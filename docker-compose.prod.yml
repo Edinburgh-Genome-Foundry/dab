@@ -1,0 +1,15 @@
+version: '2'
+
+services:
+  django:
+    environment:
+      - DEBUG=False
+
+  rqworker:
+    environment:
+      - DEBUG=False
+
+  vue:
+    command: ./production_server.sh
+    ports:
+      - "80:80"
