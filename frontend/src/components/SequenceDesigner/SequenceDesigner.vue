@@ -4,6 +4,7 @@ Memos:
 
 <template lang="pug">
 .designer
+
   p.center Pick parts to form a simple or combinatorial construct.
   .checklist
     h3 Checklist
@@ -102,7 +103,8 @@ export default {
           checklistEnabled: check.tuA.checked,
           checklistLocked: false,
           categories: {
-            'RNA stability sequence': true
+            'RNA stability sequence': true,
+            'DNA binding element': true,
           }
         },
         '5': {
@@ -116,7 +118,8 @@ export default {
           checklistEnabled: check.tuA.checked,
           checklistLocked: true,
           categories: {
-            '5-3 UTR': true
+            'kozak-ATG': true,
+            'protein tag': true,
           }
         },
         '7': {
@@ -209,7 +212,7 @@ export default {
           checklistEnabled: check.recombinationSites,
           checklistLocked: false,
           categories: {
-            'CDS': check.recombinationSites
+            'recombinase recognition site': check.recombinationSites
           }
         },
         '18': {
@@ -232,7 +235,7 @@ export default {
           categories: {
             'p2A': true,
             'peptide linker': true,
-            'pIRES': true,
+            'IRES': true,
             'protein tag': true
           }
         },
@@ -261,7 +264,7 @@ export default {
           checklistEnabled: (check.homologyArms || check.recombinationSites),
           checklistLocked: true,
           categories: {
-            'homology arm': check.homologyArms,
+            '5-3 homology arm': check.homologyArms,
             'recombinase recognition sequence': check.recombinationSites
           }
         },

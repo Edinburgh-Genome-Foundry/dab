@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 256 256" style="enable-background:new 0 0 256 256;" xml:space="preserve">
+<style type="text/css">
+	.st0{clip-path:url(#SVGID_2_);}
+	.st1{font-family:'Calibri-Bold';}
+	.st2{font-size:80.6px;}
+	.st3{letter-spacing:-2;}
+	.st4{clip-path:url(#SVGID_4_);fill-rule:evenodd;clip-rule:evenodd;fill:#FAC090;}
+	.st5{clip-path:url(#SVGID_4_);fill:none;stroke:#000000;stroke-width:0.6552;stroke-miterlimit:8;}
+</style>
+<g>
+	<g>
+		<defs>
+			<rect id="SVGID_1_" y="0" width="341" height="235.6"/>
+		</defs>
+		<clipPath id="SVGID_2_">
+			<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+		</clipPath>
+		<g class="st0">
+			<text transform="matrix(1 0 0 1 60.6777 107.6934)"><tspan x="0" y="0" class="st1 st2">A</tspan><tspan x="49.6" y="0" class="st1 st2 st3">T</tspan><tspan x="86.8" y="0" class="st1 st2">G</tspan></text>
+		</g>
+	</g>
+	<g>
+		<defs>
+			<polygon id="SVGID_3_" points="0,235.6 341,235.6 341,0 0,0 0,235.6 			"/>
+		</defs>
+		<clipPath id="SVGID_4_">
+			<use xlink:href="#SVGID_3_"  style="overflow:visible;"/>
+		</clipPath>
+		<polygon class="st4" points="77.5,170.5 164.3,170.5 164.3,151.9 201.5,189.1 164.3,226.3 164.3,207.7 77.5,207.7 77.5,170.5 		
+			"/>
+		<polygon class="st5" points="77.5,170.5 164.3,170.5 164.3,151.9 201.5,189.1 164.3,226.3 164.3,207.7 77.5,207.7 77.5,170.5 		
+			"/>
+	</g>
+</g>
+</svg>
