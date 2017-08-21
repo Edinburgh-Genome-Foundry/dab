@@ -1,10 +1,6 @@
 <template lang="pug">
-div.icon-panel
-  .row
+  div.icon-panel
     img.emma-icon(v-for='(val, icon) in icons' v-if="val" v-bind:style="{width: width+'px', height: height+'px'}" v-bind:src="'/static/icons/'+ icon + '.svg'")
-  .row
-    .expand-icon
-
 </template>
 
 <script>
@@ -33,6 +29,7 @@ export default {
 .icon-panel
 {
   text-align: center;
+  cursor: pointer;
 }
 
 .emma-icon

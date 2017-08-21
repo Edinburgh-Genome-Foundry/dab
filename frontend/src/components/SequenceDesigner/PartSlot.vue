@@ -7,11 +7,12 @@
 
   sdIcon(v-bind:iconSize="iconSize" v-bind:icons='categories')
   .line(v-if="myUserEnabled")
-    el-button(v-on:click="changeLock" size='mini') disable
-    el-select(v-model='selectedParts[0]' clearable filterable placeholder="choose part")
+    sdLock(v-on:click="changeLock" v-bind:expand='true')
+    el-select(v-model='selectedParts[0]' clearable filterable multiple placeholder="choose part")
       el-option(v-for='item in allParts', :key='item.dbId', :value='item.dbName')
+
   .line(v-else)
-    el-button(v-on:click="changeLock" size='mini') enable
+    sdLock(v-on:click="changeLock" v-bind:expand='false')
 
 </template>
 
@@ -80,7 +81,8 @@ export default {
   },
 
   components: {
-    sdIcon: require('../widgets/SeqeunceDesignerIcon.vue'),
+    sdIcon: require('../widgets/SequenceDesignerIcon.vue'),
+    sdLock: require('../widgets/SequenceDesignerLock.vue'),
   },
 }
 </script>
@@ -94,8 +96,7 @@ export default {
   display: inline-block;
   padding: 10px;
   margin: 10px;
-  width: 150px;
-  height: 200px;
+  // height: 200px;
 
   vertical-align: text-top;
   .line {
