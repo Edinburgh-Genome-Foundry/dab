@@ -1,7 +1,7 @@
 <template lang="pug">
 .part-slot(:class='{active}' v-if="checklistEnabled")
   .name {{slotName}}
-  .line active: {{active}}
+  //- .line active: {{active}}
   .line <b>categories:</b>
   .line(v-for='value, label in categories' v-if='value', :key='label') {{label}}
 
@@ -81,8 +81,8 @@ export default {
   },
 
   components: {
-    sdIcon: require('../widgets/SequenceDesignerIcon.vue'),
-    sdLock: require('../widgets/SequenceDesignerLock.vue'),
+    sdIcon: require('./SequenceDesignerIcon.vue'),
+    sdLock: require('./SequenceDesignerLock.vue'),
   },
 }
 </script>
