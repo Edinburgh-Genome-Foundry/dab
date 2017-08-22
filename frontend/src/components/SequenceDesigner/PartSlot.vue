@@ -6,10 +6,33 @@
   .line(v-for='value, label in categories' v-if='value', :key='label') {{label}}
 
   sdIcon(v-bind:iconSize="iconSize" v-bind:icons='categories')
+
   .line(v-if="myUserEnabled")
     sdLock(v-on:click="changeLock" v-bind:expand='true')
-    el-select(v-model='selectedParts[0]' clearable filterable multiple placeholder="choose part")
-      el-option(v-for='item in allParts', :key='item.dbId', :value='item.dbName')
+    .expand-select(v-if='selectVisible')
+      el-select(v-model='selectedParts'
+        filterable
+        multiple
+        placeholder="choose part"
+        v-on:visible-change="onSelectVisibleChange")
+        el-option(
+          v-for='item in allParts'
+          v-bind:key='item.dbId'
+          v-bind:label='item.dbName'
+          v-bind:value='item'
+          )
+      .center
+        el-button.expand-button(icon="minus" size="mini" type="danger" v-on:click="selectVisible = !selectVisible")
+    .center(v-else)
+      .line(v-for='item in selectedParts')
+        span {{item.dbName}}
+        span.el-icon-delete.delete-button(
+          v-on:click="removeItem(item)"
+          v-bind:item="item"
+        )
+
+      el-button.expand-button(icon="plus" size="mini" type="primary" v-on:click="selectVisible = !selectVisible")
+
 
   .line(v-else)
     sdLock(v-on:click="changeLock" v-bind:expand='false')
@@ -17,7 +40,7 @@
 </template>
 
 <script>
-
+let globalSetting = require('../../setting.js')
 export default {
   props: {
     slotName: {default: '1'}, // The slot is of the form '1', '2', '8A', '8B', etc.
@@ -28,14 +51,19 @@ export default {
   },
   data: function () {
     return {
-      selectedParts: [''], // will contain the selected parts
+      selectedParts: [], // will contain the selected parts
       allParts: [],
       myUserEnabled: this.userEnabled,
+      selectVisible: false,
     }
   },
   computed: {
     active: function () {
       return this.checklistEnabled && (this.ckecklistLocked || this.myUserEnabled)
+    },
+    selectStyle: function () {
+      if (this.selectVisible) return {display: 'inline-block'}
+      else return {display: 'none'}
     },
 
     filteredParts: function () {
@@ -57,8 +85,9 @@ export default {
     }
   },
   mounted: function () {
+    let iceUrl = globalSetting.ICE_URL
     this.$http.post(
-      '//ice.dev.genomefoundry.org/ICE-REST/rest/entries/filterlist',
+      iceUrl + 'entries/filterlist',
       {
         filter: JSON.stringify({
           type: 'part',
@@ -68,7 +97,6 @@ export default {
       },
       {emulateJSON: true},
     ).then((response) => {
-      console.log(response)
       if (response.status === 200) {
         this.allParts = response.body.data
       }
@@ -77,6 +105,12 @@ export default {
   methods: {
     changeLock: function (event) {
       this.myUserEnabled = !this.myUserEnabled
+    },
+    onSelectVisibleChange: function (visible) {
+      this.selectVisible = visible
+    },
+    removeItem: function (item) {
+      this.selectedParts.splice(this.selectedParts.indexOf(item), 1)
     }
   },
 
@@ -96,6 +130,7 @@ export default {
   display: inline-block;
   padding: 10px;
   margin: 10px;
+  width: 100px;
   // height: 200px;
 
   vertical-align: text-top;
@@ -122,6 +157,22 @@ export default {
 }
 .part-slot.active {
   background-color: #ccf;
+}
+
+.expand-select
+{
+  width:200px;
+  position:relative;
+  left: 50%;
+  margin-left:-100px;
+}
+.center
+{
+  text-align: center;
+}
+.expand-button
+{
+  border-radius: 50%;
 }
 
 </style>
