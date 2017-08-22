@@ -1,10 +1,32 @@
 <template lang="pug">
 .search-the-database
+
   h1 Explore the database
+
   .schema
-    .minislot(v-for='slot in slots', :class="'zone-' + slot.zone")
-      .icon(v-for='category in slot.categories', :style="backgroundImageStyle(category)")
-      //- .category-txt(v-for='category in slot.categories') {{category}}
+    .minislot(v-for='slotName in slotNames', :class="'zone-' + slots[slotName].zone", :key='slotName')
+      .slot-name {{slotName}}
+      .icons
+        el-tooltip(v-for='category in slots[slotName].categories', :key='category',
+                   effect="light", :content="category", :transition='null',
+                   :enterable='false', transition='el-fade-in')
+          .icon(:style="backgroundImageStyle(category)",
+                :key='category', @click='selectCategory(slotName, category)')
+
+  .parts-viewer(v-if='selectedSlotCategory')
+    h3.
+       Available <i class='selected-category-txt'>{{selectedSlotCategory.category}}</i>
+       parts at position {{selectedSlotCategory.slot}}:
+
+    .loading-icon(v-if='loading' v-loading="loading")
+
+    el-card.part-card(v-for='part in foundParts')
+      .part_header(slot='header')
+        p.part-name {{part.dbName}}
+        a.database-link(:href="'https://ice.dev.genomefoundry.org/entry/' + part.dbId") <i class="el-icon-share"></i> view in database
+
+      p(v-if='part.dbDescription') <b>Description:</b> {{part.dbDescription}}
+    el-alert(v-if='queryError', type='error' show-icon) {{queryError.body.error}}
 </template>
 
 <script>
@@ -21,6 +43,11 @@ var infos = {
 export default {
   data: function () {
     return {
+      slotNames: '1 2 3 4 5 6 7 8 8a 8b 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25'.split(' '),
+      selectedSlotCategory: null,
+      foundParts: [],
+      loading: false,
+      queryError: null,
       slots: {
         '1': {
           zone: ['none'],
@@ -109,13 +136,15 @@ export default {
           ]
         },
         '12': {
+          zone: ['none'],
           categories: [
             'insulator'
           ]
         },
         '13': {
+          zone: ['none'],
           categories: [
-            'recombinase recognition site'
+            'recombinase recognition sequence'
           ]
         },
         '14': {
@@ -139,7 +168,7 @@ export default {
         '17': {
           zone: ['none'],
           categories: [
-            'recombinase recognition site'
+            'recombinase recognition sequence'
           ]
         },
         '18': {
@@ -164,6 +193,7 @@ export default {
           ]
         },
         '21': {
+          zone: ['tuB'],
           categories: [
             'CDS'
           ]
@@ -201,8 +231,36 @@ export default {
   },
   infos: infos,
   methods: {
+    selectCategory: function (slot, category) {
+      this.selectedSlotCategory = {'slot': slot, 'category': category}
+      this.loading = true
+      this.queryError = null
+      this.foundParts = []
+      this.$http.post(
+        '//ice.dev.genomefoundry.org/ICE-REST/rest/entries/filterlist',
+        {
+          filter: JSON.stringify({
+            type: category,
+            position: slot,
+          }),
+          fields: '{"matchScore","dbDescription","dbName","dbId","type","position"}',
+        },
+        {emulateJSON: true},
+      ).then(function (response) {
+        this.loading = false
+        console.log(response)
+        if (response.status === 200) {
+          this.foundParts = response.body.data
+        }
+      }).catch(function (response) {
+        this.queryError = response
+        this.loading = false
+      })
+    },
     backgroundImageStyle: function (category) {
-      return {'background-image': 'url(/static/sbol-icons/' + category + '.svg)'}
+      return {
+        'background-image': 'url(/static/sbol-icons/' + category.split(' ').join('-') + '.svg)'
+      }
     },
     handleSuccess: function (evt) {
       console.log(evt)
@@ -223,19 +281,61 @@ export default {
 
 <style lang='scss' scoped>
 .search-the-database {
+
   .minislot {
     display: inline-block;
-    border: 2px solid black;
+    // border: 1px solid black;
     height: 120px;
-    width: 55px;
+    width: 60px;
     vertical-align: top;
+    margin-bottom: 2em;
+    &.zone-tuA { background-color: #f8f9fe}
+    &.zone-tuB { background-color: #fff7f7}
+    &.zone-selection-marker { background-color: #fef8fe}
+    .slot-name {
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 1em;
+    }
+    .el-popover {
+      .icon {
+        background-size: auto 150%;
+        background-repeat: no-repeat;
+        background-position: 50% 50%;
+        width: 100%;
+        height:30px;
+        margin-top: -8px;
+        &:not(:first-child) {
+          width: 60%;
+          margin-left: 20%;
+        }
+      }
+    }
     .icon {
-      background-size: auto 80%;
+      background-size: auto 150%;
       background-repeat: no-repeat;
       background-position: 50% 50%;
+      width: 100%;
+      height:30px;
+      margin-top: -8px;
+      &:not(:first-child) {
+        width: 60%;
+        margin-left: 20%;
+      }
+    }
+  }
+  .parts-viewer {
+    .loading-icon {
+      margin-top: 2em;
+    }
+    .selected-category-txt {
+      color: #1a5b90
     }
   }
 }
+
+
+
 h4.formlabel {
   text-align: center;
   text-transform: uppercase;
@@ -284,5 +384,44 @@ p.loadData {
   }
 }
 
+
+</style>
+
+<style lang='scss'>
+.parts-viewer {
+  .part-card {
+    width: 80%;
+    margin-left: 10%;
+    margin-bottom: 2em;
+    .el-card__header {
+      padding: 10px;
+      font-weight: bold;
+      color: white;
+      background-color: #52a2e0;
+      p.part-name {
+        display: inline-block;
+        margin-right: 2em;
+        margin:0;
+        // width: 200px;
+      }
+      a.database-link {
+        color: white;
+        text-decoration: none;
+        font-weight: normal;
+        text-align: right;
+        // margin-top: 5px;
+        float: right;
+      }
+    }
+    .el-card__body {
+      padding-top: 5px;
+      padding-bottom: 5px;
+      p {
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+      }
+    }
+  }
+}
 
 </style>

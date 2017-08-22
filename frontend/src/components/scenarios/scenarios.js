@@ -1,6 +1,6 @@
 export default {
   list: [
-    require('./Explore'),
+    require('./SearchDatabase'),
     require('./DesignConstructs'),
     require('./DomesticateParts')
   ]
