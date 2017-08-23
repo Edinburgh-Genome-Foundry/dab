@@ -89,6 +89,7 @@ export default {
     tryLogout: function (event) {
       this.userSettings.username = ''
       this.userSettings.token = ''
+      window.emmaToken = undefined
       window.localStorage.setItem('emmaSettings', JSON.stringify(this.userSettings))
     }
   },
@@ -98,7 +99,25 @@ export default {
       let lastLoginPast = (new Date()) - new Date(this.userSettings.lastLogin)
       if (lastLoginPast > 604800000) {
         this.userSettings = {}
+        window.emmaToken = undefined
         window.localStorage.setItem('emmaSettings', JSON.stringify(this.userSettings))
+      } else {
+        this.$http.post(
+          globalSettings.AUTH_URL + '/verify',
+          {
+            token: this.userSettings.token,
+          },
+          {
+            emulateJSON: true,
+          },
+        ).then((result) => {
+          console.log('token verified')
+          window.emmaToken = this.userSettings.token
+        }, (result) => {
+          this.userSettings = {}
+          window.emmaToken = undefined
+          window.localStorage.setItem('emmaSettings', JSON.stringify(this.userSettings))
+        })
       }
     }
   },
