@@ -22,7 +22,10 @@
           v-bind:value='item'
           )
       .center
-        el-button.expand-button(icon="minus" size="mini" type="danger" v-on:click="selectVisible = !selectVisible")
+        el-button.expand-button(icon="minus"
+        size="mini"
+        type="danger"
+        v-on:click="selectVisible = !selectVisible")
     .center(v-else)
       .line(v-for='item in selectedParts')
         span {{item.dbName}}
@@ -31,7 +34,11 @@
           v-bind:item="item"
         )
 
-      el-button.expand-button(icon="plus" size="mini" type="primary" v-on:click="selectVisible = !selectVisible")
+      el-button.expand-button(
+        icon="plus"
+        size="mini"
+        type="primary"
+        v-on:click="selectVisible = !selectVisible")
 
 
   .line(v-else)
@@ -172,6 +179,15 @@ export default {
 .expand-button
 {
   border-radius: 50%;
+}
+.delete-button
+{
+  cursor: pointer;
+  margin-left:5px;
+  margin-right:5px;
+  &:hover {
+    color:red;
+  }
 }
 
 </style>
