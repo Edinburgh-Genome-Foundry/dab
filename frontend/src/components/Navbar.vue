@@ -9,12 +9,10 @@ div
       template(slot='title') Scenarios
       el-menu-item(v-for='scenario in scenarios', :index="scenario.infos.path") {{scenario.infos.navbarTitle}}
     el-menu-item(index='about') About
-    li.el-menu-item(type="text" v-if="isLogin" @click="tryLogout") logout ({{this.userSettings.username}})
-    li.el-menu-item(type="text" v-else @click='showLoginDialog = true') login
-  el-dialog(
-    v-bind:visible.sync='showLoginDialog'
-    size='tiny'
-  )
+    li.el-menu-item(type="text" v-if="isLogin" @click="tryLogout") Logout ({{this.userSettings.username}})
+    li.el-menu-item(type="text" v-else @click='showLoginDialog = true') Login
+
+  el-dialog(v-bind:visible.sync='showLoginDialog' size='tiny')
     p
       span username
       el-input(v-model='username')
@@ -22,9 +20,7 @@ div
       span password
       el-input(v-model='password' type='password')
     p(v-if='loginMessage') {{loginMessage}}
-    p
-      el-button(type='primary' @click='tryLogin') submit
-      el-button(@click='showLoginDialog=false') cancel
+    el-button.center(type='primary' @click='tryLogin') submit
 
 </template>
 

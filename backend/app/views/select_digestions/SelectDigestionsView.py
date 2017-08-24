@@ -7,7 +7,7 @@ from collections import OrderedDict
 from ..base import AsyncWorker, StartJobView, JobResult
 from ..tools import string_to_record, matplotlib_figure_to_svg_base64_data
 from bandwitch import (IdealDigestionsProblem, SeparatingDigestionsProblem,
-                       NoSolutionError, LADDERS)
+                       LADDERS)
 
 
 digestion = serializers.ListField(child=serializers.CharField())
