@@ -66,12 +66,10 @@ export default {
   },
   methods: {
     selectParts: function (evt) {
-      console.log(evt)
     }
   },
   computed: {
     computedSlotsData: function () {
-      console.log('theeeere')
       var check = this.checklist
       var checklistData = {
         '1': {
@@ -276,11 +274,11 @@ export default {
           }
         }
       }
-      console.log(checklistData)
+
       var results = {}
       for (var i = 0; i < slotNames.length; i++) {
         var key = slotNames[i]
-        console.log(key)
+
         if (checklistData[key]) {
           results[key] = Object.assign(checklistData[key], this.slotsData[key])
         }
