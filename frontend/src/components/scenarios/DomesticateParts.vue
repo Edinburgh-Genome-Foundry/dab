@@ -8,6 +8,11 @@
                  :size='16', :categories='slots[slotName].categories', :slotName='slotName', @click='selectCategory')
   .part-domesticator(v-if='selectedSlot')
     h2 New <b>{{selectedSlot.category}}</b> <br /> at position {{selectedSlot.slotName}}
+    .slots-info
+    p.
+      Slot with overhangs <b>{{slots[selectedSlot.slotName].overhangs.left}}──{{slots[selectedSlot.slotName].overhangs.right}}</b>,
+      for {{slots[selectedSlot.slotName].categories.join(' or ')}} parts.
+      {{slots[selectedSlot.slotName].infos}}
     el-radio(v-model='sequenceInputType' label='file') Upload a file
     el-radio(v-model='sequenceInputType' label='text') Enter a sequence
 
@@ -19,7 +24,6 @@
       .div
         el-checkbox(v-model='polishSequence') Polish the sequence
       .polish-sequence(v-if='polishSequence')
-
       .div
         el-checkbox(v-model='addToRepo') Save to repo
       .add-to-repo(v-if='addToRepo')
@@ -43,7 +47,7 @@ var infos = {
 export default {
   data: function () {
     return {
-      slots: emma.slotCategories,
+      slots: emma.slotInfos,
       slotNames: emma.slotNames,
       selectedSlot: null,
       sequenceFile: null,
@@ -78,6 +82,10 @@ export default {
         font-weight: bold;
 
       }
+    }
+    p.overhangs {
+      margin-top: -1em;
+      color: #666;
     }
     .add-to-repo {
       margin-top: 1em;
