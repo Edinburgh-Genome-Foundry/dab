@@ -18,12 +18,13 @@
     .loading-icon(v-if='loading')
       img(src='/static/loading_plasmid.svg')
 
-
+    el-input.search-box(v-model='search', placeholder='Enter a search term' v-if='foundParts.length > 4')
     .cards(v-if='foundParts.length')
-      el-input.search-box(v-model='search', placeholder='Enter a search term')
+
       el-card.part-card(v-for='part in selectedParts', :key='part.dbName')
         .part_header(slot='header')
           p.part-name {{part.dbName}}
+          a.database-link(:href="'https://ice.dev.genomefoundry.org/ICE-REST/rest/entries/genbank/' + part.dbId") <i class="el-icon-document"></i> genbank
           a.database-link(:href="'https://ice.dev.genomefoundry.org/entry/' + part.dbId") <i class="el-icon-share"></i> view in database
 
         p(v-if='part.dbDescription') <b>Description:</b> {{part.dbDescription}}
@@ -46,7 +47,7 @@ var infos = {
 export default {
   data: function () {
     return {
-      slots: emma.slotCategories,
+      slots: emma.slotInfos,
       slotNames: emma.slotNames,
       selectedSlotCategory: null,
       foundParts: [],
@@ -64,6 +65,7 @@ export default {
     selectCategory: function (slot, category) {
       this.selectedSlotCategory = {'slot': slot, 'category': category}
       this.loading = true
+      this.search = ''
       this.queryError = null
       this.foundParts = []
       this.$http.post(
@@ -149,6 +151,10 @@ export default {
     width: 80%;
     margin-left: 10%;
     margin-bottom: 2em;
+  }
+  .cards {
+    max-height: 40em;
+    overflow-y: auto;
   }
   .part-card {
     width: 80%;
