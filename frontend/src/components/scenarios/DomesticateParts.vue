@@ -1,12 +1,37 @@
 <template lang="pug">
-div
+.domesticate-parts
+
+  h1 Domesticate Parts
+  .minischema
+    h3 Select a slot
+    minipartslot(v-for='slotName in slotNames', :zone='slots[slotName].zone', :key='slotName',
+                 :size='16', :categories='slots[slotName].categories', :slotName='slotName', @click='selectCategory')
+  .part-domesticator(v-if='selectedSlot')
+    h2 New <b>{{selectedSlot.category}}</b> <br /> at position {{selectedSlot.slotName}}
+    el-radio(v-model='sequenceInputType' label='file') Upload a file
+    el-radio(v-model='sequenceInputType' label='text') Enter a sequence
+
+    files-uploader.file-uploader(v-if="sequenceInputType == 'file'", v-model='sequenceFile',
+                                 :multiple='false', help='Upload a Genbank or Fasta file')
+    el-input(v-if="sequenceInputType == 'text'", v-model='sequenceText', type="textarea",
+            :rows="5", placeholder="Enter or paste a sequence, e.g. ATTGTGCCA...")
+    .subform(v-if='sequenceFile || sequenceText.length')
+      .div
+        el-checkbox(v-model='polishSequence') Polish the sequence
+      .polish-sequence(v-if='polishSequence')
+
+      .div
+        el-checkbox(v-model='addToRepo') Save to repo
+      .add-to-repo(v-if='addToRepo')
+        el-input(placeholder='Sequence name')
+        .submit-button
+           el-button(type='primary') Save
 </template>
 
 <script>
 import learnmore from '../../components/widgets/LearnMore'
-import sequencesuploader from '../../components/widgets/SequencesUploader'
-import digestionset from '../../components/widgets/DigestionSelectorSet'
-
+import minipartslot from '../SequenceDesigner/MiniPartSlot'
+import emma from '../SequenceDesigner/EMMA'
 var infos = {
   title: 'Domesticate parts',
   navbarTitle: 'Domesticate parts',
@@ -18,48 +43,52 @@ var infos = {
 export default {
   data: function () {
     return {
-      enzymes: ['BsaI', 'BsmBI', 'BbsI', 'Autoselect'],
-      form: {
-        enzyme: 'Autoselect',
-        parts: [],
-        backbone: null
-      },
-      infos: infos,
-      ladder_options: [
-        {
-          label: 'Ladder 100 bp - 4000 bp',
-          value: '100-4k'
-        }
-      ],
-      queryStatus: {
-        polling: {},
-        result: {},
-        requestError: ''
-      }
+      slots: emma.slotCategories,
+      slotNames: emma.slotNames,
+      selectedSlot: null,
+      sequenceFile: null,
+      sequenceText: '',
+      sequenceInputType: 'file',
+      polishSequence: false,
+      addToRepo: false
     }
   },
   components: {
-    sequencesuploader,
+    minipartslot,
     learnmore,
-    digestionset
   },
   infos: infos,
   methods: {
-    handleSuccess: function (evt) {
-      console.log(evt)
-    },
-    validateForm: function () {
-      var errors = []
-      if (this.form.parts.length === 0) {
-        errors.push('Provide at least 2 files: one or more parts and a receptor.')
-      }
-      return errors
+    selectCategory: function (slot, category) {
+      this.selectedSlot = {slotName: slot, category: category}
     }
   }
 }
 </script>
 
 <style lang='scss' scoped>
+.domesticate-parts {
+
+  .part-domesticator {
+    width: 80%;
+    margin-left: 10%;
+    h2 {
+      font-size: 1.5em;
+      b {
+        font-weight: bold;
+
+      }
+    }
+    .add-to-repo {
+      margin-top: 1em;
+      width: 80%;
+      margin-left: 10%;
+      .el-input {
+        margin-bottom: 1em;
+      }
+    }
+  }
+}
 
 h4.formlabel {
   text-align: center;

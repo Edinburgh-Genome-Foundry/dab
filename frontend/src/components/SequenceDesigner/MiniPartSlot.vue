@@ -1,18 +1,13 @@
 <template lang="pug">
-.part-slot(:class='{active}' v-if="checklistEnabled")
-  .name {{slotName}}
-  sdIcon(v-bind:iconSize="iconSize" v-bind:icons='categories')
-  .line(v-if="myUserEnabled")
-    .div
-      //- el-select(v-model='selectedParts[0]' clearable filterable placeholder="choose part")
-      //-   el-option(v-for='item in allParts', :key='item.dbId', :value='item.dbName')
-
-  .line(v-else)
-    el-button(v-on:click="changeLock" size='mini') enable
-  .selectedParts
-    p(v-for='part in selectedParts') {{part}}
-  .delete-button
-    el-button(v-on:click="changeLock" size='mini' icon='delete' v-if="myUserEnabled")
+.mini-part-slot(:class="['zone-' + zone, {disabled: disabled}]",
+                :style="{'font-size': size + 'px'}")
+  .slot-name {{slotName}}
+  .icons
+    el-tooltip(v-for='category in categories', :key='category',
+               effect="light", :content="category", :transition='null',
+               :enterable='false', transition='el-fade-in')
+      .icon(:style="backgroundImageStyle(category)",
+            :key='category', @click="$emit('click', slotName, category)")
 </template>
 
 <script>
@@ -20,110 +15,48 @@
 export default {
   props: {
     slotName: {default: '1'}, // The slot is of the form '1', '2', '8A', '8B', etc.
-    checklistEnabled: {default: true}, // If not active, will be smaller, greyer, no inputs
-    checklistLocked: {default: false}, // Locked means you can't add or remove a block
-    userEnabled: {default: true}, // If not active, will be smaller, greyer, no inputs
-    categories: {default: () => ({})} // categories of parts filtered in the dropdown
-  },
-  data: function () {
-    return {
-      selectedParts: [''], // will contain the selected parts
-      allParts: [],
-      myUserEnabled: this.userEnabled,
-    }
-  },
-  computed: {
-    active: function () {
-      return this.checklistEnabled && (this.ckecklistLocked || this.myUserEnabled)
-    },
-
-    filteredParts: function () {
-      let ret = []
-      for (let part in this.allParts) {
-        // if (this.categories[part.dbType]) {
-        ret.append(part)
-        // }
-      }
-      return ret
-    },
-
-    iconSize: function () {
-      if (this.checklistEnabled) {
-        return 48
-      } else {
-        return 32
-      }
-    }
-  },
-  mounted: function () {
-    this.$http.post(
-      '//ice.dev.genomefoundry.org/ICE-REST/rest/entries/filterlist',
-      {
-        filter: JSON.stringify({
-          type: 'part',
-          position: this.slotName,
-        }),
-        fields: '{"matchScore","dbDescription","dbName","dbId","type","position"}',
-      },
-      {emulateJSON: true},
-    ).then((response) => {
-      console.log(response)
-      if (response.status === 200) {
-        this.allParts = response.body.data
-      }
-    })
+    size: {default: 15},
+    zone: {default: 'none'}, // If not active, will be smaller, greyer, no inputs
+    categories: {default: () => ([])}, // Locked means you can't add or remove a block
+    disabled: {default: false}
   },
   methods: {
-    changeLock: function (event) {
-      this.myUserEnabled = !this.myUserEnabled
+    backgroundImageStyle: function (category) {
+      return {
+        'background-image': 'url(/static/sbol-icons/' + category.split(' ').join('-') + '.svg)'
+      }
     }
-  },
-
-  components: {
-    sdIcon: require('../widgets/SeqeunceDesignerIcon.vue'),
-  },
+  }
 }
 </script>
 <style lang='scss' scoped>
-.name {
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 10px;
-}
-.part-slot {
+.mini-part-slot {
   display: inline-block;
-  padding: 10px;
-  margin: 2px;
-  width: auto;
-  height: 200px;
-
-  vertical-align: text-top;
-  .line {
-    margin:0;
-    font-size: 10px;
-    .selectable-part {
-      font-size: 10px;
-      display:inline-block;
-      max-width:80%;
-      cursor: pointer;
-      &:hover {
-          background: rgba(0,0,128,0.25);
-        }
-    }
-    .check-mark {
-      display:inline-block;
-      font-size:200%;
-      color:darkgreen;
-      margin-left:5px;
-    }
+  height: 10em;
+  width: 2.85em;
+  vertical-align: top;
+  margin-bottom: 2em;
+  &.zone-tuA {
+    background-color: #f8f9fe;
   }
-  background-color: #ddd;
-  .delete-button {
+  &.zone-tuB { background-color: #fff7f7}
+  &.zone-selection-marker { background-color: #fef8fe}
+  .slot-name {
+    font-weight: bold;
     text-align: center;
+    margin-bottom: 1em;
+  }
+  .icon {
+    background-size: auto 150%;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    width: 100%;
+    height: 2em;
+    margin-top: -0.28em;
+    &:not(:first-child) {
+      width: 60%;
+      margin-left: 20%;
+    }
   }
 }
-.part-slot.active {
-  background-color: #ccf;
-}
-
 </style>
