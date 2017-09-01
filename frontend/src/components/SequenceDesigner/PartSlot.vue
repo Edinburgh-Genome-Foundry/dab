@@ -2,10 +2,15 @@
 .part-slot(:class='{active}' v-if="checklistEnabled")
   .name {{slotName}}
   //- .line active: {{active}}
-  .line <b>categories:</b>
-  .line(v-for='value, label in categories' v-if='value', :key='label') {{label}}
+  // .line <b>categories:</b>
+  // .line(v-for='value, label in categories' v-if='value', :key='label') {{label}}
 
-  sdIcon(v-bind:iconSize="iconSize" v-bind:icons='categories')
+  el-tooltip.tooltip(v-for='value, category in categories', v-if='value', :key='category',
+               effect="light", :content="category", :transition='null',
+               :enterable='false', transition='el-fade-in')
+    .icon(:class='{active}' v-bind:style="backgroundImageStyle(category)")
+
+  // sdIcon(v-bind:iconSize="iconSize" v-bind:icons='categories')
 
   .line(v-if="myUserEnabled")
     sdLock(v-on:click="changeLock" v-bind:expand='true')
@@ -117,7 +122,13 @@ export default {
     },
     removeItem: function (item) {
       this.selectedParts.splice(this.selectedParts.indexOf(item), 1)
-    }
+    },
+    backgroundImageStyle: function (category) {
+      console.log('cat', category)
+      return {
+        'background-image': 'url(/static/sbol-icons/' + category.split(' ').join('-') + '.svg)'
+      }
+    },
   },
 
   components: {
@@ -134,8 +145,9 @@ export default {
 }
 .part-slot {
   display: inline-block;
-  padding: 10px;
-  margin: 10px;
+  // padding: 10px;
+  // margin: 10px;
+  margin-bottom: 20px;
   width: 100px;
   // height: 200px;
 
@@ -159,10 +171,10 @@ export default {
       margin-left:5px;
     }
   }
-  background-color: #ddd;
+  // background-color: #ddd;
 }
 .part-slot.active {
-  background-color: #ccf;
+  // background-color: #ccf;
 }
 
 .expand-select
@@ -189,5 +201,24 @@ export default {
     color:red;
   }
 }
+.icon {
+    background-size: auto 150%;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    width: 100%;
+    height: 30px;
+    margin-top: 20px;
+    &:not(:first-child) {
+      width: 100%;
+      margin-left: 0%;
+    }
+    filter: grayscale(100%);
+
+  }
+  .icon.active{
+      height: 50px;
+      margin-top:0px;
+      filter: grayscale(0%);
+  }
 
 </style>
