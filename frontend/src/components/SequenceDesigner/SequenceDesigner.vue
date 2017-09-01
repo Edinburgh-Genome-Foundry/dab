@@ -22,6 +22,13 @@ Memos:
             el-radio(v-model='checklist.tuA.sistrons', label='bi') Bistronic
     .div
       el-checkbox(v-model='checklist.tuB.checked') Transcription Unit B
+
+  .super-mini-schema.center
+    h3 Minimap:
+    minipartslot(v-for='slotName in slotNames', :zone='slotInfos[slotName].zone', :key='slotName',
+                 v-if='computedSlotsData[slotName].checklistEnabled',
+                 :disabled='!computedSlotsData[slotName].userEnabled',
+                 :size='10', :categories='slotInfos[slotName].categories.filter((c) => computedSlotsData[slotName].categories[c])', :slotName='slotName')
   .partsSlots
     partslot(v-for='slotName in slotNames',
              :slotName='slotName',
@@ -33,11 +40,12 @@ Memos:
 
 <script>
 import partslot from './PartSlot'
-var slotNames = '1 2 3 4 5 6 7 8 8a 8b 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25'.split(' ')
+import emma from './EMMA'
+import minipartslot from './MiniPartSlot'
 export default {
   data: function () {
     var slotsData = {}
-    slotNames.map(function (slotName) {
+    emma.slotNames.map(function (slotName) {
       slotsData[slotName] = {
         userEnabled: true,
         selectedParts: []
@@ -57,12 +65,14 @@ export default {
           checked: true
         }
       },
-      slotNames: slotNames,
+      slotNames: emma.slotNames,
+      slotInfos: emma.slotInfos,
       slotsData: slotsData
     }
   },
   components: {
-    partslot
+    partslot,
+    minipartslot
   },
   methods: {
     selectParts: function (evt) {
@@ -70,214 +80,11 @@ export default {
   },
   computed: {
     computedSlotsData: function () {
-      var check = this.checklist
-      var checklistData = {
-        '1': {
-          checklistEnabled: true,
-          checklistLocked: check.homologyArms,
-          categories: {
-            '5-3 homology arm': check.homologyArms,
-            '5-3 ITR': !check.homologyArms,
-            '5-3 LTR': !check.homologyArms,
-            'recombinase recognition sequence': (!check.homologyArms && check.recombinationSites)
-          }
-        },
-        '2': {
-          checklistEnabled: true,
-          checklistLocked: false,
-          categories: {
-            'insulator': true,
-            'recombinase recognition sequence': check.recombinationSites
-          }
-        },
-        '3': {
-          checklistEnabled: check.tuA.checked,
-          checklistLocked: true,
-          categories: {
-            'promoter': true
-          }
-        },
-        '4': {
-          checklistEnabled: check.tuA.checked,
-          checklistLocked: false,
-          categories: {
-            'RNA stability sequence': true,
-            'DNA binding element': true,
-          }
-        },
-        '5': {
-          checklistEnabled: check.tuA.checked,
-          checklistLocked: true,
-          categories: {
-            '5-3 UTR': true
-          }
-        },
-        '6': {
-          checklistEnabled: check.tuA.checked,
-          checklistLocked: true,
-          categories: {
-            'kozak-ATG': true,
-            'protein tag': true,
-          }
-        },
-        '7': {
-          checklistEnabled: check.tuA.checked,
-          checklistLocked: true,
-          categories: {
-            'CDS': true
-          }
-        },
-        '8': {
-          checklistEnabled: check.tuA.checked,
-          checklistLocked: true,
-          categories: {
-            'p2A': true,
-            'peptide linker': true
-          }
-        },
-        '8a': {
-          checklistEnabled: check.tuA.checked,
-          checklistLocked: true,
-          categories: {
-            'protein tag': true
-          }
-        },
-        '8b': {
-          checklistEnabled: check.tuA.checked,
-          checklistLocked: true,
-          categories: {
-            'IRES': true
-          }
-        },
-        '9': {
-          checklistEnabled: check.tuA.checked,
-          checklistLocked: true,
-          categories: {
-            'CDS': true
-          }
-        },
-        '10': {
-          checklistEnabled: check.tuA.checked,
-          checklistLocked: true,
-          categories: {
-            '5-3 UTR': true,
-            '5-3 LTR': true
-          }
-        },
-        '11': {
-          checklistEnabled: check.tuA.checked,
-          checklistLocked: true,
-          categories: {
-            'terminator': true
-          }
-        },
-        '12': {
-          checklistEnabled: true,
-          checklistLocked: false,
-          categories: {
-            'insulator': true
-          }
-        },
-        '13': {
-          checklistEnabled: check.recombinationSites,
-          checklistLocked: false,
-          categories: {
-            'recombinase recognition site': check.recombinationSites
-          }
-        },
-        '14': {
-          checklistEnabled: check.selectionMarker,
-          checklistLocked: true,
-          categories: {
-            'promoter': true
-          }
-        },
-        '15': {
-          checklistEnabled: check.selectionMarker,
-          checklistLocked: true,
-          categories: {
-            'CDS': true
-          }
-        },
-        '16': {
-          checklistEnabled: check.selectionMarker,
-          checklistLocked: true,
-          categories: {
-            'terminator': true
-          }
-        },
-        '17': {
-          checklistEnabled: check.recombinationSites,
-          checklistLocked: false,
-          categories: {
-            'recombinase recognition site': check.recombinationSites
-          }
-        },
-        '18': {
-          checklistEnabled: check.tuB.checked,
-          checklistLocked: true,
-          categories: {
-            'promoter': true
-          }
-        },
-        '19': {
-          checklistEnabled: check.tuB.checked,
-          checklistLocked: true,
-          categories: {
-            'CDS': true
-          }
-        },
-        '20': {
-          checklistEnabled: check.tuB.checked,
-          checklistLocked: true,
-          categories: {
-            'p2A': true,
-            'peptide linker': true,
-            'IRES': true,
-            'protein tag': true
-          }
-        },
-        '21': {
-          checklistEnabled: check.tuB.checked,
-          checklistLocked: true,
-          categories: {
-            'CDS': true
-          }
-        },
-        '22': {
-          checklistEnabled: check.tuB.checked,
-          checklistLocked: true,
-          categories: {
-            'terminator': true
-          }
-        },
-        '23': {
-          checklistEnabled: true,
-          checklistLocked: false,
-          categories: {
-            'insulator': true
-          }
-        },
-        '24': {
-          checklistEnabled: (check.homologyArms || check.recombinationSites),
-          checklistLocked: true,
-          categories: {
-            '5-3 homology arm': check.homologyArms,
-            'recombinase recognition sequence': check.recombinationSites
-          }
-        },
-        '25': {
-          checklistEnabled: check.replicationOrigin,
-          checklistLocked: false,
-          categories: {
-            'origin of replication': true
-          }
-        }
-      }
+      var checklistData = emma.computeChecklistData(this.checklist)
 
       var results = {}
-      for (var i = 0; i < slotNames.length; i++) {
-        var key = slotNames[i]
+      for (var i = 0; i < this.slotNames.length; i++) {
+        var key = this.slotNames[i]
 
         if (checklistData[key]) {
           results[key] = Object.assign(checklistData[key], this.slotsData[key])
@@ -294,6 +101,24 @@ export default {
   height: 200px;
   .subchecklist {
     margin-left: 2em;
+  }
+}
+
+.super-mini-schema {
+  .mini-part-slot {
+    width: 1.8em;
+    /deep/.icon {
+      // background-size: 100% cover;
+      background-repeat: no-repeat;
+      background-position: 50% 50%;
+      width: 100%;
+      height: 2.1em;
+      margin-top: -0.28em;
+      &:not(:first-child) {
+        width: 90%;
+        margin-left: 5%;
+      }
+    }
   }
 }
 
