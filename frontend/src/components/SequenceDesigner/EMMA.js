@@ -307,10 +307,10 @@ export default {
         }
       },
       '2': {
-        checklistEnabled: true,
+        checklistEnabled: checklist.recombinationSites || checklist.insulators,
         checklistLocked: false,
         categories: {
-          'insulator': true,
+          'insulator': checklist.insulators,
           'recombinase recognition sequence': checklist.recombinationSites
         }
       },
@@ -331,7 +331,7 @@ export default {
       },
       '5': {
         checklistEnabled: checklist.tuA.checked,
-        checklistLocked: true,
+        checklistLocked: false,
         categories: {
           '5-3 UTR': true
         }
@@ -352,29 +352,36 @@ export default {
         }
       },
       '8': {
-        checklistEnabled: checklist.tuA.checked,
+        checklistEnabled: checklist.tuA.checked &&
+          (((checklist.tuA.sistrons === 'mono') && (checklist.tuA.fusion)) ||
+          ((checklist.tuA.sistrons === 'bi') && (checklist.tuA.bisistron_type === 'p2A'))),
         checklistLocked: true,
         categories: {
-          'p2A': true,
-          'peptide linker': true
+          'p2A': (checklist.tuA.sistrons === 'bi') && (checklist.tuA.bisistron_type === 'p2A'),
+          'peptide linker': (checklist.tuA.sistrons === 'mono') && (checklist.tuA.fusion)
         }
       },
       '8a': {
-        checklistEnabled: checklist.tuA.checked,
+        checklistEnabled: checklist.tuA.checked &&
+          ((checklist.tuA.sistrons === 'mono') && (!checklist.tuA.fusion)) ||
+          ((checklist.tuA.sistrons === 'bi') && (checklist.tuA.bisistron_type === 'IRES')),
+
         checklistLocked: true,
         categories: {
           'protein tag': true
         }
       },
       '8b': {
-        checklistEnabled: checklist.tuA.checked,
+        checklistEnabled: checklist.tuA.checked &&
+                          (checklist.tuA.sistrons === 'bi') &&
+                          (checklist.tuA.bisistron_type === 'IRES'),
         checklistLocked: true,
         categories: {
           'IRES': true
         }
       },
       '9': {
-        checklistEnabled: checklist.tuA.checked,
+        checklistEnabled: checklist.tuA.checked && !((checklist.tuA.sistrons === 'mono') && (!checklist.tuA.fusion)),
         checklistLocked: true,
         categories: {
           'CDS': true
@@ -382,7 +389,7 @@ export default {
       },
       '10': {
         checklistEnabled: checklist.tuA.checked,
-        checklistLocked: true,
+        checklistLocked: false,
         categories: {
           '5-3 UTR': true,
           '5-3 LTR': true
@@ -396,10 +403,10 @@ export default {
         }
       },
       '12': {
-        checklistEnabled: true,
+        checklistEnabled: checklist.insulators,
         checklistLocked: false,
         categories: {
-          'insulator': true
+          'insulator': checklist.insulators
         }
       },
       '13': {
@@ -455,14 +462,14 @@ export default {
         checklistEnabled: checklist.tuB.checked,
         checklistLocked: true,
         categories: {
-          'p2A': true,
-          'peptide linker': true,
-          'IRES': true,
-          'protein tag': true
+          'p2A': (checklist.tuB.sistrons === 'bi') && (checklist.tuB.bisistron_type === 'p2A'),
+          'IRES': (checklist.tuB.sistrons === 'bi') && (checklist.tuB.bisistron_type === 'IRES'),
+          'protein tag': (checklist.tuB.sistrons === 'mono') && (!checklist.tuB.fusion),
+          'peptide linker': (checklist.tuB.sistrons === 'mono') && (checklist.tuB.fusion)
         }
       },
       '21': {
-        checklistEnabled: checklist.tuB.checked,
+        checklistEnabled: checklist.tuB.checked && !((checklist.tuB.sistrons === 'mono') && (!checklist.tuB.fusion)),
         checklistLocked: true,
         categories: {
           'CDS': true
@@ -476,10 +483,10 @@ export default {
         }
       },
       '23': {
-        checklistEnabled: true,
+        checklistEnabled: checklist.insulators,
         checklistLocked: false,
         categories: {
-          'insulator': true
+          'insulator': checklist.insulators
         }
       },
       '24': {

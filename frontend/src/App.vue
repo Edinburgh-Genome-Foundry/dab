@@ -31,7 +31,9 @@ export default {
 }
 </script>
 
-<style>
+<style lang='scss'>
+@import './assets/css/animate.css';
+
 #app {
   font-family: 'Raleway', 'Source Sans Pro',  Helvetica, Arial, sans-serif;
   font-size:16px;

@@ -1,64 +1,70 @@
 <template lang="pug">
-.part-slot(:class='{active}' v-if="checklistEnabled")
-  .name {{slotName}}
-  //- .line active: {{active}}
-  // .line <b>categories:</b>
-  // .line(v-for='value, label in categories' v-if='value', :key='label') {{label}}
+.part-slot(:class='[{inactive: !active}, zone]' v-show="checklistEnabled")
 
-  el-tooltip.tooltip(v-for='value, category in categories', v-if='value', :key='category',
-               effect="light", :content="category", :transition='null',
-               :enterable='false', transition='el-fade-in')
-    .icon(:class='{active}' v-bind:style="backgroundImageStyle(category)")
+  .slot-name {{slotName}}
 
-  // sdIcon(v-bind:iconSize="iconSize" v-bind:icons='categories')
+  transition(name='part-pop1' enter-active-class='animated flipInY')
+    .active-display(v-if='active')
+      .controls
+        i.el-icon-delete(@click="$emit('userDisable', slotName)" v-if='!checklistLocked')
+        i.animated.infinite.tada.el-icon-edit(@click="dialogVisible = true" v-if='selectedParts.length === 0')
+        i.tada.el-icon-edit(@click="dialogVisible = true" v-else)
+      .part-label(v-if='selectedParts.length > 0') {{selectedParts[0].dbName}}
+      .icons
+        el-tooltip.tooltip(v-for="value, category in categories", v-if='value', :key='category',
+                     effect="light", :content="category", :transition='null',
+                     :enterable='false', transition='el-fade-in')
+          .icon(v-bind:style="backgroundImageStyle(category)")
+      el-icon.center.delete(icon='delete', v-if='checklistEnabled && !checklistLocked',
+                       size='small', @click="$emit('userDisable', slotName)")
 
-  .line(v-if="myUserEnabled")
-    sdLock(v-on:click="changeLock" v-bind:expand='true')
-    .expand-select(v-if='selectVisible')
-      el-select(v-model='selectedParts'
-        filterable
-        multiple
-        placeholder="choose part"
-        v-on:visible-change="onSelectVisibleChange")
-        el-option(
-          v-for='item in allParts'
-          v-bind:key='item.dbId'
-          v-bind:label='item.dbName'
-          v-bind:value='item'
-          )
-      .center
-        el-button.expand-button(icon="minus"
-        size="mini"
-        type="danger"
-        v-on:click="selectVisible = !selectVisible")
-    .center(v-else)
-      .line(v-for='item in selectedParts')
-        span {{item.dbName}}
-        span.el-icon-delete.delete-button(
-          v-on:click="removeItem(item)"
-          v-bind:item="item"
-        )
+  transition(name='part-pop2' enter-active-class='animated rubberBand')
+    .inactive-display(v-if='!active')
+      .controls
+        i.el-icon-plus(@click="$emit('userEnable', slotName)")
+      .icons
+        .icon.active( v-bind:style="backgroundImageStyle('empty')")
+        el-tooltip.tooltip(v-for="value, category in categories", v-if='value', :key='category',
+                     effect="light", :content="category", :transition='null',
+                     :enterable='false', transition='el-fade-in')
+          .icon.inactive(v-bind:style="backgroundImageStyle(category)")
 
-      el-button.expand-button(
-        icon="plus"
-        size="mini"
-        type="primary"
-        v-on:click="selectVisible = !selectVisible")
+  el-dialog.part-selector(title="Select parts", :visible.sync="dialogVisible", size='large')
+    .show-selected
+      el-button.center(icon='arrow-right' @click='function () {showSelected = !showSelected}' v-if='!showSelected' size='small') Show selected ({{selectedParts.length}})
+      el-button.center(icon='arrow-down' @click='function () {showSelected = !showSelected}' v-if='showSelected' size='small') Hide selected ({{selectedParts.length}})
 
-
-  .line(v-else)
-    sdLock(v-on:click="changeLock" v-bind:expand='false')
+      .parts(v-if='showSelected')
+        partcard(v-for='part in selectedParts', :key='part.dbName', :selected='true', :part='part',
+                 @deselectPart='deselectPart')
+    el-input.search-box(v-model='search', placeholder='Enter a search term' v-if='categoryFilteredParts.length > 4')
+    .parts
+      partcard(v-for='part in searchFilteredParts', :key='part.dbName', :selected='partIsSelected(part)', :part='part',
+              @selectPart='selectPart', @deselectPart='deselectPart')
+        //- .part_header(slot='header')
+        //-   span(v-if='partIsSelected(part)')
+        //-     i.select-part.el-icon-delete(@click='deselectPart(part)')
+        //-     p.part-name {{part.dbName}} (selected)
+        //-   span(v-else)
+        //-     i.select-part.el-icon-plus(@click='selectPart(part)')
+        //-     p.part-name {{part.dbName}}
+        //-
+        //-   a.database-link(:href="'https://ice.dev.genomefoundry.org/ICE-REST/rest/entries/genbank/' + part.dbId") <i class="el-icon-document"></i> genbank
+        //-   a.database-link(:href="'https://ice.dev.genomefoundry.org/entry/' + part.dbId") <i class="el-icon-share"></i> ICE page
+        //- p(v-if='part.dbDescription') <b>Description:</b> {{part.dbDescription}}
 </template>
 
 <script>
 let globalSetting = require('../../setting.js')
+import partcard from './PartCard'
 export default {
   props: {
     slotName: {default: '1'}, // The slot is of the form '1', '2', '8A', '8B', etc.
     checklistEnabled: {default: true}, // If not active, will be smaller, greyer, no inputs
     checklistLocked: {default: false}, // Locked means you can't add or remove a block
     userEnabled: {default: true}, // If not active, will be smaller, greyer, no inputs
-    categories: {default: () => ({})} // categories of parts filtered in the dropdown
+    categories: {default: () => ({})}, // categories of parts filtered in the dropdown
+    zone: {default: 'nozone'}
   },
   data: function () {
     return {
@@ -66,33 +72,38 @@ export default {
       allParts: [],
       myUserEnabled: this.userEnabled,
       selectVisible: false,
+      dialogVisible: false,
+      search: '',
+      showSelected: false
     }
+  },
+  components: {
+    partcard
   },
   computed: {
     active: function () {
-      return this.checklistEnabled && (this.ckecklistLocked || this.myUserEnabled)
+      return this.checklistEnabled && (this.ckecklistLocked || this.userEnabled)
     },
     selectStyle: function () {
       if (this.selectVisible) return {display: 'inline-block'}
       else return {display: 'none'}
     },
-
-    filteredParts: function () {
-      let ret = []
-      for (let part in this.allParts) {
-        // if (this.categories[part.dbType]) {
-        ret.append(part)
-        // }
-      }
-      return ret
+    categoryFilteredParts: function () {
+      var self = this
+      return this.allParts.filter(function (part) {
+        return self.categories[part.dbType]
+      })
     },
-
-    iconSize: function () {
-      if (this.checklistEnabled) {
-        return 48
-      } else {
-        return 32
+    searchFilteredParts: function () {
+      if (this.search === '') {
+        return this.categoryFilteredParts
       }
+      var self = this
+      return self.categoryFilteredParts.filter(function (part) {
+        return [part.dbName, part.dbDescription].some(function (txt) {
+          return txt.toLowerCase().indexOf(self.search.toLowerCase()) >= 0
+        })
+      })
     }
   },
   mounted: function () {
@@ -101,7 +112,7 @@ export default {
       iceUrl + 'entries/filterlist',
       {
         filter: JSON.stringify({
-          type: 'part',
+          type: 'N/A',
           position: this.slotName,
         }),
         fields: '{"matchScore","dbDescription","dbName","dbId","type","position"}',
@@ -124,57 +135,155 @@ export default {
       this.selectedParts.splice(this.selectedParts.indexOf(item), 1)
     },
     backgroundImageStyle: function (category) {
-      console.log('cat', category)
       return {
         'background-image': 'url(/static/sbol-icons/' + category.split(' ').join('-') + '.svg)'
       }
     },
-  },
-
-  components: {
-    sdIcon: require('./SequenceDesignerIcon.vue'),
-    sdLock: require('./SequenceDesignerLock.vue'),
-  },
+    selectPart: function (part) {
+      if (!this.partIsSelected(part)) {
+        this.selectedParts.push(part)
+      }
+    },
+    deselectPart: function (part) {
+      var index = this.selectedParts.indexOf(part)
+      this.selectedParts.splice(index, 1)
+    },
+    partIsSelected: function (part) {
+      return this.selectedParts.some(function (p) { return p === part })
+    }
+  }
 }
 </script>
 <style lang='scss' scoped>
-.name {
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 10px;
-}
-.part-slot {
-  display: inline-block;
-  // padding: 10px;
-  // margin: 10px;
-  margin-bottom: 20px;
-  width: 100px;
-  // height: 200px;
 
-  vertical-align: text-top;
-  .line {
-    margin:0;
-    font-size: 10px;
-    .selectable-part {
-      font-size: 10px;
-      display:inline-block;
-      max-width:80%;
-      cursor: pointer;
-      &:hover {
-          background: rgba(0,0,128,0.25);
-        }
-    }
-    .check-mark {
-      display:inline-block;
-      font-size:200%;
-      color:darkgreen;
-      margin-left:5px;
+$linecolor: #ccc;
+$linestyle: 2px dashed;
+$colors: (
+    tuA: #f6faff,
+    tuB: #f4fefa,
+    selection-marker: #fff5ff
+);
+@each $zone in tuA, tuB, selection-marker {
+  .#{$zone} + .#{$zone} {
+    border-right: 0;
+    border-left: 0;
+  }
+
+  .#{$zone} {
+    border-right: #{$linestyle} #{$linecolor};
+    border-left: #{$linestyle} #{$linecolor};
+
+    .icons {
+      background-color: map-get($colors, $zone);
     }
   }
-  // background-color: #ddd;
+  .none + .#{$zone}, .selection-marker + .#{$zone}  { border-right: 0;}
+  .#{$zone} + .none { border-left: #{$linestyle} #{$linecolor}};
 }
-.part-slot.active {
-  // background-color: #ccf;
+
+
+.part-slot {
+  &.inactive {
+    max-width:2em;
+    min-width: 1em;
+    .slot-name {
+      opacity: 0
+    }
+    .controls i {
+      position: relative;
+      display: inline-block;
+      color: #bbb;
+      top: 5.3em;
+      cursor: pointer;
+      z-index: 1000;
+    }
+
+  }
+  .slot-name {
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+    color: #ddd;
+    height: 10px;
+  }
+  .controls {
+    text-align: center;
+    i {
+      font-size: 0.8em;
+      margin-left: 0.2em;
+      color: #888;
+      cursor: pointer;
+    }
+    margin-bottom: 1em;
+  }
+  .part-label {
+    position: relative;
+    top: -0.6em;
+    font-size: 0.8em;
+    text-align: center;
+    height: 0;
+    padding-left: 1em;
+    padding-right: 1em;
+
+  }
+  height:10em;
+  display: inline-block;
+  margin-bottom: 2em;
+  margin-top: 1em;
+  min-width: 5em;
+  max-width: 10em;
+
+  vertical-align: text-top;
+
+  .icons {
+    position: relative;
+    height: 4em;
+    width: 100%;
+    top: 2.1em;
+    .icon {
+        background-size: auto 130%;
+        background-repeat: no-repeat;
+        background-position: 50% 50%;
+        width: 100%;
+        height: 2.8em;
+        margin-bottom: -0.7em;
+        &:not(:first-child) {
+          width: 70%;
+          margin-left: 15%;
+        }
+      &.inactive{
+        height: 0.8em;
+        margin-bottom: -0.3em;
+        margin-top:0px;
+        filter: grayscale(100%);
+      }
+    }
+  }
+  .part-selector {
+
+    .parts {
+      max-height: 40em;
+      overflow-y: auto;
+    }
+    .search-box {
+      width: 80%;
+      margin: 0 10% 2em;
+    }
+    .show-selected {
+
+      margin-top: -4em;
+      margin-bottom: 4em;
+
+      /deep/.el-button {
+        font-size: 0.7em;
+        border: none;
+        font-size: 1.2em;
+      }
+    }
+  }
+
+
+
 }
 
 .expand-select
@@ -201,24 +310,6 @@ export default {
     color:red;
   }
 }
-.icon {
-    background-size: auto 150%;
-    background-repeat: no-repeat;
-    background-position: 50% 50%;
-    width: 100%;
-    height: 30px;
-    margin-top: 20px;
-    &:not(:first-child) {
-      width: 100%;
-      margin-left: 0%;
-    }
-    filter: grayscale(100%);
 
-  }
-  .icon.active{
-      height: 50px;
-      margin-top:0px;
-      filter: grayscale(0%);
-  }
 
 </style>

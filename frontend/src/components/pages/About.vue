@@ -50,12 +50,9 @@ export default {
     }
     .mini-part-slot {
       height: 3em;
+      font-family: 'Inconsolata', Courier;
     }
     .overhang .slot-name {
-        font-family: 'Inconsolata', Courier;
-        margin-top: 30%;
-        margin-bottom: -38.5%;
-        font-size: 14px;
         color: #000;
       }
     }
