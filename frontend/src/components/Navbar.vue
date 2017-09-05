@@ -76,6 +76,11 @@ export default {
           this.userSettings.token = result.body.data.token
           this.userSettings.lastLogin = new Date()
           window.localStorage.setItem('emmaSettings', JSON.stringify(this.userSettings))
+          var parentUrl = location.hostname.split('.').slice(1).join('.')
+          document.cookie = 'sessionId="' + this.userSettings.token +
+          '"; domain=' + parentUrl
+          document.cookie = 'userId="' + this.userSettings.username +
+          '"; domain=' + parentUrl
           this.password = ''
           this.loginMessage = ''
           this.showLoginDialog = false
@@ -95,6 +100,9 @@ export default {
       this.userSettings.username = ''
       this.userSettings.token = ''
       window.localStorage.setItem('emmaSettings', JSON.stringify(this.userSettings))
+      var url = location.hostname.split('.').slice(1).join('.')
+      document.cookie = 'sessionId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + url
+      document.cookie = 'userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + url
     },
     getVisitorToken: function () {
       this.$http.post(
@@ -111,6 +119,10 @@ export default {
           if (!this.userSettings) this.userSettings = {}
           this.userSettings.visitorToken = result.body.data.token
           window.localStorage.setItem('emmaSettings', JSON.stringify(this.userSettings))
+          var parentUrl = location.hostname.split('.').slice(1).join('.')
+          document.cookie = 'sessionId="' + this.userSettings.visitorToken +
+          '"; domain=' + parentUrl
+          document.cookie = 'userId="visitor"; domain=' + parentUrl
         } else {
           this.loginMessage = 'unable get visitor token' + result.status
         }
