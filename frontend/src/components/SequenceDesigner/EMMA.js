@@ -1,5 +1,15 @@
 export default {
   slotNames: '1 2 3 4 5 6 7 8 8a 8b 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25'.split(' '),
+  overhangs: [
+    'ACGA', 'ACTG', 'AGCG', 'AGGC', 'ATCC', 'ATGG', 'CACG', 'CAGC', 'CCAG',
+    'CCCT', 'CGAA', 'CGGT', 'CGTC', 'CTAC', 'GACT', 'GCAA', 'GCGT', 'GCTC',
+    'GGAC', 'GGTA', 'GTGC', 'GTTG', 'TAGG', 'TCAC', 'TCCG', 'TGCT', 'TGGA'],
+  compatibleOverhangs: [
+    'AACC', 'AACG', 'AAGC', 'AAGG', 'ACAC', 'ACAG', 'ACCA', 'ACTC', 'AGAC',
+    'AGAG', 'AGGA', 'AGGT', 'AGTG', 'ATCG', 'ATGC', 'CAAG', 'GAAC', 'GAAG',
+    'GATG', 'TACG', 'TAGC', 'TCAG', 'TCTC', 'TCTG', 'TGAC', 'TGAG', 'TGTC',
+    'TGTG', 'TTCC', 'TTGG'
+  ],
   slotInfos: {
     '1': {
       zone: ['none'],
@@ -282,6 +292,218 @@ export default {
       categories: [
         'origin of replication'
       ]
+    }
+  },
+  computeChecklistData: function (checklist) {
+    return {
+      '1': {
+        checklistEnabled: true,
+        checklistLocked: checklist.homologyArms,
+        categories: {
+          '5-3 homology arm': checklist.homologyArms,
+          '5-3 ITR': !checklist.homologyArms,
+          '5-3 LTR': !checklist.homologyArms,
+          'recombinase recognition sequence': (!checklist.homologyArms && checklist.recombinationSites)
+        }
+      },
+      '2': {
+        checklistEnabled: checklist.recombinationSites || checklist.insulators,
+        checklistLocked: false,
+        categories: {
+          'insulator': checklist.insulators,
+          'recombinase recognition sequence': checklist.recombinationSites
+        }
+      },
+      '3': {
+        checklistEnabled: checklist.tuA.checked,
+        checklistLocked: true,
+        categories: {
+          'promoter': true
+        }
+      },
+      '4': {
+        checklistEnabled: checklist.tuA.checked,
+        checklistLocked: false,
+        categories: {
+          'RNA stability sequence': true,
+          'DNA binding element': true,
+        }
+      },
+      '5': {
+        checklistEnabled: checklist.tuA.checked,
+        checklistLocked: false,
+        categories: {
+          '5-3 UTR': true
+        }
+      },
+      '6': {
+        checklistEnabled: checklist.tuA.checked,
+        checklistLocked: true,
+        categories: {
+          'kozak-ATG': true,
+          'protein tag': true,
+        }
+      },
+      '7': {
+        checklistEnabled: checklist.tuA.checked,
+        checklistLocked: true,
+        categories: {
+          'CDS': true
+        }
+      },
+      '8': {
+        checklistEnabled: checklist.tuA.checked &&
+          (((checklist.tuA.sistrons === 'mono') && (checklist.tuA.fusion)) ||
+          ((checklist.tuA.sistrons === 'bi') && (checklist.tuA.bisistron_type === 'p2A'))),
+        checklistLocked: true,
+        categories: {
+          'p2A': (checklist.tuA.sistrons === 'bi') && (checklist.tuA.bisistron_type === 'p2A'),
+          'peptide linker': (checklist.tuA.sistrons === 'mono') && (checklist.tuA.fusion)
+        }
+      },
+      '8a': {
+        checklistEnabled: checklist.tuA.checked &&
+          ((checklist.tuA.sistrons === 'mono') && (!checklist.tuA.fusion)) ||
+          ((checklist.tuA.sistrons === 'bi') && (checklist.tuA.bisistron_type === 'IRES')),
+
+        checklistLocked: true,
+        categories: {
+          'protein tag': true
+        }
+      },
+      '8b': {
+        checklistEnabled: checklist.tuA.checked &&
+                          (checklist.tuA.sistrons === 'bi') &&
+                          (checklist.tuA.bisistron_type === 'IRES'),
+        checklistLocked: true,
+        categories: {
+          'IRES': true
+        }
+      },
+      '9': {
+        checklistEnabled: checklist.tuA.checked && !((checklist.tuA.sistrons === 'mono') && (!checklist.tuA.fusion)),
+        checklistLocked: true,
+        categories: {
+          'CDS': true
+        }
+      },
+      '10': {
+        checklistEnabled: checklist.tuA.checked,
+        checklistLocked: false,
+        categories: {
+          '5-3 UTR': true,
+          '5-3 LTR': true
+        }
+      },
+      '11': {
+        checklistEnabled: checklist.tuA.checked,
+        checklistLocked: true,
+        categories: {
+          'terminator': true
+        }
+      },
+      '12': {
+        checklistEnabled: checklist.insulators,
+        checklistLocked: false,
+        categories: {
+          'insulator': checklist.insulators
+        }
+      },
+      '13': {
+        checklistEnabled: checklist.recombinationSites,
+        checklistLocked: false,
+        categories: {
+          'recombinase recognition sequence': checklist.recombinationSites
+        }
+      },
+      '14': {
+        checklistEnabled: checklist.selectionMarker,
+        checklistLocked: true,
+        categories: {
+          'promoter': true
+        }
+      },
+      '15': {
+        checklistEnabled: checklist.selectionMarker,
+        checklistLocked: true,
+        categories: {
+          'CDS': true
+        }
+      },
+      '16': {
+        checklistEnabled: checklist.selectionMarker,
+        checklistLocked: true,
+        categories: {
+          'terminator': true
+        }
+      },
+      '17': {
+        checklistEnabled: checklist.recombinationSites,
+        checklistLocked: false,
+        categories: {
+          'recombinase recognition sequence': checklist.recombinationSites
+        }
+      },
+      '18': {
+        checklistEnabled: checklist.tuB.checked,
+        checklistLocked: true,
+        categories: {
+          'promoter': true
+        }
+      },
+      '19': {
+        checklistEnabled: checklist.tuB.checked,
+        checklistLocked: true,
+        categories: {
+          'CDS': true
+        }
+      },
+      '20': {
+        checklistEnabled: checklist.tuB.checked,
+        checklistLocked: true,
+        categories: {
+          'p2A': (checklist.tuB.sistrons === 'bi') && (checklist.tuB.bisistron_type === 'p2A'),
+          'IRES': (checklist.tuB.sistrons === 'bi') && (checklist.tuB.bisistron_type === 'IRES'),
+          'protein tag': (checklist.tuB.sistrons === 'mono') && (!checklist.tuB.fusion),
+          'peptide linker': (checklist.tuB.sistrons === 'mono') && (checklist.tuB.fusion)
+        }
+      },
+      '21': {
+        checklistEnabled: checklist.tuB.checked && !((checklist.tuB.sistrons === 'mono') && (!checklist.tuB.fusion)),
+        checklistLocked: true,
+        categories: {
+          'CDS': true
+        }
+      },
+      '22': {
+        checklistEnabled: checklist.tuB.checked,
+        checklistLocked: true,
+        categories: {
+          'terminator': true
+        }
+      },
+      '23': {
+        checklistEnabled: checklist.insulators,
+        checklistLocked: false,
+        categories: {
+          'insulator': checklist.insulators
+        }
+      },
+      '24': {
+        checklistEnabled: (checklist.homologyArms || checklist.recombinationSites),
+        checklistLocked: true,
+        categories: {
+          '5-3 homology arm': checklist.homologyArms,
+          'recombinase recognition sequence': checklist.recombinationSites
+        }
+      },
+      '25': {
+        checklistEnabled: checklist.replicationOrigin,
+        checklistLocked: false,
+        categories: {
+          'origin of replication': true
+        }
+      }
     }
   }
 }

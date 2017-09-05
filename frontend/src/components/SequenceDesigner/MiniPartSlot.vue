@@ -44,7 +44,13 @@ export default {
   .slot-name {
     font-weight: bold;
     text-align: center;
-    margin-bottom: 1em;
+
+  }
+  .icons {
+    margin-top: 1em;
+    position: relative;
+    top: 0em;
+
   }
   .icon {
     background-size: auto 150%;

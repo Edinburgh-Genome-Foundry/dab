@@ -1,7 +1,7 @@
 <template lang="pug">
 div
   h1  {{ infos.title }}
-  img.icon.center-block(slot='title-img', :src='infos.icon')
+  //- img.icon.center-block(slot='title-img', :src='infos.icon')
   sequencedesigner
   //-
   //- .form
