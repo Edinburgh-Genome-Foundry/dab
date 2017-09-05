@@ -20,7 +20,8 @@ div
       span password
       el-input(v-model='password' type='password')
     p(v-if='loginMessage') {{loginMessage}}
-    el-button.center(type='primary' @click='tryLogin') submit
+    div.center
+      el-button(type='primary' @click='tryLogin') submit
 
 </template>
 
@@ -41,6 +42,13 @@ export default {
   computed: {
     isLogin: function () {
       return this.userSettings && this.userSettings.token
+    },
+    currentToken: function () {
+      if (this.username && this.userSettings.token) {
+        return this.userSettings.token
+      } else {
+        return this.userSettings.visitorToken
+      }
     }
   },
   methods: {
@@ -71,6 +79,7 @@ export default {
           this.password = ''
           this.loginMessage = ''
           this.showLoginDialog = false
+          console.log('logged in')
         } else {
           this.passwrod = ''
           this.loginMessage = 'bad password' + result.status
@@ -85,17 +94,36 @@ export default {
     tryLogout: function (event) {
       this.userSettings.username = ''
       this.userSettings.token = ''
-      window.emmaToken = undefined
       window.localStorage.setItem('emmaSettings', JSON.stringify(this.userSettings))
-    }
+    },
+    getVisitorToken: function () {
+      this.$http.post(
+        globalSettings.AUTH_URL,
+        {},
+        {
+          headers: {
+            Authorization: 'Basic ' + btoa(globalSettings.ANONYMOUS_USERNAME + ':' + globalSettings.ANONYMOUS_PASSWORD)
+          },
+          emulateJSON: true,
+        },
+      ).then((result) => {
+        if (result.status === 200) {
+          if (!this.userSettings) this.userSettings = {}
+          this.userSettings.visitorToken = result.body.data.token
+          window.localStorage.setItem('emmaSettings', JSON.stringify(this.userSettings))
+        } else {
+          this.loginMessage = 'unable get visitor token' + result.status
+        }
+      })
+    },
   },
   created: function () {
+    this.getVisitorToken()
     // verify if login information is expired
     if (this.userSettings && this.userSettings.lastLogin) {
       let lastLoginPast = (new Date()) - new Date(this.userSettings.lastLogin)
       if (lastLoginPast > 604800000) {
-        this.userSettings = {}
-        window.emmaToken = undefined
+        this.userSettings.token = undefined
         window.localStorage.setItem('emmaSettings', JSON.stringify(this.userSettings))
       } else {
         this.$http.post(
@@ -108,10 +136,8 @@ export default {
           },
         ).then((result) => {
           console.log('token verified')
-          window.emmaToken = this.userSettings.token
         }, (result) => {
-          this.userSettings = {}
-          window.emmaToken = undefined
+          this.userSettings.token = undefined
           window.localStorage.setItem('emmaSettings', JSON.stringify(this.userSettings))
         })
       }
