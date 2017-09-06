@@ -72,7 +72,7 @@ export default {
         console.log(result)
         if (result.status === 200) {
           if (!this.userSettings) this.userSettings = {}
-          this.userSettings.username = this.username
+          this.$set(this.userSettings, 'username', this.username)
           this.userSettings.token = result.body.data.token
           this.userSettings.lastLogin = new Date()
           window.localStorage.setItem('emmaSettings', JSON.stringify(this.userSettings))
