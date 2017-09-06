@@ -14,7 +14,7 @@
         el-tooltip.tooltip(v-for="value, category in categories", v-if='value', :key='category',
                      effect="light", :content="category", :transition='null',
                      :enterable='false', transition='el-fade-in')
-          .icon(v-bind:style="backgroundImageStyle(category)")
+          .icon(v-bind:style="backgroundImageStyle(category)", @click="dialogVisible = true")
       el-icon.center.delete(icon='delete', v-if='checklistEnabled && !checklistLocked',
                        size='small', @click="$emit('userDisable', slotName)")
 
@@ -23,7 +23,7 @@
       .controls
         i.el-icon-plus(@click="$emit('userEnable', slotName)")
       .icons
-        .icon.active( v-bind:style="backgroundImageStyle('empty')")
+        .icon.active(v-bind:style="backgroundImageStyle('empty')")
         el-tooltip.tooltip(v-for="value, category in categories", v-if='value', :key='category',
                      effect="light", :content="category", :transition='null',
                      :enterable='false', transition='el-fade-in')
@@ -64,13 +64,12 @@ export default {
     checklistLocked: {default: false}, // Locked means you can't add or remove a block
     userEnabled: {default: true}, // If not active, will be smaller, greyer, no inputs
     categories: {default: () => ({})}, // categories of parts filtered in the dropdown
-    zone: {default: 'nozone'}
+    zone: {default: 'nozone'},
+    selectedParts: {default: () => ([])}
   },
   data: function () {
     return {
-      selectedParts: [], // will contain the selected parts
       allParts: [],
-      myUserEnabled: this.userEnabled,
       selectVisible: false,
       dialogVisible: false,
       search: '',
@@ -126,7 +125,7 @@ export default {
   },
   methods: {
     changeLock: function (event) {
-      this.myUserEnabled = !this.myUserEnabled
+      this.$emit('update:userEnabled', !this.userEnabled)
     },
     onSelectVisibleChange: function (visible) {
       this.selectVisible = visible

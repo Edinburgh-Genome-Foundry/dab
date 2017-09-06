@@ -2,13 +2,6 @@
 .designer
 
   .features
-    //- h3 Features
-    //- .super-mini-schema.center
-    //-   minipartslot(v-for='slotName in slotNames', :zone='slotInfos[slotName].zone', :key='slotName',
-    //-                v-if='computedSlotsData[slotName].checklistEnabled',
-    //-                :disabled='!computedSlotsData[slotName].userEnabled', :size='10',
-    //-                :categories='slotInfos[slotName].categories.filter((c) => computedSlotsData[slotName].categories[c])',
-    //-                :slotName='slotName')
     .div
       el-checkbox(v-model='checklist.selectionMarker') Selection marker
       el-checkbox(v-model='checklist.homologyArms') Homology arms
@@ -46,12 +39,13 @@
     partslot(v-for='slotName in slotNames',
              :key='slotName',
              :slotName='slotName',
-             :checklistEnabled='computedSlotsData[slotName].checklistEnabled',
-             :userEnabled='computedSlotsData[slotName].userEnabled',
-             :checklistLocked='computedSlotsData[slotName].checklistLocked',
-             :categories='computedSlotsData[slotName].categories',
-             :zone= 'computedSlotsData[slotName].zone'
-             @userEnable='userEnable', @userDisable='userDisable',  @select='selectParts')
+             :checklistEnabled='slotsData[slotName].checklistEnabled',
+             :userEnabled.sync='slotsData[slotName].userEnabled',
+             :selectedParts.sync='slotsData[slotName].selectedParts',
+             :checklistLocked='slotsData[slotName].checklistLocked',
+             :categories='slotsData[slotName].categories',
+             :zone= 'slotsData[slotName].zone'
+             @userEnable='userEnable', @userDisable='userDisable')
 </template>
 
 <script>
@@ -59,15 +53,10 @@ import partslot from './PartSlot'
 import emma from './EMMA'
 import minipartslot from './MiniPartSlot'
 export default {
+  props: {
+    value: {default: () => ({})}
+  },
   data: function () {
-    var slotsData = {}
-    emma.slotNames.map(function (slotName) {
-      slotsData[slotName] = {
-        userEnabled: true,
-        selectedParts: [],
-        zone: emma.slotInfos[slotName].zone[0]
-      }
-    })
     return {
       checklist: {
         homologyArms: true,
@@ -90,7 +79,7 @@ export default {
       },
       slotNames: emma.slotNames,
       slotInfos: emma.slotInfos,
-      slotsData: slotsData
+      slotsData: this.value
     }
   },
   components: {
@@ -98,29 +87,44 @@ export default {
     minipartslot
   },
   methods: {
-    selectParts: function (evt) {
-    },
+    // selectParts: function (slotName, val) {
+    //   this.$set(this.slotsData[slotName], 'userEnabled', true)
+    // },
     userEnable: function (slotName) {
       this.$set(this.slotsData[slotName], 'userEnabled', true)
     },
     userDisable: function (slotName) {
       this.$set(this.slotsData[slotName], 'userEnabled', false)
     },
-
-  },
-  computed: {
-    computedSlotsData: function () {
+    updateChecklistSlotData: function () {
       var checklistData = emma.computeChecklistData(this.checklist)
-
       var results = {}
       for (var i = 0; i < this.slotNames.length; i++) {
         var key = this.slotNames[i]
-
         if (checklistData[key]) {
-          results[key] = Object.assign(checklistData[key], this.slotsData[key])
+          results[key] = Object.assign({}, this.slotsData[key], checklistData[key])
         }
       }
-      return results
+      this.slotsData = results
+    }
+  },
+  computed: {
+  },
+  mounted: function () {
+    this.updateChecklistSlotData()
+  },
+  watch: {
+    slotsData: {
+      deep: true,
+      handler: function (newval) {
+        this.$emit('input', this.slotsData)
+      }
+    },
+    checklist: {
+      deep: true,
+      handler: function (newval) {
+        this.updateChecklistSlotData()
+      }
     }
   }
 }
