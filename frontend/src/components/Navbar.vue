@@ -9,8 +9,10 @@ div
       template(slot='title') Scenarios
       el-menu-item(v-for='scenario in scenarios', :index="scenario.infos.path") {{scenario.infos.navbarTitle}}
     el-menu-item(index='about') About
-    li.el-menu-item(type="text" v-if="isLogin" @click="tryLogout") Logout ({{this.userSettings.username}})
-    li.el-menu-item(type="text" v-else @click='showLoginDialog = true') Login
+    li.el-menu-item-x(type="text" v-if="isLogin") welcome, {{this.userSettings.username}}
+      el-button(type="primary" size="mini" style="marginLeft:20px" @click="tryLogout") logout
+    div.el-menu-item-x(type="text" v-else ) welcome, Visitor
+      el-button(type="primary" size="mini" style="marginLeft:20px" @click='showLoginDialog = true') login
 
   el-dialog(v-bind:visible.sync='showLoginDialog' size='tiny')
     p
@@ -187,5 +189,18 @@ export default {
 
 .logo img {
   height:140%;
+}
+.el-menu-item-x {
+    font-size: 14px;
+    color: #48576a;
+    padding: 0 20px;
+    float: left;
+    height: 60px;
+    line-height: 60px;
+    margin: 0;
+    cursor: pointer;
+    position: relative;
+    box-sizing: border-box;
+    border-bottom: 5px solid transparent;
 }
 </style>
