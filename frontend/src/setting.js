@@ -1,6 +1,6 @@
 module.exports = {
-  'ICE_URL': '//ice.dev.genomefoundry.org/ICE-REST/rest/',
-  'AUTH_URL': 'https://ice.dev.genomefoundry.org/ICE-REST/rest/session/EMMA',
+  'ICE_URL': '//emmadb.genomefoundry.org/ICE-REST/rest/',
+  'AUTH_URL': 'https://emmadb.genomefoundry.org/ICE-REST/rest/session/EMMA',
   'ANONYMOUS_USERNAME': 'visitor',
   'ANONYMOUS_PASSWORD': 'visitor',
 }

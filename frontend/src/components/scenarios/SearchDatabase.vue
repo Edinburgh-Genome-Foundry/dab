@@ -24,8 +24,8 @@
       el-card.part-card(v-for='part in selectedParts', :key='part.dbName')
         .part_header(slot='header')
           p.part-name {{part.dbName}}
-          a.database-link(:href="'https://ice.dev.genomefoundry.org/ICE-REST/rest/entries/genbank/' + part.dbId") <i class="el-icon-document"></i> genbank
-          a.database-link(:href="'https://ice.dev.genomefoundry.org/entry/' + part.dbId") <i class="el-icon-share"></i> ICE page
+          a.database-link(:href="'https://emmadb.genomefoundry.org/ICE-REST/rest/entries/genbank/' + part.dbId") <i class="el-icon-document"></i> genbank
+          a.database-link(:href="'https://emmadb.genomefoundry.org/entry/' + part.dbId") <i class="el-icon-share"></i> ICE page
 
         p(v-if='part.dbDescription') <b>Description:</b> {{part.dbDescription}}
     el-alert(v-if='queryError', type='error', title='', show-icon) {{queryError.body.error}}
