@@ -2,14 +2,14 @@
 div
   h1  {{ infos.title }}
   //- img.icon.center-block(slot='title-img', :src='infos.icon')
-  sequencedesigner
+  sequencedesigner(v-model='slotsData')
   el-button.center(type='primary', :disabled='emptySlots') {{ emptySlots ? 'Some slots are empty' : 'Get sequence(s)' }}
 </template>
 
 <script>
 import learnmore from '../widgets/LearnMore'
 import sequencedesigner from '../SequenceDesigner/SequenceDesigner'
-
+import emma from '../SequenceDesigner/EMMA'
 var infos = {
   title: 'Design constructs',
   navbarTitle: 'Design constructs',
@@ -20,8 +20,17 @@ var infos = {
 
 export default {
   data: function () {
+    var slotsData = {}
+    emma.slotNames.map(function (slotName) {
+      slotsData[slotName] = {
+        userEnabled: true,
+        selectedParts: [],
+        zone: emma.slotInfos[slotName].zone[0]
+      }
+    })
     return {
       infos: infos,
+      slotsData: slotsData,
       form: {
       },
       queryStatus: {
@@ -43,7 +52,10 @@ export default {
   },
   computed: {
     emptySlots: function () {
-      return true
+      return Object.values(this.slotsData).some(function (slot) {
+        return ((slot.selectedParts.length === 0) && slot.checklistEnabled &&
+                (slot.userEnabled || slot.checklistLocked))
+      })
     }
   },
   components: {

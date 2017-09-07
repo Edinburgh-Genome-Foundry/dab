@@ -1,7 +1,6 @@
 <template lang='pug'>
 .about-emma
   h1  About EMMA
-  p bla bla bla
 
   h2 Overhangs
 
@@ -19,7 +18,9 @@
   el-card(header='EMMA- and Inter-compatible overhangs').overhangs-list
     .overhang-seq(v-for='seq in emma.compatibleOverhangs') {{seq}}&nbsp
 
-
+  h2 Part categories
+  .part-categories
+    .part-category(v-for='category in partCategories.sort()' key='category') {{category}}
 </template>
 
 <script>
@@ -27,8 +28,17 @@ import emma from '../SequenceDesigner/EMMA.js'
 import minipartslot from '../SequenceDesigner/MiniPartSlot'
 export default {
   data: function () {
+    var partCategories = []
+    Object.values(emma.slotInfos).map(function (part) {
+      part.categories.map(function (category) {
+        if (partCategories.indexOf(category) < 0) {
+          partCategories.push(category)
+        }
+      })
+    })
     return {
-      emma: emma
+      emma: emma,
+      partCategories: partCategories
     }
   },
   components: {
@@ -69,6 +79,18 @@ export default {
     }
   }
 
+}
+
+.part-categories {
+  width: 80%;
+  margin-left: 10%;
+  .part-category {
+    display: inline;
+    font-family: 'Inconsolata', Courier;
+  }
+  .part-category ~ .part-category:before {
+    content: ', '
+  }
 }
 
 </style>
