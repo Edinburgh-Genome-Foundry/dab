@@ -103,6 +103,10 @@ export default {
       var url = location.hostname.split('.').slice(1).join('.')
       document.cookie = 'sessionId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + url
       document.cookie = 'userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + url
+      var parentUrl = location.hostname.split('.').slice(1).join('.')
+      document.cookie = 'sessionId="' + this.userSettings.visitorToken +
+      '"; domain=' + parentUrl
+      document.cookie = 'userId="visitor"; domain=' + parentUrl
     },
     getVisitorToken: function () {
       this.$http.post(
