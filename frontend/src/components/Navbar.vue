@@ -9,10 +9,10 @@ div
       template(slot='title') Scenarios
       el-menu-item(v-for='scenario in scenarios', :index="scenario.infos.path") {{scenario.infos.navbarTitle}}
     el-menu-item(index='about') About
-    li.el-menu-item-x(type="text" v-if="isLogin") welcome, {{this.userSettings.username}}
-      el-button(type="primary" size="mini" style="marginLeft:20px" @click="tryLogout") logout
-    div.el-menu-item-x(type="text" v-else ) welcome, Visitor
-      el-button(type="primary" size="mini" style="marginLeft:20px" @click='showLoginDialog = true') login
+    li.el-menu-item-x(type="text" v-if="isLogin") Welcome, {{this.userSettings.username}}
+      a(type="text" size="mini" style="color:#20a0ff; marginLeft:20px" @click="tryLogout") Logout
+    div.el-menu-item-x(type="text" v-else ) Welcome, Visitor
+      a(type="text" size="mini" style="color:#20a0ff; marginLeft:20px" @click='showLoginDialog = true') Login
 
   el-dialog(v-bind:visible.sync='showLoginDialog' size='tiny')
     p
