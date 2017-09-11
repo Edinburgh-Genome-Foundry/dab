@@ -17,9 +17,7 @@
 
   el-card(header='EMMA- and Inter-compatible overhangs').overhangs-list
     .overhang-seq(v-for='seq in emma.compatibleOverhangs', :key='seq') {{seq}}&nbsp
-  //- h2 Part categories
-  //- .part-categories
-  //-   .part-category(v-for='category in partCategories.sort()', key='category') {{category}}
+
 </template>
 
 <script>
@@ -27,19 +25,8 @@ import emma from '../SequenceDesigner/EMMA.js'
 import minipartslot from '../SequenceDesigner/MiniPartSlot'
 export default {
   data: function () {
-    // var partCategories = []
-    //- Object.values(emma.slotInfos).forEach(function (part) {
-    //-   console.log(part)
-    //-   part.categories.forEach(function (category) {
-    //-     console.log(category)
-    //-     if (partCategories.indexOf(category) < 0) {
-    //-       partCategories.push(category)
-    //-     }
-    //-   })
-    //- })
     return {
       emma: emma,
-      // partCategories: partCategories
     }
   },
   components: {
