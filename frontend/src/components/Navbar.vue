@@ -79,10 +79,8 @@ export default {
           this.userSettings.lastLogin = new Date()
           window.localStorage.setItem('emmaSettings', JSON.stringify(this.userSettings))
           var parentUrl = location.hostname.split('.').slice(1).join('.')
-          document.cookie = 'sessionId="' + this.userSettings.token +
-          '"; domain=' + parentUrl
-          document.cookie = 'userId="' + this.userSettings.username +
-          '"; domain=' + parentUrl
+          document.cookie = 'sessionId="' + this.userSettings.token + '"; domain=' + parentUrl
+          document.cookie = 'userId="' + this.userSettings.username + '"; domain=' + parentUrl
           this.password = ''
           this.loginMessage = ''
           this.showLoginDialog = false
