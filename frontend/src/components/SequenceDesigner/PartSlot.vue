@@ -9,7 +9,10 @@
         i.el-icon-delete(@click="$emit('userDisable', slotName)" v-if='!checklistLocked')
         i.animated.infinite.tada.el-icon-edit(@click="dialogVisible = true" v-if='selectedParts.length === 0')
         i.tada.el-icon-edit(@click="dialogVisible = true" v-else)
-      .part-label(v-if='selectedParts.length > 0') {{selectedParts[0].dbName}}
+      .part-label(v-if='selectedParts.length > 0' @click="dialogVisible = true")
+        span {{selectedParts[0].dbName}}
+        br
+        span.and-others(v-if='andOthers.length > 0') {{andOthers}}
       .icons
         el-tooltip.tooltip(v-for="value, category in categories", v-if='value', :key='category',
                      effect="light", :content="category", :transition='null',
@@ -103,6 +106,14 @@ export default {
           return txt.toLowerCase().indexOf(self.search.toLowerCase()) >= 0
         })
       })
+    },
+    andOthers: function () {
+      var others = this.selectedParts.length - 1
+      if (others > 0) {
+        return ' and ' + others + ' other' + ((others > 1) ? 's' : '')
+      } else {
+        return ''
+      }
     }
   },
   mounted: function () {
@@ -223,6 +234,10 @@ $colors: (
     height: 0;
     padding-left: 1em;
     padding-right: 1em;
+    cursor: pointer;
+    .and-others {
+      color: #888;
+    }
 
   }
   height:10em;
