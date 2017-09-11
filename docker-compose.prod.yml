@@ -8,8 +8,23 @@ services:
   rqworker:
     environment:
       - DEBUG=False
-
+  
   vue:
     command: ./production_server.sh
     ports:
+     - "1080:80"
+
+  egf_nginx:
+    restart: always
+    build: ../EGFNginx
+    links:
+      - "vue:vue"
+    ports:
       - "80:80"
+      - "443:443"
+    volumes:
+      - /srv/nginx/conf:/etc/nginx/conf.d 
+      - /srv/nginx/www:/var/www 
+      - /srv/nginx/log:/var/log/nginx 
+      - /srv/nginx/sys:/sys 
+      - /cert:/cert 
