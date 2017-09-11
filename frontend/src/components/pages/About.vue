@@ -4,7 +4,7 @@
 
   h2 Overhangs
 
-  el-card(header='EMMA overhangs, by part').overhangs-list
+  el-card(header='EMMA overhangs, by position').overhangs-list
     .minischema.center
       .part-and-overhangs(v-for='slotName in emma.slotNames', :key='slotName')
         minipartslot.overhang(:size='13', :categories="['overhang']", :slotName='emma.slotInfos[slotName].overhangs.left')
@@ -13,14 +13,13 @@
 
 
   el-card.overhangs-list(header='EMMA overhangs, alphabetically')
-    .overhang-seq(v-for='seq in emma.overhangs') {{seq}}&nbsp
+    .overhang-seq(v-for='seq in emma.overhangs', :key='seq') {{seq}}&nbsp
 
   el-card(header='EMMA- and Inter-compatible overhangs').overhangs-list
-    .overhang-seq(v-for='seq in emma.compatibleOverhangs') {{seq}}&nbsp
-
-  h2 Part categories
-  .part-categories
-    .part-category(v-for='category in partCategories.sort()' key='category') {{category}}
+    .overhang-seq(v-for='seq in emma.compatibleOverhangs', :key='seq') {{seq}}&nbsp
+  //- h2 Part categories
+  //- .part-categories
+  //-   .part-category(v-for='category in partCategories.sort()', key='category') {{category}}
 </template>
 
 <script>
@@ -28,17 +27,19 @@ import emma from '../SequenceDesigner/EMMA.js'
 import minipartslot from '../SequenceDesigner/MiniPartSlot'
 export default {
   data: function () {
-    var partCategories = []
-    Object.values(emma.slotInfos).map(function (part) {
-      part.categories.map(function (category) {
-        if (partCategories.indexOf(category) < 0) {
-          partCategories.push(category)
-        }
-      })
-    })
+    // var partCategories = []
+    //- Object.values(emma.slotInfos).forEach(function (part) {
+    //-   console.log(part)
+    //-   part.categories.forEach(function (category) {
+    //-     console.log(category)
+    //-     if (partCategories.indexOf(category) < 0) {
+    //-       partCategories.push(category)
+    //-     }
+    //-   })
+    //- })
     return {
       emma: emma,
-      partCategories: partCategories
+      // partCategories: partCategories
     }
   },
   components: {
