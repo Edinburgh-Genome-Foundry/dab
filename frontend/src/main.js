@@ -8,6 +8,7 @@ import About from './components/pages/About'
 import Login from './auth/Login'
 import scenarios from './components/scenarios/scenarios'
 import widgets from './components/widgets'
+import VueCookie from 'vue-cookie'
 
 // import auth from './auth'
 // import BootstrapVue from 'bootstrap-vue'
@@ -18,6 +19,7 @@ Vue.use(VueResource)
 Vue.use(VueRouter)
 Vue.use(ElementUI)
 Vue.use(widgets)
+Vue.use(VueCookie)
 
 // Check the users auth status when the app starts
 // auth.checkAuth()
