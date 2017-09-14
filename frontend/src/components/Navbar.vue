@@ -9,11 +9,14 @@ div
       template(slot='title') Scenarios
       el-menu-item(v-for='scenario in scenarios', :index="scenario.infos.path") {{scenario.infos.navbarTitle}}
     el-menu-item(index='about') About
-    li.el-menu-item-x(type="text") Welcome, {{userSettings.username}}
+    li.el-menu-item-x(type="text"  v-if="isLogin") Welcome, {{userSettings.username}}
       a(type="text" size="mini" style="color:#20a0ff; marginLeft:20px" @click="tryLogout") Logout
     //- div.el-menu-item-x(type="text" v-else ) Welcome, Visitor
     //-   a(type="text" size="mini" style="color:#20a0ff; marginLeft:20px" @click='showLoginDialog = true') Login
+    div.el-menu-item-x(type="text" v-else ) Welcome, Visitor
+      a(type="text" size="mini" style="color:#20a0ff; marginLeft:20px" @click='showLoginDialog = true') Login
 
+  //el-dialog(v-bind:visible.sync='showLoginDialog' size='tiny')
   el-dialog(v-bind:visible.sync='showLoginDialog' size='tiny')
     p
       span username
@@ -35,15 +38,16 @@ export default {
     fullWidth: 0,
     userSettings: JSON.parse(window.localStorage.getItem('emmaSettings')),
     showLoginDialog: false,
+    // showLoginDialog: true,
     username: '',
     password: '',
     loginMessage: '',
   }),
 
   computed: {
-    // isLogin: function () {
-    //   return this.userSettings && this.userSettings.token
-    // },
+    isLogin: function () {
+      return this.userSettings && this.userSettings.token
+    },
     currentToken: function () {
       if (this.username && this.userSettings.token) {
         return this.userSettings.token
@@ -96,6 +100,7 @@ export default {
       )
     },
     tryLogout: function (event) {
+      console.log('click on logout')
       this.userSettings.username = ''
       this.userSettings.token = ''
       window.localStorage.setItem('emmaSettings', JSON.stringify(this.userSettings))
@@ -108,6 +113,7 @@ export default {
       document.cookie = 'userId="visitor"; domain=' + parentUrl
     },
     getVisitorToken: function () {
+      console.log('execute getVisitorToken')
       this.$http.post(
         globalSettings.AUTH_URL,
         {},
