@@ -9,10 +9,10 @@ div
       template(slot='title') Scenarios
       el-menu-item(v-for='scenario in scenarios', :index="scenario.infos.path") {{scenario.infos.navbarTitle}}
     el-menu-item(index='about') About
-    li.el-menu-item-x(type="text" v-if="isLogin") Welcome, {{this.userSettings.username}}
+    li.el-menu-item-x(type="text") Welcome, {{userSettings.username}}
       a(type="text" size="mini" style="color:#20a0ff; marginLeft:20px" @click="tryLogout") Logout
-    div.el-menu-item-x(type="text" v-else ) Welcome, Visitor
-      a(type="text" size="mini" style="color:#20a0ff; marginLeft:20px" @click='showLoginDialog = true') Login
+    //- div.el-menu-item-x(type="text" v-else ) Welcome, Visitor
+    //-   a(type="text" size="mini" style="color:#20a0ff; marginLeft:20px" @click='showLoginDialog = true') Login
 
   el-dialog(v-bind:visible.sync='showLoginDialog' size='tiny')
     p
@@ -24,7 +24,6 @@ div
     p(v-if='loginMessage') {{loginMessage}}
     div.center
       el-button(type='primary' @click='tryLogin') submit
-
 </template>
 
 <script>
@@ -42,9 +41,9 @@ export default {
   }),
 
   computed: {
-    isLogin: function () {
-      return this.userSettings && this.userSettings.token
-    },
+    // isLogin: function () {
+    //   return this.userSettings && this.userSettings.token
+    // },
     currentToken: function () {
       if (this.username && this.userSettings.token) {
         return this.userSettings.token
@@ -79,10 +78,8 @@ export default {
           this.userSettings.lastLogin = new Date()
           window.localStorage.setItem('emmaSettings', JSON.stringify(this.userSettings))
           var parentUrl = location.hostname.split('.').slice(1).join('.')
-          document.cookie = 'sessionId="' + this.userSettings.token +
-          '"; domain=' + parentUrl
-          document.cookie = 'userId="' + this.userSettings.username +
-          '"; domain=' + parentUrl
+          document.cookie = 'sessionId="' + this.userSettings.token + '"; domain=' + parentUrl
+          document.cookie = 'userId="' + this.userSettings.username + '"; domain=' + parentUrl
           this.password = ''
           this.loginMessage = ''
           this.showLoginDialog = false

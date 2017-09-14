@@ -2,7 +2,7 @@
 div
   h1  {{ infos.title }}
   //- img.icon.center-block(slot='title-img', :src='infos.icon')
-  sequencedesigner(v-model='slotsData')
+  sequencedesigner(v-model='design')
   el-button.center(type='primary', :disabled='emptySlots') {{ emptySlots ? 'Some slots are empty' : 'Get sequence(s)' }}
 </template>
 
@@ -30,29 +30,22 @@ export default {
     })
     return {
       infos: infos,
-      slotsData: slotsData,
+      design: {
+        slotsData: slotsData,
+        checklist: emma.checklistDefaults
+      },
       form: {
       },
       queryStatus: {
         polling: {},
         result: {},
         requestError: ''
-      },
-      goal_options: [
-        {
-          label: 'A collection of compatible overhangs',
-          value: 'overhangs_collection'
-        },
-        {
-          label: 'A sequence decomposition, with compatible overhangs',
-          value: 'sequence_decomposition'
-        }
-      ]
+      }
     }
   },
   computed: {
     emptySlots: function () {
-      return Object.values(this.slotsData).some(function (slot) {
+      return Object.values(this.design.slotsData).some(function (slot) {
         return ((slot.selectedParts.length === 0) && slot.checklistEnabled &&
                 (slot.userEnabled || slot.checklistLocked))
       })

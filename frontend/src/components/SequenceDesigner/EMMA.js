@@ -10,6 +10,25 @@ export default {
     'GATG', 'TACG', 'TAGC', 'TCAG', 'TCTC', 'TCTG', 'TGAC', 'TGAG', 'TGTC',
     'TGTG', 'TTCC', 'TTGG'
   ],
+  checklistDefaults: {
+    homologyArms: true,
+    insulators: true,
+    recombinationSites: false,
+    replicationOrigin: true,
+    tuA: {
+      checked: true,
+      sistrons: 'bi',
+      bisistron_type: 'p2A',
+      fusion: true
+    },
+    selectionMarker: true,
+    tuB: {
+      checked: true,
+      sistrons: 'bi',
+      bisistron_type: 'p2A',
+      fusion: true
+    }
+  },
   slotInfos: {
     '1': {
       zone: ['none'],
