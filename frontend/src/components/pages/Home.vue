@@ -3,7 +3,8 @@
 <template lang="pug">
 div
   //h1 Welcome {{userSettings.username}}
-  h1 Welcome {{userName}}
+  // h1 Welcome  {{userName}}
+  // h1 Welcome
   h2 Choose an app below
   scenariospanel
 </template>

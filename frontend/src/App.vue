@@ -60,7 +60,7 @@ body {
 }
 
 .container {
-  width:850px;
+  width:950px;
   max-width:95%;
   margin: 0px auto;
 }
