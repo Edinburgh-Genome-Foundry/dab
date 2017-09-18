@@ -6,7 +6,7 @@
         img(:src='softwareInfos[0].logoSrc')
         span.software-name {{softwareInfos[0].name}}
     el-row(v-else).powered-by-logos
-      el-col.powered-by-logo(:xs="24", :sm="12", :md="12", :lg="12" v-for='item in softwareInfos')
+      el-col.powered-by-logo(:xs="24", :sm="12", :md="12", :lg="12" v-for='item in softwareInfos'  v-bind:key="item.txt")
         a(:href='item.href')
           img(:src='item.logoSrc')
           span.software-name {{item.name}}
