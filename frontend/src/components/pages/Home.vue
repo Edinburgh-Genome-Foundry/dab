@@ -2,9 +2,7 @@
 
 <template lang="pug">
 div
-  //h1 Welcome {{userSettings.username}}
-  // h1 Welcome  {{userName}}
-  // h1 Welcome
+  h1 Welcome {{userSettings}}
   h2 Choose an app below
   scenariospanel
 </template>
@@ -14,8 +12,7 @@ import scenariospanel from '../ScenariosPanel'
 export default {
   data: function () {
     return {
-      // userSettings: JSON.parse(window.localStorage.getItem('emmaSettings')),
-      userName: this.$cookie.get('userId')
+      userSettings: JSON.parse(window.localStorage.getItem('emmaSettings')),
     }
   },
   components: {

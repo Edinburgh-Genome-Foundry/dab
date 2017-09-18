@@ -1,6 +1,6 @@
 <template lang="pug">
 el-row
-  el-col(:xs="24", :sm="8", :md="6", :lg="6" v-for='scenario in scenarios' v-bind:key="scenario.text")
+  el-col(:xs="24", :sm="8", :md="6", :lg="6" v-for='scenario in scenarios')
     el-card.box-card
       img.icon(:src='scenario.infos.icon', alt='')
       .caption
