@@ -3,7 +3,16 @@ div
   h1  {{ infos.title }}
   //- img.icon.center-block(slot='title-img', :src='infos.icon')
   sequencedesigner(v-model='design')
-  el-button.center(type='primary', :disabled='emptySlots') {{ emptySlots ? 'Some slots are empty' : 'Get sequence(s)' }}
+  backend-querier(:form='form', :backendUrl='infos.backendUrl',
+                  :validateForm='validateForm', submitButtonText='Get design sequence(s)',
+                  v-model='queryStatus')
+  el-alert(v-if='queryStatus.requestError', :title="queryStatus.requestError",
+     type="error", :closable="false")
+  .results(v-if='!queryStatus.polling.inProgress')
+    download-button(v-if='queryStatus.result.file',
+                    :filedata='queryStatus.result.file')
+    .results-summary(v-if='queryStatus.result.preview',
+                     v-html="queryStatus.result.preview.html")
 </template>
 
 <script>
@@ -14,6 +23,7 @@ var infos = {
   title: 'Design constructs',
   navbarTitle: 'Design constructs',
   path: 'design-constructs',
+  backendUrl: 'start/simulate_cloning',
   description: '',
   icon: require('assets/images/pencil.svg')
 }
@@ -35,6 +45,8 @@ export default {
         checklist: emma.checklistDefaults
       },
       form: {
+        database_token: this.$cookie.get('sessionId').slice(1, -1),
+        parts_ids: []
       },
       queryStatus: {
         polling: {},
@@ -59,6 +71,29 @@ export default {
   methods: {
     handleSuccess: function (evt) {
       console.log(evt)
+    },
+    validateForm: function () {
+      var errors = []
+      if (this.emptySlots) {
+        errors.push('Cannot compute sequences when there are empty slots.')
+      }
+      return errors
+    }
+  },
+  watch: {
+    design: {
+      deep: true,
+      handler: function (newval) {
+        var partsIds = []
+        Object.values(newval.slotsData).map(function (val) {
+          val.selectedParts.map(function (val2) {
+            if (partsIds.indexOf(val2.dbId) < 0) {
+              partsIds.push(val2.dbId)
+            }
+          })
+        })
+        this.form.parts_ids = partsIds
+      }
     }
   }
 }

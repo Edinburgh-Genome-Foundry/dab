@@ -4,19 +4,16 @@ from base64 import b64decode, b64encode
 
 from rest_framework import serializers
 from ..base import AsyncWorker, StartJobView, JobResult
-from ..tools import string_to_record
-from dnacauldron import full_assembly_report, autoselect_enzyme
+from ..tools import record_from_ice_database
+from ..common_data import connector_records, backbone
+from dnacauldron import full_assembly_report
 
 
 digestion = serializers.ListField(child=serializers.CharField())
-class FileSerializer(serializers.Serializer):
-    name = serializers.CharField()
-    content = serializers.CharField()
-    circularity = serializers.BooleanField()
 
 class serializer_class(serializers.Serializer):
-    enzyme = serializers.CharField()
-    parts = serializers.ListField(child=FileSerializer())
+    database_token = serializers.CharField()
+    parts_ids = serializers.ListField(child=serializers.CharField())
 
 class worker_class(AsyncWorker):
 
@@ -24,23 +21,19 @@ class worker_class(AsyncWorker):
         self.set_progress_message("Reading Data...")
         data = self.data
 
-        records = []
-        for f in data.parts:
-            content = f.content.split("base64,")[1]
-            content = b64decode(content).decode("utf-8")
-            record, fmt = string_to_record(content)
-            record.name = f.name
-            record.linear = not f.circularity
-            records.append(record)
-
-        if data.enzyme == "Autoselect":
-            possible_enzymes = ["BsaI", "BsmBI", "BbsI"]
-            data.enzyme = autoselect_enzyme(records, enzymes=possible_enzymes)
+        records = [
+            record_from_ice_database(part_id, data.database_token,
+                                     linear=True)
+            for part_id in data.parts_ids
+        ]
+        print ([(r.id, r.name, len(r)) for r in records])
+        print (backbone.id, len(backbone))
 
         self.set_progress_message("Generating a report, be patient.")
 
         nconstructs, zip_data = full_assembly_report(
-            records, target='@memory', enzyme=self.data.enzyme,
+            [backbone] + records, target='@memory', enzyme='BsmBI',
+            connector_records=connector_records,
             max_assemblies=40, fragments_filters='auto',
             assemblies_prefix='assembly'
         )

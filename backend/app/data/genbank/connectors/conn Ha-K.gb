@@ -1,0 +1,30 @@
+LOCUS       Exported                  64 bp ds-DNA     linear   UNA 08-MAY-2016
+DEFINITION  natural linear DNA
+ACCESSION   .
+VERSION     .
+KEYWORDS    conn Ha-K.dna
+SOURCE      natural DNA sequence
+  ORGANISM  unspecified
+REFERENCE   1  (bases 1 to 64)
+  AUTHORS   Trial User
+  TITLE     Direct Submission
+  JOURNAL   Exported Sep 21, 2017 from SnapGene Viewer 4.0.2
+            http://www.snapgene.com
+FEATURES             Location/Qualifiers
+     source          1..64
+                     /organism="unspecified"
+                     /mol_type="genomic DNA"
+     misc_feature    1..6
+                     /label=BsmBI
+     misc_feature    8..11
+                     /label=Ha
+     misc_feature    12..53
+                     /label=conn Ha-K
+     misc_feature    54..57
+                     /label=K
+     misc_feature    complement(59..64)
+                     /label=BsmBI
+ORIGIN
+        1 cgtctcgatc cgaggctaac tgaaacacgg aaggagacaa tacaggaagg aacggtacga
+       61 gacg
+//

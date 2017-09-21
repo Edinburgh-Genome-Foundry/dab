@@ -20,7 +20,11 @@ ADD requirements.txt /code/
 WORKDIR /code
 RUN pip install -r requirements.txt
 
+ARG CACHEBUST=28
+RUN pip install --upgrade git+ssh://git@git.genomefoundry.org:10022/valentin/dnacauldron.git
+
 # Remove SSH keys
 RUN rm -rf /root/.ssh/
+
 
 ADD . /code/

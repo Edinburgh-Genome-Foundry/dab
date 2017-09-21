@@ -1,11 +1,12 @@
 import sys
 from Bio import SeqIO
-from Bio.SeqRecord import SeqRecord
+from dnacauldron import load_genbank
 from Bio.Seq import Seq
 from Bio.Alphabet import DNAAlphabet
 import bandwagon as bw
 import re
 from base64 import b64encode, b64decode
+import requests
 
 PYTHON3 = (sys.version_info > (3, 0))
 if PYTHON3:
@@ -34,6 +35,20 @@ def string_to_record(string):
         except:
             pass
     raise ValueError("Invalid sequence format")
+
+def fix_ice_genbank(genbank_txt):
+    lines = genbank_txt.splitlines()
+    lines[0] += max(0, 80 - len(lines[0])) * ' '
+    return '\n'.join(lines)
+
+base_url = "https://emmadb.genomefoundry.org/ICE-REST/rest"
+
+def record_from_ice_database(seq_id, token, linear=False):
+    """Return a Biopython record from ICE's data on the construct"""
+    url = "%s/entries/genbank/%s" % (base_url, seq_id)
+    response = requests.post(url, headers={'token': token})
+    genbank = fix_ice_genbank(response.content.decode('utf-8'))
+    return load_genbank(StringIO(genbank), linear=linear, name=seq_id)
 
 def records_from_data_file(data_file):
     content = data_file.content.split("base64,")[1]

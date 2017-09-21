@@ -1,0 +1,29 @@
+LOCUS       Exported                  58 bp ds-DNA     linear   UNA 08-MAY-2016
+DEFINITION  natural linear DNA
+ACCESSION   .
+VERSION     .
+KEYWORDS    conn U-V.dna
+SOURCE      natural DNA sequence
+  ORGANISM  unspecified
+REFERENCE   1  (bases 1 to 58)
+  AUTHORS   Trial User
+  TITLE     Direct Submission
+  JOURNAL   Exported Aug 31, 2017 from SnapGene Viewer 4.0.2
+            http://www.snapgene.com
+FEATURES             Location/Qualifiers
+     source          1..58
+                     /organism="unspecified"
+                     /mol_type="genomic DNA"
+     misc_feature    1..6
+                     /label=BsmBI
+     misc_feature    8..11
+                     /label=U
+     misc_feature    12..47
+                     /label=conn U-V
+     misc_feature    48..51
+                     /label=V
+     misc_feature    complement(53..58)
+                     /label=BsmBI
+ORIGIN
+        1 cgtctcgtgg ataatccaac aaccccataa cacccgccac acatacagtt gcgagacg
+//

@@ -1,0 +1,34 @@
+LOCUS       Exported                  70 bp ds-DNA     linear   UNA 07-MAY-2016
+DEFINITION  natural linear DNA
+ACCESSION   .
+VERSION     .
+KEYWORDS    conn H-Ha
+SOURCE      natural DNA sequence
+  ORGANISM  unspecified
+REFERENCE   1  (bases 1 to 70)
+  AUTHORS   Trial User
+  TITLE     Direct Submission
+  JOURNAL   Exported Tuesday, Oct 25, 2016 from SnapGene Viewer 3.2.2
+            http://www.snapgene.com
+FEATURES             Location/Qualifiers
+     source          1..70
+                     /organism="unspecified"
+                     /mol_type="genomic DNA"
+     misc_feature    1..6
+                     /note="BsmBI"
+     misc_feature    8..11
+                     /note="H"
+     misc_feature    12..59
+                     /note="conn H-Ha"
+     CDS             12..14
+                     /codon_start=1
+                     /note="STOP"
+                     /translation=""
+     misc_feature    60..63
+                     /note="Ha"
+     misc_feature    complement(65..70)
+                     /note="BsmBI"
+ORIGIN
+        1 cgtctcgagg ctaataacag cttccggact ctagaacatc cctacaggtg atatcctcga
+       61 tcccgagacg
+//

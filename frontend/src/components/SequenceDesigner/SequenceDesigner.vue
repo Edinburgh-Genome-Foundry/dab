@@ -68,7 +68,10 @@ export default {
       slotNames: emma.slotNames,
       slotInfos: emma.slotInfos,
       showDialog: false,
-      jsonSchemaFile: {}
+      jsonSchemaFile: {
+        name: '',
+        content: ''
+      }
     }
   },
   components: {
@@ -121,8 +124,10 @@ export default {
     'jsonSchemaFile.content': {
       deep: true,
       handler: function (newval) {
-        var json = JSON.parse(atob(newval.split(',')[1]))
-        console.log(json)
+        if (newval) {
+          var json = JSON.parse(atob(newval.split(',')[1]))
+          this.design = json
+        }
       }
     }
   }

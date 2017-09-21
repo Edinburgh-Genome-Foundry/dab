@@ -1,0 +1,30 @@
+LOCUS       Exported                  62 bp ds-DNA     linear   UNA 08-MAY-2016
+DEFINITION  natural linear DNA
+ACCESSION   .
+VERSION     .
+KEYWORDS    conn R-W
+SOURCE      natural DNA sequence
+  ORGANISM  unspecified
+REFERENCE   1  (bases 1 to 62)
+  AUTHORS   Trial User
+  TITLE     Direct Submission
+  JOURNAL   Exported Tuesday, Oct 25, 2016 from SnapGene Viewer 3.2.2
+            http://www.snapgene.com
+FEATURES             Location/Qualifiers
+     source          1..62
+                     /organism="unspecified"
+                     /mol_type="genomic DNA"
+     misc_feature    1..6
+                     /note="BsmBI"
+     misc_feature    8..11
+                     /note="R"
+     misc_feature    12..51
+                     /note="R-W"
+     misc_feature    52..55
+                     /note="W"
+     misc_feature    complement(57..62)
+                     /note="BsmBI"
+ORIGIN
+        1 cgtctcgcgg tcctacccaa ctacaaagcc ctccgaagtc cctaccagct ccgaacgaga
+       61 cg
+//

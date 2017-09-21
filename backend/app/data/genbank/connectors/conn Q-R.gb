@@ -1,0 +1,30 @@
+LOCUS       Exported                 114 bp ds-DNA     linear   UNA 07-MAY-2016
+DEFINITION  natural linear DNA
+ACCESSION   .
+VERSION     .
+KEYWORDS    conn Q-R
+SOURCE      natural DNA sequence
+  ORGANISM  unspecified
+REFERENCE   1  (bases 1 to 114)
+  AUTHORS   Trial User
+  TITLE     Direct Submission
+  JOURNAL   Exported Tuesday, Oct 25, 2016 from SnapGene Viewer 3.2.2
+            http://www.snapgene.com
+FEATURES             Location/Qualifiers
+     source          1..114
+                     /organism="unspecified"
+                     /mol_type="genomic DNA"
+     misc_feature    1..6
+                     /note="BsmBI"
+     misc_feature    8..11
+                     /note="Q"
+     misc_feature    12..103
+                     /note="conn Q-R"
+     misc_feature    104..107
+                     /note="R"
+     misc_feature    complement(109..114)
+                     /note="BsmBI"
+ORIGIN
+        1 cgtctcggct cgacataatc caccatcaac atgcaagtcc agtcaacaac tttccctcag
+       61 acgttagtgg taatcgaacc tcaacaccta gcccagaaca agccggtcga gacg
+//
