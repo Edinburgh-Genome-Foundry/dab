@@ -25,25 +25,21 @@ div
 
 <script>
 import scenarios from './scenarios/scenarios.js'
-import globalSettings from '../setting.js'
+import utils from '../utils.js'
+console.log(scenarios.list[0].infos)
 export default {
   data: () => ({
     scenarios: scenarios.list,
     fullWidth: 0,
-    userSettings: this.isLogin,
-    showLoginDialog: false,
+    userId: this.userIdLookup,
     username: '',
     password: '',
+    database: '',
     loginMessage: 'Enter user and password',
+    showLoginDialog: false,
     loginAction: 'Switch User',
-    userId: this.userIdLookup,
+    // databases: globalSettings.DATABASES,
   }),
-  computed: {
-    isLogin: function () {
-      console.log('we  check login')
-      return this.$cookie.get('userId') && this.$cookie.get('sessionId')
-    },
-  },
   methods: {
     handleSelect: function (key, keyPath) {
       this.$router.push(key)
@@ -51,119 +47,35 @@ export default {
     handleResize: function (event) {
       this.fullWidth = document.documentElement.clientWidth
     },
-    userIdLookup: function () {
-      console.log('userId function')
-      if (this.$cookie.get('userId')) {
-        this.userId = this.$cookie.get('userId').replace(/"/g, '')
-      } else {
-        this.userId = 'visitor'
-      }
-      return this.userId
-    },
     tryLogin: function (event) {
-      this.$http.post(
-        globalSettings.AUTH_URL,
-        {},
-        {
-          headers: {
-            Authorization: 'Basic ' + btoa(this.username + ':' + this.password)
-          },
-          emulateJSON: true,
-        },
-      ).then((result) => {
-        if (result.status === 200) {
-          if (!this.userSettings) this.userSettings = {}
-          this.$set(this.userSettings, 'username', this.username)
-          this.userSettings.token = result.body.data.token
-          this.userSettings.lastLogin = new Date()
-          var parentUrl = location.hostname.split('.').slice(1).join('.')
-          document.cookie = 'sessionId="' + this.userSettings.token + '"; domain=' + parentUrl
-          document.cookie = 'userId="' + this.userSettings.username + '"; domain=' + parentUrl
-          this.showLoginDialog = false
-          this.$set(this, 'userId', this.username)
-          this.$set(this, 'loginAction', 'Switch to visitor')
-        } else {
-          this.loginMessage = 'bad password' + result.status
-        }
-      },
-      (result) => {
-        this.passwrod = ''
-        this.loginMessage = 'bad password'
-      }
-      )
+      utils.getToken(this)
+    },
+    userIdLookup: function (event) {
+      utils.userIdLookup(this)
     },
     switchUser: function (event) {
       this.$set(this, 'userId', 'visitor')
       if (this.$cookie.get('userId')) {
-        if (this.$cookie.get('userId') !== '"visitor"') {
-          this.tryLogout()
-        } else {
-          console.log('show login')
-          this.showLoginDialog = true
-        }
+        (this.$cookie.get('userId') !== '"visitor"') ? utils.tryLogout(this) : this.showLoginDialog = true
       } else {
         this.showLoginDialog = true
       }
     },
-    tryLogout: function (event) {
-      var url = location.hostname.split('.').slice(1).join('.')
-      document.cookie = 'sessionId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + url
-      document.cookie = 'userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + url
-      this.getVisitorToken()
-    },
-    verifyCookie: function (event) {
-      this.$http.post(
-        globalSettings.AUTH_URL + '/verify',
-        {
-          token: this.$cookie.get('sessionId'),
-        },
-        {
-          emulateJSON: true,
-        },
-      ).then((result) => {
-        this.$set(this, 'userId', this.userIdLookup())
-      }, (result) => {
-        console.log('token verified ko')
-      })
-    },
-    getVisitorToken: function () {
-      this.$http.post(
-        globalSettings.AUTH_URL,
-        {},
-        {
-          headers: {
-            Authorization: 'Basic ' + btoa(globalSettings.ANONYMOUS_USERNAME + ':' + globalSettings.ANONYMOUS_PASSWORD)
-          },
-          emulateJSON: true,
-        },
-      ).then((result) => {
-        if (result.status === 200) {
-          if (!this.userSettings) this.userSettings = {}
-          this.$set(this.userSettings, 'visitorToken', result.body.data.token)
-          var parentUrl = location.hostname.split('.').slice(1).join('.')
-          document.cookie = 'sessionId="' + this.userSettings.visitorToken + '"; domain=' + parentUrl
-          document.cookie = 'userId="visitor"; domain=' + parentUrl
-          this.$set(this, 'loginAction', 'Switch User')
-        } else {
-          this.loginMessage = 'unable get visitor token' + result.status
-        }
-      })
-    },
   },
   created: function () {
-    // verify if login information is expired
-    if (this.$cookie.get('userId')) { // && this.verifyCookie()) {
-      console.log('We have a session')
-    } else {
-      this.getVisitorToken()
-    }
-    this.$set(this, 'userId', this.userIdLookup()) // reactive
+    // !this.$cookie.get('userId') && utils.getToken(this) // new session
+    !this.$cookie.get('userId') && this.$router.push('Home')  // go home
+    // we have to go home as the loading is parallel and no cookie is present.
+    this.$set(this, 'userId', utils.userIdLookup(this)) // reactive
   },
   mounted: function () {
-    window.addEventListener('resize', this.handleResize)
+    // (!this.$cookie.get('userId')) && utils.getToken(this) // new session
     this.handleResize()
+    console.log('we  check login')
+    window.addEventListener('resize', this.handleResize)
   }
 }
+
 </script>
 <style lang='scss' scoped>
 .el-menu, .el-submenu {

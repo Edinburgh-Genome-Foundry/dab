@@ -45,7 +45,6 @@ routes.push({
 })
 
 console.log(routes)
-
 const router = new VueRouter({
   routes
 })
