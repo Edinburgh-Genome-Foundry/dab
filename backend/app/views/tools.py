@@ -1,5 +1,6 @@
 import sys
 from Bio import SeqIO
+from Bio.SeqRecord import SeqRecord
 from dnacauldron import load_genbank
 from Bio.Seq import Seq
 from Bio.Alphabet import DNAAlphabet
@@ -43,12 +44,14 @@ def fix_ice_genbank(genbank_txt):
 
 base_url = "https://emmadb.genomefoundry.org/ICE-REST/rest"
 
-def record_from_ice_database(seq_id, token, linear=False):
+def record_from_ice_database(seq_id, token, linear=False, name=None):
     """Return a Biopython record from ICE's data on the construct"""
     url = "%s/entries/genbank/%s" % (base_url, seq_id)
     response = requests.post(url, headers={'token': token})
     genbank = fix_ice_genbank(response.content.decode('utf-8'))
-    return load_genbank(StringIO(genbank), linear=linear, name=seq_id)
+    if name is None:
+        name = seq_id
+    return load_genbank(StringIO(genbank), linear=linear, name=name)
 
 def records_from_data_file(data_file):
     content = data_file.content.split("base64,")[1]

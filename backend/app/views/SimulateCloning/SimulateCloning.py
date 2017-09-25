@@ -13,7 +13,8 @@ digestion = serializers.ListField(child=serializers.CharField())
 
 class serializer_class(serializers.Serializer):
     database_token = serializers.CharField()
-    parts_ids = serializers.ListField(child=serializers.CharField())
+    parts_ids = serializers.ListField(
+        child=serializers.ListField(child=serializers.CharField()))
 
 class worker_class(AsyncWorker):
 
@@ -23,8 +24,8 @@ class worker_class(AsyncWorker):
 
         records = [
             record_from_ice_database(part_id, data.database_token,
-                                     linear=True)
-            for part_id in data.parts_ids
+                                     linear=True, name=part_name)
+            for (part_id, part_name) in data.parts_ids
         ]
         print ([(r.id, r.name, len(r)) for r in records])
         print (backbone.id, len(backbone))

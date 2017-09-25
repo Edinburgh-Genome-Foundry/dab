@@ -86,11 +86,13 @@ export default {
       handler: function (newval) {
         var partsIds = []
         Object.values(newval.slotsData).map(function (val) {
-          val.selectedParts.map(function (val2) {
-            if (partsIds.indexOf(val2.dbId) < 0) {
-              partsIds.push(val2.dbId)
-            }
-          })
+          if (val.checklistEnabled && (val.checklistLocked || val.userEnabled)) {
+            val.selectedParts.map(function (val2) {
+              if (partsIds.indexOf(val2.dbId) < 0) {
+                partsIds.push([val2.dbId, val2.dbName])
+              }
+            })
+          }
         })
         this.form.parts_ids = partsIds
       }
