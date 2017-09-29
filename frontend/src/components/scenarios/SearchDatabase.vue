@@ -76,6 +76,8 @@ export default {
             position: slot,
           }),
           fields: '{"matchScore","dbDescription","dbName","dbId","type","position"}',
+          sessionIdForm: this.$cookie.get('sessionId'),
+          userIdForm: this.$cookie.get('userId'),
         },
         {emulateJSON: true},
       ).then(function (response) {
