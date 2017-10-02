@@ -1,16 +1,23 @@
 <template lang="pug">
-div
-  el-menu(:mode="fullWidth > 610 ? 'horizontal' : 'vertical'" @select="handleSelect")
-    .logo(v-if='fullWidth > 610')
+.navbar
+  el-menu(:mode="fullWidth > 1020 ? 'horizontal' : 'vertical'" @select="handleSelect")
+    .logo(v-if='fullWidth > 1020')
       router-link(to='home')
         img(src='../assets/images/emma-title.svg')
     el-menu-item(index='home') Home
+    el-menu-item(index='repo')
+      icon(name='external-link')
+      a(href='https://emmadb.genomefoundry.org/') Parts Repo
     el-submenu(index='2')
       template(slot='title') Scenarios
-      el-menu-item(v-for='scenario in scenarios',  v-bind:key="scenario.infos.path" ,:index="scenario.infos.path") {{scenario.infos.navbarTitle}}
-    el-menu-item(index='about') About
-    li.el-menu-item-x(type="html" v-bind:userId='userId') Welcome,  {{ userId }}
-      a(type="text" size="mini" @click="switchUser" v-bind:loginAction='loginAction' ) {{ loginAction }}
+      el-menu-item(v-for='scenario in scenarios',  :key="scenario.infos.path" ,:index="scenario.infos.path") {{scenario.infos.navbarTitle}}
+    el-submenu(index='3')
+      template(slot='title') About
+      el-menu-item(index='about-emma') About Emma
+      el-menu-item(index='help') Help
+
+    li.el-menu-item-x.login(type="html" v-bind:userId='userId') Logged as <b>{{ userId }}</b>
+      a(type="text" size="mini" @click="switchUser" v-bind:loginAction='loginAction' ) ({{ loginAction }})
   el-dialog(v-bind:visible.sync='showLoginDialog' size='tiny')
     p
       span username
@@ -78,41 +85,51 @@ export default {
 
 </script>
 <style lang='scss' scoped>
-.el-menu, .el-submenu {
-  background-color: white;
-  max-width: 90%;
-}
 
-.el-menu {
-  border-bottom: 2px solid #dddddd;
-}
+.navbar {
+  .el-menu, .el-submenu {
+    background-color: white;
+    max-width: 90%;
+  }
 
-.logo {
-  // display: inline-block;
-  float: left;
-  margin-left: 20px;
-  margin-right: 20px;
-  height:40px;
-}
+  .el-menu {
+    border-bottom: 2px solid #dddddd;
+  }
 
-.logo img {
-  height:140%;
-}
-.el-menu-item-x {
-    font-size: 14px;
-    color: #48576a;
-    padding: 0 20px;
+  .logo {
+    // display: inline-block;
     float: left;
-    height: 60px;
-    line-height: 60px;
-    margin: 0;
-    cursor: pointer;
-    position: relative;
-    box-sizing: border-box;
-    border-bottom: 5px solid transparent;
-}
-a {
-    color: #20a0ff;
     margin-left: 20px;
+    margin-right: 20px;
+    height:40px;
+  }
+
+  .logo img {
+    height:140%;
+  }
+  .el-menu-item-x {
+      font-size: 14px;
+      color: #48576a;
+      padding: 0 20px;
+      float: left;
+      height: 60px;
+      line-height: 60px;
+      margin: 0;
+      cursor: pointer;
+      position: relative;
+      box-sizing: border-box;
+      border-bottom: 5px solid transparent;
+  }
+  a {
+      text-decoration: none;
+  }
+  .fa-icon {
+    margin-bottom: -0.25em;
+    margin-right: 0.5em;
+  }
+  .login a {
+    margin-left: 1em;
+  }
 }
+
 </style>

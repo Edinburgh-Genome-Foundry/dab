@@ -60,9 +60,18 @@ body {
 }
 
 .container {
-  width:950px;
+  width:1050px;
   max-width:95%;
   margin: 0px auto;
+}
+
+.reduced-width {
+  max-width: 800px;
+  margin: 0 auto;
+
+  img {
+    max-width: 100%;
+  }
 }
 
 .el-button {
@@ -87,6 +96,10 @@ img.icon {
   display: block;
   margin: 0 auto;
   max-width: 100px;
+}
+
+a {
+  color: #20a0ff;
 }
 
 .center {

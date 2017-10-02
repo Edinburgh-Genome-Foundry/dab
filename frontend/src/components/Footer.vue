@@ -1,7 +1,9 @@
 <template lang='pug'>
 footer
   .container
-  | © Edinburgh Genome Foundry, 2017
+  | Made with &hearts; at the Edinburgh Genome Foundry <br />
+  | Source released under MIT Licence <br />
+  | © Edinburgh Genome Foundry 2017
 </template>
 
 <style scoped>

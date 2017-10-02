@@ -3,13 +3,12 @@ import VueRouter from 'vue-router'
 import VueResource from 'vue-resource'
 import ElementUI from 'element-ui'
 import App from './App'
-import Home from './components/pages/Home'
-import About from './components/pages/About'
-import Login from './auth/Login'
 import scenarios from './components/scenarios/scenarios'
 import widgets from './components/widgets'
 import VueCookie from 'vue-cookie'
-
+import Home from './components/pages/Home'
+import Icon from 'vue-awesome/components/Icon'
+import 'vue-awesome/icons'
 // import auth from './auth'
 // import BootstrapVue from 'bootstrap-vue'
 
@@ -20,6 +19,7 @@ Vue.use(VueRouter)
 Vue.use(ElementUI)
 Vue.use(widgets)
 Vue.use(VueCookie)
+Vue.component('icon', Icon)
 
 // Check the users auth status when the app starts
 // auth.checkAuth()
@@ -28,11 +28,14 @@ const routes = [{
   path: '/home',
   component: Home
 }, {
-  path: '/about',
-  component: About
+  path: '/about-emma',
+  component: require('./components/pages/About-EMMA')
+}, {
+  path: '/help',
+  component: require('./components/pages/Help')
 }, {
   path: '/login',
-  component: Login
+  component: require('./auth/Login')
 }
 ]
 
