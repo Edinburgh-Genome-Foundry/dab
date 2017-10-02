@@ -17,7 +17,6 @@
 
   el-card(header='EMMA- and Inter-compatible overhangs').overhangs-list
     .overhang-seq(v-for='seq in emma.compatibleOverhangs', :key='seq') {{seq}}&nbsp
-
 </template>
 
 <script>

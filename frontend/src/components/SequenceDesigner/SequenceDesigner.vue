@@ -99,9 +99,6 @@ export default {
     downloadSchema: function () {
       download(JSON.stringify(this.design, null, ' '), 'design.json')
     },
-    uploadSchema: function (evt) {
-      console.log(evt)
-    }
   },
   computed: {
   },
@@ -124,6 +121,7 @@ export default {
     'jsonSchemaFile.content': {
       deep: true,
       handler: function (newval) {
+        this.showDialog = false
         if (newval) {
           var json = JSON.parse(atob(newval.split(',')[1]))
           this.design = json
