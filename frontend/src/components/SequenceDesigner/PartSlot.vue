@@ -126,8 +126,11 @@ export default {
           position: this.slotName,
         }),
         fields: '{"matchScore","dbDescription","dbName","dbId","type","position"}',
+        sessionIdForm: this.$cookie.get('sessionId'),
+        userIdForm: this.$cookie.get('userId'),
       },
       {emulateJSON: true},
+      {credentials: false},
     ).then((response) => {
       if (response.status === 200) {
         this.allParts = response.body.data
