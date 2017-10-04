@@ -8,8 +8,8 @@ el-card.part-card(:class="{selected: selected}")
       i.select-part.el-icon-plus(@click="$emit('selectPart',part)")
       p.part-name {{part.dbName}}
 
-    a.database-link(:href="'https://emmadb.genomefoundry.org/ICE-REST/rest/entries/genbank/' + part.dbId") <i class="el-icon-document"></i> genbank
-    a.database-link(:href="'https://emmadb.genomefoundry.org/entry/' + part.dbId") <i class="el-icon-share"></i> ICE page
+    a.database-link(:href="'https://emmadb.genomefoundry.org/ICE-REST/rest/entries/genbank/' + part.dbId" ) <i class="el-icon-document"></i> genbank
+    a.database-link(:href="'https://emmadb.genomefoundry.org/entry/' + part.dbId" target="_blank") <i class="el-icon-share"></i> ICE page
   p(v-if='part.dbDescription') <b>Description:</b> {{part.dbDescription}}
 </template>
 
