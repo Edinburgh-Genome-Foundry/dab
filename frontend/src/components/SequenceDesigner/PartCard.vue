@@ -9,7 +9,7 @@ el-card.part-card(:class="{selected: selected}")
       p.part-name {{part.dbName}}
 
     a.database-link(:href="'https://emmadb.genomefoundry.org/ICE-REST/rest/entries/genbank/' + part.dbId" ) <i class="el-icon-document"></i> genbank
-    a.database-link(:href="'https://emmadb.genomefoundry.org/entry/' + part.dbId" target="_blank") <i class="el-icon-share"></i> ICE page
+    a.database-link(:href="'https://emmadb.genomefoundry.org/entry/' + part.dbId"  rel="noopener" target="_blank") <i class="el-icon-share"></i> ICE page
   p(v-if='part.dbDescription') <b>Description:</b> {{part.dbDescription}}
 </template>
 

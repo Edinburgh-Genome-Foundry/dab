@@ -7,7 +7,7 @@
     el-menu-item(index='home') Home
     el-menu-item(index='repo')
       icon(name='external-link')
-      a(href='https://emmadb.genomefoundry.org/' target="_blank") Parts Repo
+      a(href='https://emmadb.genomefoundry.org/'  rel="noopener" target="_blank") Parts Repo
     el-submenu(index='2')
       template(slot='title') Scenarios
       el-menu-item(v-for='scenario in scenarios',  :key="scenario.infos.path" ,:index="scenario.infos.path") {{scenario.infos.navbarTitle}}
