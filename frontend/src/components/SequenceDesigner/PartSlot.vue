@@ -26,7 +26,7 @@
       .controls
         i.el-icon-plus(@click="$emit('userEnable', slotName)")
       .icons
-        .icon.active(v-bind:style="backgroundImageStyle('empty')")
+        .icon.active(v-bind:style="backgroundImageStyle('none')")
         el-tooltip.tooltip(v-for="value, category in categories", v-if='value', :key='category',
                      effect="light", :content="category", :transition='null',
                      :enterable='false', transition='el-fade-in')

@@ -101,12 +101,12 @@ export default {
     float: left;
     margin-left: 20px;
     margin-right: 20px;
-    height:40px;
+    height:50px;
+    img {
+      height:180%;
+    }
   }
 
-  .logo img {
-    height:140%;
-  }
   .el-menu-item-x {
       font-size: 14px;
       color: #48576a;

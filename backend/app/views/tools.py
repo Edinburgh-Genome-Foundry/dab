@@ -47,7 +47,6 @@ base_url = "https://emmadb.genomefoundry.org/ICE-REST/rest"
 def record_from_ice_database(seq_id, token, linear=False, name=None):
     """Return a Biopython record from ICE's data on the construct"""
     url = "%s/entries/genbank/%s" % (base_url, seq_id)
-    print ("token", token)
     response = requests.post(url, headers={'token': token})
     genbank = fix_ice_genbank(response.content.decode('utf-8'))
     if name is None:
