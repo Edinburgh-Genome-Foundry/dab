@@ -1,51 +1,20 @@
 version: '2'
 
 services:
-  redis:
-    restart: always
-    image: redis
-
   django:
-    restart: always
-    build:
-      context: backend
-    command: gunicorn website.wsgi:application -b :8082 --reload
-    links:
-      - redis
-    depends_on:
-      - redis
-    volumes:
-      - ./backend:/code
     environment:
       - DEBUG=False
-
 
   rqworker:
     environment:
       - DEBUG=False
-    restart: always
-    build: backend
-    command: ./rqworker_reload.sh
-    links:
-      - redis
-      - django
-    depends_on:
-      - redis
-      - django
-    volumes:
-      - ./backend:/code
 
   vue:
     command: ./production_server.sh
-    restart: always
-    build: frontend
-    command: npm run dev
-    volumes:
-      - ./frontend:/code
-      - /code/node_modules
 
-  egf_nginx:
-    restart: always
+  nginx:
+    environment:
+      - BUFFERING=on
     build: ../EGFNginx
     links:
       - "vue:vue"

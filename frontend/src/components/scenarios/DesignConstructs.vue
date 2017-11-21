@@ -1,24 +1,48 @@
 <template lang="pug">
-div
+.page
   h1  {{ infos.title }}
-  //- img.icon.center-block(slot='title-img', :src='infos.icon')
-  sequencedesigner(v-model='design')
-  backend-querier(:form='form', :backendUrl='infos.backendUrl',
-                  :validateForm='validateForm', submitButtonText='Get design sequence(s)',
-                  v-model='queryStatus')
-  el-alert(v-if='queryStatus.requestError', :title="queryStatus.requestError",
-     type="error", :closable="false")
-  .results(v-if='!queryStatus.polling.inProgress')
-    download-button(v-if='queryStatus.result.file',
-                    :filedata='queryStatus.result.file')
-    .results-summary(v-if='queryStatus.result.preview',
-                     v-html="queryStatus.result.preview.html")
+
+
+  constructsdesigner
+
+  collapsible-button.query-button(v-if='constructs.length' text='Export project')
+    backend-querier.querier
+      span(slot='button' @click.stop='downloadJSON') <icon name='download'></icon> As JSON
+    backend-querier.querier(:form='{constructs: constructs}',
+                    backendUrl='start/get_constructs_as_genbanks',
+                    v-model='queryStatus')
+      span(slot='button') <icon name='download'></icon> As Genbank
+    backend-querier.querier(:form='{constructs: constructs, withLinkers: form.withLinkers}',
+                    backendUrl='start/simulate_cloning',
+                    v-model='queryStatus')
+      span(slot='button') <icon name='download'></icon> As PDF
+    .center.checkbox
+      el-checkbox(v-model='form.withLinkers') (include linkers)
+  collapsible-button(v-if='constructs.length' text='Send order to EGF...')
+    p Provide your contact informations, we will contact you shortly
+    el-input(placeholder='Name')
+    el-input(placeholder='Email address')
+    el-input(type="textarea", placeholder='Comments')
+    backend-querier.querier(:form='{constructs: constructs}',
+                    backendUrl='start/get_constructs_as_genbanks',
+                    v-model='queryStatus')
+      span(slot='button') <icon name='envelope-o'></icon> Send
+
+    el-alert(v-if='queryStatus.requestError', :title="queryStatus.requestError",
+             type="error", :closable="false")
+    .results(v-if='!queryStatus.polling.inProgress')
+      download-button(v-if='queryStatus.result.file',
+                      :filedata='queryStatus.result.file')
+      .results-summary(v-if='queryStatus.result.preview',
+                       v-html="queryStatus.result.preview.html")
 </template>
 
 <script>
 import learnmore from '../widgets/LearnMore'
-import sequencedesigner from '../SequenceDesigner/SequenceDesigner'
-import emma from '../SequenceDesigner/EMMA'
+import constructsdesigner from '../SequenceDesigner/ConstructsDesigner'
+import CollapsibleButton from '../widgets/CollapsibleButton'
+import download from 'downloadjs'
+
 var infos = {
   title: 'Design constructs',
   navbarTitle: 'Design constructs',
@@ -30,23 +54,13 @@ var infos = {
 
 export default {
   data: function () {
-    var slotsData = {}
-    emma.slotNames.map(function (slotName) {
-      slotsData[slotName] = {
-        userEnabled: true,
-        selectedParts: [],
-        zone: emma.slotInfos[slotName].zone[0]
-      }
-    })
     return {
       infos: infos,
-      design: {
-        slotsData: slotsData,
-        checklist: emma.checklistDefaults
-      },
       form: {
         database_token: this.$cookie.get('sessionId').slice(1, -1),
-        parts_ids: []
+        withLinkers: false,
+        userName: '',
+        userEmail: ''
       },
       queryStatus: {
         polling: {},
@@ -55,29 +69,28 @@ export default {
       }
     }
   },
+  // computed: {
+  //   emptySlots: function () {
+  //     return Object.values(this.design.slotsData).some(function (slot) {
+  //       return ((slot.selectedParts.length === 0) && slot.checklistEnabled &&
+  //               (slot.userEnabled || slot.checklistLocked))
+  //     })
+  //   }
+  // },
   computed: {
-    emptySlots: function () {
-      return Object.values(this.design.slotsData).some(function (slot) {
-        return ((slot.selectedParts.length === 0) && slot.checklistEnabled &&
-                (slot.userEnabled || slot.checklistLocked))
-      })
+    constructs () {
+      return this.$store.state.constructs
     }
   },
   components: {
-    sequencedesigner,
-    learnmore
+    constructsdesigner,
+    learnmore,
+    'collapsible-button': CollapsibleButton
   },
   infos: infos,
   methods: {
-    handleSuccess: function (evt) {
-      console.log(evt)
-    },
-    validateForm: function () {
-      var errors = []
-      if (this.emptySlots) {
-        errors.push('Cannot compute sequences when there are empty slots.')
-      }
-      return errors
+    downloadJSON: function () {
+      download(JSON.stringify(this.constructs, null, ' '), 'constructs.json')
     }
   },
   watch: {
@@ -101,8 +114,16 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang='scss' scoped>
+.querier /deep/ button {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  border: none;
 
+}
+.page {
+  width: 90%;
+}
 h4.formlabel {
   text-align: center;
   text-transform: uppercase;
@@ -121,10 +142,15 @@ h4.formlabel {
 
 }
 
-.el-checkbox {
-  font-weight: normal;
+.checkbox {
+  margin-top: -1em;
 }
 
+.el-input, .el-textarea {
+  margin-top: 1em;
+  width: 90%;
+  max-width: 400px;
+}
 
 .el-select {
   width: 100%

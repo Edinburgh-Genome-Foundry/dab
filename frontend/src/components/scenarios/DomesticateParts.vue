@@ -1,5 +1,5 @@
 <template lang="pug">
-.domesticate-parts
+.page
 
   h1 Domesticate Parts
   .minischema
@@ -35,7 +35,10 @@
 <script>
 import learnmore from '../../components/widgets/LearnMore'
 import minipartslot from '../SequenceDesigner/MiniPartSlot'
-import emma from '../SequenceDesigner/EMMA'
+import emmaTemplate from '../SequenceDesigner/templates/EMMAConstruct'
+
+var emma = emmaTemplate.constructTemplate
+
 var infos = {
   title: 'Domesticate parts',
   navbarTitle: 'Domesticate parts',
@@ -71,7 +74,7 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.domesticate-parts {
+.page {
 
   .part-domesticator {
     width: 80%;

@@ -1,36 +1,41 @@
 <template lang="pug">
-.part-slot(:class='[{inactive: !active}, zone]' v-show="checklistEnabled")
+.part-slot(:class='[{inactive: !active}, zone]')
 
   .slot-name {{slotName}}
 
   transition(name='part-pop1' enter-active-class='animated flipInY')
     .active-display(v-if='active')
-      .controls
-        i.el-icon-delete(@click="$emit('userDisable', slotName)" v-if='!checklistLocked')
-        i.animated.infinite.tada.el-icon-edit(@click="dialogVisible = true" v-if='selectedParts.length === 0')
-        i.tada.el-icon-edit(@click="dialogVisible = true" v-else)
+      .controls.construct-hover-only
+        span(@click="toggleUserEnabled(false)", v-if='!optionsLocked')
+          icon(name='trash-o')
+        span(@click="dialogVisible = true")
+          icon.animated.infinite.tada(name='pencil' v-if='selectedParts.length === 0')
+          icon(name='pencil' v-else)
       .part-label(v-if='selectedParts.length > 0' @click="dialogVisible = true")
         span {{selectedParts[0].dbName}}
         br
-        span.and-others(v-if='andOthers.length > 0') {{andOthers}}
+        el-tooltip.tooltip(v-if='andOthers.length > 0',
+                           :content="partsTooltip", effect="light", :transition='null',
+                           :enterable='false', transition='el-fade-in')
+          .and-others {{andOthers}}
       .icons
-        el-tooltip.tooltip(v-for="value, category in categories", v-if='value', :key='category',
+        el-tooltip.tooltip(v-for="value, category in categoriesEnabled", v-if='value', :key='category',
                      effect="light", :content="category", :transition='null',
                      :enterable='false', transition='el-fade-in')
           .icon(v-bind:style="backgroundImageStyle(category)", @click="dialogVisible = true")
-      el-icon.center.delete(icon='delete', v-if='checklistEnabled && !checklistLocked',
+      el-icon.center.delete(icon='delete', v-if='!optionsLocked',
                        size='small', @click="$emit('userDisable', slotName)")
 
   transition(name='part-pop2' enter-active-class='animated rubberBand')
-    .inactive-display(v-if='!active')
-      .controls
-        i.el-icon-plus(@click="$emit('userEnable', slotName)")
+    .inactive-display(v-if='!active' @click="toggleUserEnabled(true)")
+      .controls.construct-hover-only
+        icon(name='plus')
       .icons
         .icon.active(v-bind:style="backgroundImageStyle('none')")
-        el-tooltip.tooltip(v-for="value, category in categories", v-if='value', :key='category',
+        el-tooltip.tooltip(v-for="value, category in categoriesEnabled", v-if='value', :key='category',
                      effect="light", :content="category", :transition='null',
                      :enterable='false', transition='el-fade-in')
-          .icon.inactive(v-bind:style="backgroundImageStyle(category)")
+          .icon.inactive(v-bind:style="backgroundImageStyle(category)").construct-hover-only
 
   el-dialog.part-selector(title="Select parts", :visible.sync="dialogVisible", size='large')
     .show-selected
@@ -44,31 +49,21 @@
     .parts
       partcard(v-for='part in searchFilteredParts', :key='part.dbName', :selected='partIsSelected(part)', :part='part',
               @selectPart='selectPart', @deselectPart='deselectPart')
-        //- .part_header(slot='header')
-        //-   span(v-if='partIsSelected(part)')
-        //-     i.select-part.el-icon-delete(@click='deselectPart(part)')
-        //-     p.part-name {{part.dbName}} (selected)
-        //-   span(v-else)
-        //-     i.select-part.el-icon-plus(@click='selectPart(part)')
-        //-     p.part-name {{part.dbName}}
-        //-
-        //-   a.database-link(:href="'https://ice.dev.genomefoundry.org/ICE-REST/rest/entries/genbank/' + part.dbId") <i class="el-icon-document"></i> genbank
-        //-   a.database-link(:href="'https://ice.dev.genomefoundry.org/entry/' + part.dbId") <i class="el-icon-share"></i> ICE page
-        //- p(v-if='part.dbDescription') <b>Description:</b> {{part.dbDescription}}
 </template>
 
 <script>
 let globalSetting = require('../../setting.js')
 import partcard from './PartCard'
+import { mapMutations } from 'vuex'
+
 export default {
   props: {
     slotName: {default: '1'}, // The slot is of the form '1', '2', '8A', '8B', etc.
-    checklistEnabled: {default: true}, // If not active, will be smaller, greyer, no inputs
-    checklistLocked: {default: false}, // Locked means you can't add or remove a block
+    optionsLocked: {default: false}, // Locked means you can't add or remove a block
     userEnabled: {default: true}, // If not active, will be smaller, greyer, no inputs
-    categories: {default: () => ({})}, // categories of parts filtered in the dropdown
+    categoriesEnabled: {default: () => ({})}, // categories of parts filtered in the dropdown
     zone: {default: 'nozone'},
-    selectedParts: {default: () => ([])}
+    construct: {default: null}
   },
   data: function () {
     return {
@@ -83,17 +78,25 @@ export default {
     partcard
   },
   computed: {
-    active: function () {
-      return this.checklistEnabled && (this.ckecklistLocked || this.userEnabled)
+    selectedParts: {
+      get () {
+        return this.construct.selectedParts[this.slotName]
+      },
+      set (value) {
+        this.updateSelectedParts({
+          construct: this.construct,
+          slotName: this.slotName,
+          selectedParts: value
+        })
+      }
     },
-    selectStyle: function () {
-      if (this.selectVisible) return {display: 'inline-block'}
-      else return {display: 'none'}
+    active: function () {
+      return (this.ckecklistLocked || this.userEnabled)
     },
     categoryFilteredParts: function () {
       var self = this
       return this.allParts.filter(function (part) {
-        return self.categories[part.dbType]
+        return self.categoriesEnabled[part.dbType]
       })
     },
     searchFilteredParts: function () {
@@ -114,6 +117,9 @@ export default {
       } else {
         return ''
       }
+    },
+    partsTooltip () {
+      return this.selectedParts.map(part => part.dbName).join(' , ')
     }
   },
   mounted: function () {
@@ -138,14 +144,17 @@ export default {
     })
   },
   methods: {
-    changeLock: function (event) {
-      this.$emit('update:userEnabled', !this.userEnabled)
-    },
-    onSelectVisibleChange: function (visible) {
-      this.selectVisible = visible
-    },
-    removeItem: function (item) {
-      this.selectedParts.splice(this.selectedParts.indexOf(item), 1)
+    ...mapMutations([
+      'updateUserEnabled',
+      'updateSelectedParts',
+
+    ]),
+    toggleUserEnabled (bool) {
+      this.updateUserEnabled({
+        construct: this.construct,
+        slotName: this.slotName,
+        bool: bool
+      })
     },
     backgroundImageStyle: function (category) {
       return {
@@ -169,44 +178,18 @@ export default {
 </script>
 <style lang='scss' scoped>
 
-$linecolor: #ccc;
-$linestyle: 2px dashed;
-$colors: (
-    tuA: #f6faff,
-    tuB: #f4fefa,
-    selection-marker: #fff5ff
-);
-@each $zone in tuA, tuB, selection-marker {
-  .#{$zone} + .#{$zone} {
-    border-right: 0;
-    border-left: 0;
-  }
-
-  .#{$zone} {
-    border-right: #{$linestyle} #{$linecolor};
-    border-left: #{$linestyle} #{$linecolor};
-
-    .icons {
-      background-color: map-get($colors, $zone);
-    }
-  }
-  .none + .#{$zone}, .selection-marker + .#{$zone}  { border-right: 0;}
-  .#{$zone} + .none { border-left: #{$linestyle} #{$linecolor}};
-}
-
-
 .part-slot {
   &.inactive {
     max-width:2em;
-    min-width: 1em;
+    min-width: 1.5em;
     .slot-name {
       opacity: 0
     }
-    .controls i {
+    .controls .fa-icon {
       position: relative;
       display: inline-block;
       color: #bbb;
-      top: 5.3em;
+      top: 5em;
       cursor: pointer;
       z-index: 1000;
     }
@@ -218,11 +201,14 @@ $colors: (
     margin-bottom: 10px;
     color: #ddd;
     height: 10px;
+    padding-left: 1em;
+    padding-right: 1em;
   }
   .controls {
     text-align: center;
-    i {
-      font-size: 0.8em;
+    .fa-icon {
+      font-size: 0.9em;
+      height: 1em;
       margin-left: 0.2em;
       color: #888;
       cursor: pointer;
@@ -257,6 +243,7 @@ $colors: (
     height: 4em;
     width: 100%;
     top: 2.1em;
+    cursor: pointer;
     .icon {
         background-size: auto 130%;
         background-repeat: no-repeat;
@@ -269,7 +256,7 @@ $colors: (
           margin-left: 15%;
         }
       &.inactive{
-        height: 0.8em;
+        height: 1.2em;
         margin-bottom: -0.3em;
         margin-top:0px;
         filter: grayscale(100%);
@@ -277,7 +264,6 @@ $colors: (
     }
   }
   .part-selector {
-
     .parts {
       max-height: 40em;
       overflow-y: auto;
@@ -329,4 +315,32 @@ $colors: (
 }
 
 
+</style>
+
+<style lang='scss'>
+$linecolor: #ccc;
+$linestyle: 2px dashed;
+$colors: (
+    tuA: #f6faff,
+    tuB: #f4fefa,
+    selection-marker: #fff5ff,
+    promoter: #f6faff,
+    cds: #f4fefa,
+    terminator: #fff5ff
+);
+
+@each $zone in tuA, tuB, selection-marker, promoter, cds, terminator {
+
+  :not(.#{$zone}) + .#{$zone} {
+    border-left: #{$linestyle} #{$linecolor};
+  }
+  .#{$zone} + :not(.#{$zone}) {
+    border-left: #{$linestyle} #{$linecolor};
+  }
+  .#{$zone} {
+    .icons {
+      background-color: map-get($colors, $zone);
+    }
+  }
+}
 </style>

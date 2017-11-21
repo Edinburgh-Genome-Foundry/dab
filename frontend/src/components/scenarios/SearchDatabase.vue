@@ -1,5 +1,5 @@
 <template lang="pug">
-.search-the-database
+.page
 
   h1 Explore the database
 
@@ -34,7 +34,9 @@
 <script>
 import learnmore from '../../components/widgets/LearnMore'
 import minipartslot from '../SequenceDesigner/MiniPartSlot'
-import emma from '../SequenceDesigner/EMMA'
+import emmaTemplate from '../SequenceDesigner/templates/EMMAConstruct'
+
+var emma = emmaTemplate.constructTemplate
 
 var infos = {
   title: 'Search the database',
@@ -126,7 +128,7 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.search-the-database {
+.page {
   .parts-viewer {
     .loading-icon {
       margin-top: 2em;

@@ -1,5 +1,5 @@
 <template lang='pug'>
-  #app
+  #website
     .container
       navbar
       router-view
@@ -38,7 +38,7 @@ export default {
 @import url(https://fonts.googleapis.com/css?family=Raleway);
 
 
-#app {
+#website {
   font-family: 'Raleway', 'Source Sans Pro',  Helvetica, Arial, sans-serif;
   font-size:16px;
   -webkit-font-smoothing: antialiased;
@@ -59,7 +59,7 @@ body {
   margin-bottom: 60px;
 }
 
-.container {
+.page, .navbar {
   width:1050px;
   max-width:95%;
   margin: 0px auto;

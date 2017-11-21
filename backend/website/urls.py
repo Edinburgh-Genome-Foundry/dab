@@ -22,12 +22,12 @@ from django.contrib import admin
 import app.views as views
 
 urlpatterns = [
-    url(r'^poll$', views.PollJobView.as_view()),
-    url(r'^start/simulate_cloning$',
+    url(r'^api/poll$', views.PollJobView.as_view()),
+    url(r'^api/start/simulate_cloning$',
         views.SimulateCloningView.as_view()),
 
 
-    url(r'^docs/', include('rest_framework_docs.urls')),
-    url(r'^django-rq/', include('django_rq.urls')),
-    url(r'^admin/', admin.site.urls)
+    url(r'^api/docs/', include('rest_framework_docs.urls')),
+    url(r'^api/django-rq/', include('django_rq.urls')),
+    url(r'^api/admin/', admin.site.urls)
 ]

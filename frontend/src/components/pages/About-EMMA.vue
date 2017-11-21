@@ -1,5 +1,5 @@
 <template lang='pug'>
-.about-emma
+.page
   h1 About EMMA
 
   p This page gathers technical informations on the EMMA assembly standard.
@@ -8,17 +8,17 @@
 
   el-card(header='EMMA overhangs, by position').overhangs-list
     .minischema.center
-      .part-and-overhangs(v-for='slotName in emma.slotNames', :key='slotName')
-        minipartslot.overhang(:size='13', :categories="['overhang']", :slotName='emma.slotInfos[slotName].overhangs.left')
-        minipartslot(:size='13', :categories='[emma.slotInfos[slotName].categories[0]]', :slotName='slotName')
-        minipartslot.overhang(:size='13', :categories="['overhang']", :slotName='emma.slotInfos[slotName].overhangs.right')
+      .part-and-overhangs(v-for='slotName in template.slotNames', :key='slotName')
+        minipartslot.overhang(:size='13', :categories="['overhang']", :slotName='template.slotInfos[slotName].overhangs.left')
+        minipartslot(:size='13', :categories='[template.slotInfos[slotName].categories[0]]', :slotName='slotName')
+        minipartslot.overhang(:size='13', :categories="['overhang']", :slotName='template.slotInfos[slotName].overhangs.right')
 
 
   el-card.overhangs-list(header='EMMA overhangs, alphabetically')
-    .overhang-seq(v-for='seq in emma.overhangs', :key='seq') {{seq}}&nbsp
+    .overhang-seq(v-for='seq in template.overhangs', :key='seq') {{seq}}&nbsp
 
   el-card(header='EMMA- and Inter-compatible overhangs').overhangs-list
-    .overhang-seq(v-for='seq in emma.compatibleOverhangs', :key='seq') {{seq}}&nbsp
+    .overhang-seq(v-for='seq in template.compatibleOverhangs', :key='seq') {{seq}}&nbsp
 
   el-card(header='Valid part categories on this website').overhangs-list
     p(name='categories' id='categories').
@@ -29,24 +29,13 @@
 </template>
 
 <script>
-import emma from '../SequenceDesigner/EMMA.js'
+import template from '../SequenceDesigner/templates/EMMAConstruct.vue'
 import minipartslot from '../SequenceDesigner/MiniPartSlot'
+
 export default {
   data: function () {
-    // var partCategories = []
-    // Object.values(emma.slotInfos).forEach(function (part) {
-    //   console.log(part)
-    //   part.categories.forEach(function (category) {
-    //     console.log(category)
-    //     if (partCategories.indexOf(category) < 0) {
-    //       partCategories.push(category)
-    //     }
-    //   })
-    // })
-
     return {
-      emma: emma,
-      // partCategories: partCategories
+      template: template.constructTemplate,
     }
   },
   components: {
@@ -55,7 +44,7 @@ export default {
 }
 </script>
 <style lang='scss' >
-.about-emma {
+.page {
   .minischema {
     margin-top: 2em;
     .part-and-overhangs {

@@ -1,7 +1,7 @@
 <!-- src/components/Home.vue -->
 
 <template lang="pug">
-div
+.page
   h1 Welcome
   h2 Connect with your EMMA-DB identifiers
   scenariospanel
@@ -17,7 +17,9 @@ export default {
 </script>
 
 <style scoped>
-h2 {margin-bottom: 60px}
+h2 {
+  margin-bottom: 60px;
+}
 p {
   font-size: 18px;
 }

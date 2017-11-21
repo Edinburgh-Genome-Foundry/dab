@@ -1,30 +1,33 @@
 <template lang='pug'>
-div
+.backend-querier
   input(type='text', size='25', value='', v-model='honeypot', :style="{display: 'none'}")
-  el-button.center(v-if='submitButtonText.length > 0' @click='submit()') {{submitButtonText }}
+  el-button.center(v-if='submitButtonText.length > 0' @click='submit()',
+          :disabled='status.polling.inProgress')
+    slot(name='button')
   .polling(v-if='status.polling.inProgress && showProgress')
-    spinner(color="#6da5ff" size="12px")
+
     .polling-message {{status.polling.data.message}}
     el-steps(:space='100', :active='progressStage')
       el-step(icon='upload')
       el-step(icon='setting')
       el-step.last-step(icon='message')
+    img.spinner(src='../../assets/images/loading_plasmid.svg')
 </template>
 
 <script>
 import downloadbutton from './DownloadButton'
-import spinner from 'vue-spinner/src/PulseLoader'
 
 export default {
   name: 'backend-querier',
   props: {
-    submitButtonText: {default: ''},
+    submitButtonText: {default: 'Submit'},
     value: {default: () => ({})},
     backendUrl: {default: ''},
     backendIP: {default: 'auto'},
     form: {default: () => ({})},
     validateForm: {default: () => () => ([])},
-    showProgress: {default: true}
+    showProgress: {default: true},
+    submitTrigger: {default: false}
   },
   data: function () {
     console.log(this.backendIP === 'auto' ? this.computeBackendIP() : this.backendIP)
@@ -43,8 +46,7 @@ export default {
     }
   },
   components: {
-    downloadbutton,
-    spinner
+    downloadbutton
   },
   watch: {
     value: {
@@ -59,6 +61,11 @@ export default {
         this.$emit('input', val)
       },
       deep: true
+    },
+    submitTrigger: function (value) {
+      if (value) {
+        this.submit()
+      }
     }
   },
   computed: {
@@ -79,8 +86,9 @@ export default {
         this.status.requestError = 'Invalid form: ' + errors.join('   ')
         return false
       }
-      this.status.polling.data.message = 'Contacting the server...'
       this.status.polling.inProgress = true
+      this.status.polling.data = {message: 'Contacting the server...'}
+
       this.$http.post(
         this.backendRoot + this.backendUrl,
         this.form
@@ -119,8 +127,11 @@ export default {
           } else if (data.status === 'started') {
             self.status.polling.data = data.progress_data
           } else if (data.status === 'finished') {
-            self.status.polling.data.message = 'Finished ! sending now'
+            self.status.polling.data.message = 'Finished !'
             self.status.result = data.result
+            if (data.result.error) {
+              self.status.requestError = 'Program error: ' + data.result.error.message
+            }
             self.status.polling.inProgress = false
             clearInterval(jobPoller)
           }
@@ -138,7 +149,7 @@ export default {
       if (location[location.length - 5] === ':') {
         location = location.slice(0, location.length - 5)
       }
-      return location + ':8082/'
+      return location + '/api/'
     }
   }
 }
@@ -167,6 +178,11 @@ export default {
 
 .last-step {
   width: 40px !important;
+}
+
+.spinner {
+  width: 120px;
+  margin-top: 2em;
 }
 
 </style>
