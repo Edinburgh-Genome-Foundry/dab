@@ -7,23 +7,22 @@
     //- el-dialog.part-selector(title="Upload a schema", :visible.sync="showFileDialog", size='small')
     //-   files-uploader(v-model='file', :showSelected='false', :multiple='false')
   //- textarea.title(v-model='projectTitle', type="textarea" rows=1, placeholder='(Enter a project title)')
-  .constructs
-    transition-group(name='constructs-list',
-                     enter-active-class='animated flipInX',
-                     leave-active-class='animated fadeOut',
-                     tag='div')
-      .construct(v-for="construct, i in constructs",
-           :construct='construct',
-           :is='constructTypes[construct.templateName]',
-           :key='construct.id')
+  transition-group(name='constructs-list',
+                   enter-active-class='animated flipInX',
+                   leave-active-class='animated fadeOut',
+                   tag='div')
+    .construct(v-for="construct, i in constructs",
+         :construct='construct',
+         :is='constructTypes[construct.templateName]',
+         :key='construct.id')
 
-  collapsible-button(text='Add constructs')
-    el-button.add-construct(icon='plus' v-for='component, name in constructTypes',
-                           size='small', :key='name',
-                           @click='addConstruct({template: component.constructTemplate}); dialogVisible=false') {{name}}
-    files-uploader(v-model='file', :showSelected='false', :multiple='false',
-                   help='Click here or drag/drop a .project',
-                   text='...or provide constructs from a previous project.')
+    collapsible-button(text='Add constructs' key='collapsible-button')
+      el-button.add-construct(icon='plus' v-for='component, name in constructTypes',
+                              size='small', :key='name',
+                              @click='addConstruct({template: component.constructTemplate}); dialogVisible=false') {{name}}
+      files-uploader(v-model='file', :showSelected='false', :multiple='false',
+                     help='Click here or drag/drop a .project',
+                     text='...or provide constructs from a previous project.')
 </template>
 
 <script>
@@ -145,6 +144,9 @@ export default {
 
   }
   .constructs-list-move {
+    transition: transform 1s;
+  }
+  .collapsible-button-move {
     transition: transform 1s;
   }
 }

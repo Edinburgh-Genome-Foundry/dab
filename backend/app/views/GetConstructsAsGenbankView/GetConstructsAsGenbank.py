@@ -11,10 +11,15 @@ from dnacauldron import full_assembly_report
 
 digestion = serializers.ListField(child=serializers.CharField())
 
-class serializer_class(serializers.Serializer):
-    database_token = serializers.CharField()
+class ConstructSerializer(serializers.Serializer):
+    name = serializers.CharField()
     parts_ids = serializers.ListField(
         child=serializers.ListField(child=serializers.CharField()))
+
+
+class serializer_class(serializers.Serializer):
+    database_token = serializers.CharField()
+    constructs = serializers.ListField(child=ConstructSerializer())
 
 class worker_class(AsyncWorker):
 
@@ -54,6 +59,6 @@ class worker_class(AsyncWorker):
             file_name='asm_report.zip'
         )
 
-class SimulateCloningView(StartJobView):
+class GetConstructsAsGenbankView(StartJobView):
     serializer_class = serializer_class
     worker_class = worker_class

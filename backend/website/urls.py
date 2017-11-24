@@ -23,8 +23,10 @@ import app.views as views
 
 urlpatterns = [
     url(r'^api/poll$', views.PollJobView.as_view()),
-    url(r'^api/start/simulate_cloning$',
-        views.SimulateCloningView.as_view()),
+    url(r'^api/start/get_constructs_as_genbanks$',
+        views.GetConstructsAsGenbankView.as_view()),
+    url(r'^api/start/get_constructs_as_pdf$',
+        views.GetConstructsAsPDFView.as_view()),
 
 
     url(r'^api/docs/', include('rest_framework_docs.urls')),

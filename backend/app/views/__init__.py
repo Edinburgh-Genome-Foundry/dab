@@ -1,2 +1,3 @@
 from .base import PollJobView
-from .SimulateCloning import SimulateCloningView
+from .GetConstructsAsGenbankView import GetConstructsAsGenbankView
+from .GetConstructsAsPDFView import GetConstructsAsPDFView
