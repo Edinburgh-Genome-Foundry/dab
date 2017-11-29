@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VueResource from 'vue-resource'
 import ElementUI from 'element-ui'
+import locale from 'element-ui/lib/locale/lang/en'
 import App from './App'
 import scenarios from './components/scenarios/scenarios'
 import widgets from './components/widgets'
@@ -17,7 +18,7 @@ import 'vue-awesome/icons'
 
 Vue.use(VueResource)
 Vue.use(VueRouter)
-Vue.use(ElementUI)
+Vue.use(ElementUI, { locale })
 Vue.use(widgets)
 Vue.use(VueCookie)
 Vue.component('icon', Icon)

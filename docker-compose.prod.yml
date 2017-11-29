@@ -15,17 +15,8 @@ services:
   nginx:
     environment:
       - BUFFERING=on
-    build: ../EGFNginx
-    links:
-      - "vue:vue"
-      - django
     ports:
       - "80:80"
       - "443:443"
-      - "8082:8082"
     volumes:
-      - /srv/nginx/conf:/etc/nginx/conf.d
-      - /srv/nginx/www:/var/www
-      - /srv/nginx/log:/var/log/nginx
-      - /srv/nginx/sys:/sys
       - /cert:/cert
