@@ -57,8 +57,16 @@ const routes = [{
 ]
 
 scenarios.list.forEach(function (scenario) {
-  routes.push({ path: '/' + scenario.infos.path, component: scenario })
+  routes.push({
+    path: '/' + scenario.infos.path,
+    component: scenario,
+    meta: {
+      title: scenario.infos.title + '- EMMA-DB',
+      description: 'EMMA-DB is a website of the EGF}'
+    }
+  })
 })
+
 routes.push({
   path: '*',
   component: Home,
@@ -71,6 +79,11 @@ routes.push({
 const router = new VueRouter({
   routes,
   mode: 'history'
+})
+
+router.beforeEach((to, from, next) => {
+  document.title = to.meta.title
+  next()
 })
 
 /* eslint-disable no-new */
