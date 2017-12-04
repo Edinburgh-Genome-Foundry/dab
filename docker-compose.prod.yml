@@ -20,3 +20,4 @@ services:
       - "443:443"
     volumes:
       - /cert:/cert
+      - ./nginx/nginx.prod.conf:/etc/nginx/nginx.conf
