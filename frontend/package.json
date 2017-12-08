@@ -1,7 +1,7 @@
 {
-  "name": "cab-frontend",
+  "name": "emma-db-frontend",
   "version": "1.0.0",
-  "description": "Frontend for a Computational Application Boilerplate",
+  "description": "Frontend for the EMMA DB website",
   "author": "Zulko <valentin.zulkower@ed.ac.uk>",
   "private": true,
   "scripts": {
@@ -19,7 +19,8 @@
     "element-ui": "1.3.0",
     "vue-spinner": "1.0.2",
     "vue-cookie": "1.1.4",
-    "vue-awesome": "2.3.3"
+    "vue-awesome": "2.3.3",
+    "utf8": "3.0.0"
   },
   "devDependencies": {
     "autoprefixer": "6.7.7",

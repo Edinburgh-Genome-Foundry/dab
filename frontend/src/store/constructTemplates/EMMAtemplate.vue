@@ -1,59 +1,4 @@
-<template lang='pug'>
-.construct
-  textarea.name(v-model='constructName', placeholder='(Name this construct)' rows=1)
-  .construct-hover-only
-    toolbar(:construct='construct', @toggleOptions="showOptions = !showOptions")
-
-  .options.animated.flipInX(v-show='showOptions')
-    .div
-      el-checkbox(v-model='options.selectionMarker') Selection marker
-      el-checkbox(v-model='options.homologyArms') Homology arms
-      el-checkbox(v-model='options.recombinationSites') Recombination sites
-      el-checkbox(v-model='options.insulators') Insulators
-      el-checkbox(v-model='options.replicationOrigin') Replication origin
-
-    hr
-    el-checkbox(v-model='options.tuA.checked') Transcription Unit A
-    el-select(v-if='options.tuA.checked' v-model='options.tuA.sistrons')
-      el-option(label='Monosistronic' value='mono')
-      el-option(label='Bisistronic' value='bi')
-
-    el-checkbox(v-if="options.tuA.checked && (options.tuA.sistrons === 'mono')",
-                v-model='options.tuA.fusion') Fusion
-
-    span(v-if="options.tuA.checked && (options.tuA.sistrons === 'bi')")
-      el-radio(v-model='options.tuA.bisistron_type', label='IRES') IRES
-      el-radio(v-model='options.tuA.bisistron_type', label='p2A') p2A
-
-    hr
-    el-checkbox(v-model='options.tuB.checked') Transcription Unit B
-    el-select(v-if='options.tuB.checked' v-model='options.tuB.sistrons')
-      el-option(label='Monosistronic' value='mono')
-      el-option(label='Bisistronic' value='bi')
-
-    el-checkbox(v-if="options.tuB.checked && (options.tuB.sistrons === 'mono')",
-                v-model='options.tuB.fusion') Fusion
-
-    span(v-if="options.tuB.checked && (options.tuB.sistrons === 'bi')")
-      el-radio(v-model='options.tuB.bisistron_type', label='IRES') IRES
-      el-radio(v-model='options.tuB.bisistron_type', label='p2A') p2A
-
-  .slots
-    transition-group(name='parts-list',
-                     enter-active-class='animated flipInX',
-                     leave-active-class='animated zoomOut absolute-animation',
-                     tag='div')
-      .part-slot(v-for='slotName in constructTemplate.slotNames', :key='slotName',
-                 v-if='optionsEnabled[slotName]', :slotName='slotName',
-                 is='part-slot',
-                 :categoriesEnabled='categoriesEnabled[slotName]',
-                 :zone='constructTemplate.slotInfos[slotName].zone',
-                 :construct='construct',
-                 :optionsLocked='optionsLocked[slotName]',
-                 :userEnabled='construct.userEnabled[slotName]')
-</template>
 <script>
-import Construct from '../Construct'
 
 var slotNames = '1 2 3 4 5 6 7 8 8a 8b 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25'.split(' ')
 var defaultSlots = {}
@@ -64,7 +9,7 @@ slotNames.map(function (slotName) {
   }
 })
 
-var template = {
+export const EMMAtemplate = {
   name: 'EMMA',
   slotNames: slotNames,
   defaultSlots: defaultSlots,
@@ -590,15 +535,6 @@ var template = {
         'origin of replication': true
       })
     }
-  }
-}
-
-export default {
-  name: 'EMMAConstruct',
-  extends: Construct,
-  constructTemplate: template,
-  beforeCreate () {
-    this.constructTemplate = template
   }
 }
 </script>

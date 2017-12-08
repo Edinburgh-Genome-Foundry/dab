@@ -103,6 +103,7 @@ export default {
     border: 2px dashed #CBCBCB;
     &.hovered {
         border: 2px dashed #2E94C4;
+        background-color: rgba(#19749f, 0.03);
         .dropzone-title {
           color: #1975A0;
         }

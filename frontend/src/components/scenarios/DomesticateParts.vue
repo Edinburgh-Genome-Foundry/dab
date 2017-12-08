@@ -34,10 +34,7 @@
 
 <script>
 import learnmore from '../../components/widgets/LearnMore'
-import minipartslot from '../SequenceDesigner/MiniPartSlot'
-import emmaTemplate from '../SequenceDesigner/templates/EMMAConstruct'
-
-var emma = emmaTemplate.constructTemplate
+import minipartslot from '../Parts/MiniPartSlot'
 
 var infos = {
   title: 'Domesticate parts',
@@ -50,8 +47,7 @@ var infos = {
 export default {
   data: function () {
     return {
-      slots: emma.slotInfos,
-      slotNames: emma.slotNames,
+      templateName: 'EMMA',
       selectedSlot: null,
       sequenceFile: null,
       sequenceText: '',
@@ -64,9 +60,20 @@ export default {
     minipartslot,
     learnmore,
   },
+  computed: {
+    currentTemplate () {
+      return this.$store.state.constructTemplates[this.templateName]
+    },
+    slots () {
+      return this.currentTemplate.slotInfos
+    },
+    slotNames () {
+      return this.currentTemplate.slotNames
+    }
+  },
   infos: infos,
   methods: {
-    selectCategory: function (slot, category) {
+    selectCategory (slot, category) {
       this.selectedSlot = {slotName: slot, category: category}
     }
   }

@@ -1,5 +1,5 @@
 <template lang='pug'>
-el-button.download.center(type='primary' @click='downloadContent' icon='document') Download Report
+el-button.download.center(type='primary' @click='downloadContent' icon='document') {{button_text}}
 </template>
 
 <script>
@@ -7,7 +7,7 @@ var download = require('downloadjs')
 export default {
   props: {
     button_text: {
-      default: 'Submit'
+      default: 'Download'
     },
     filedata: {}
   },

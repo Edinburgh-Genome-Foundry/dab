@@ -1,63 +1,57 @@
 """Bla."""
 
-from base64 import b64decode, b64encode
-
 from rest_framework import serializers
-from ..base import AsyncWorker, StartJobView, JobResult
-from ..tools import record_from_ice_database
+from ..base import AsyncWorker, StartJobView
+from ..tools import record_from_ice_database, data_to_html_data
 from ..common_data import connector_records, backbone
+from flametree import file_tree
 from dnacauldron import full_assembly_report
-
-
-digestion = serializers.ListField(child=serializers.CharField())
-
-class ConstructSerializer(serializers.Serializer):
-    name = serializers.CharField()
-    parts_ids = serializers.ListField(
-        child=serializers.ListField(child=serializers.CharField()))
 
 
 class serializer_class(serializers.Serializer):
     database_token = serializers.CharField()
-    constructs = serializers.ListField(child=ConstructSerializer())
+    constructsData = serializers.JSONField()
 
 class worker_class(AsyncWorker):
 
     def work(self):
         self.set_progress_message("Reading Data...")
-        data = self.data
+        data = self.data.constructsData
+        results_zip_root = file_tree('@memory')
+        for construct in self.data.constructsData.constructs:
+            print (construct.enabledSlots)
+            parts = [
+                (part.dbId, part.dbName)
+                for slot, selected_parts in construct.selectedParts.items()
+                if construct.enabledSlots[slot]
+                for part in selected_parts
+            ]
+            parts_records = [
+                record_from_ice_database(part_id, self.data.database_token,
+                                         linear=True, name=part_name)
+                for part_id, part_name in parts
+            ] + [backbone]
+            nassemblies, zipdata = full_assembly_report(
+                parts_records, "@memory", enzyme='BsmBI',
+                assemblies_prefix=construct.name,
+                connector_records=connector_records,
+                include_fragments=False, include_parts=False)
+            folder = results_zip_root._dir(construct.name)
+            ziproot = file_tree(zipdata)
+            for d in ziproot._dirs:
+                d._copy(folder)
+            ziproot.parts_graph_pdf.copy(folder._file('parts_graph.pdf'))
 
-        records = [
-            record_from_ice_database(part_id, data.database_token,
-                                     linear=True, name=part_name)
-            for (part_id, part_name) in data.parts_ids
-        ]
-        print ([(r.id, r.name, len(r)) for r in records])
-        print (backbone.id, len(backbone))
+        zip_data = results_zip_root._close()
+        name = data.projectName if len(data.projectName) else 'sequences'
 
-        self.set_progress_message("Generating a report, be patient.")
-
-        nconstructs, zip_data = full_assembly_report(
-            [backbone] + records, target='@memory', enzyme='BsmBI',
-            connector_records=connector_records,
-            max_assemblies=40, fragments_filters='auto',
-            assemblies_prefix='assembly'
-        )
-        zip_data = ('data:application/zip;base64,' +
-                    b64encode(zip_data).decode("utf-8"))
-        if nconstructs == 0:
-            preview_html = 'No possible construct found, see report for more.'
-        elif nconstructs == 1:
-            preview_html = '1 construct was generated.'
-        else:
-            preview_html = "%d constructs were generated." % nconstructs
-
-        return JobResult(
-            preview_html=preview_html,
-            file_data=zip_data,
-            file_mimetype='application/zip',
-            file_name='asm_report.zip'
-        )
+        return {
+            'zip_file': dict(
+               name=name + '.zip',
+               data=data_to_html_data(zip_data, datatype='zip'),
+               mimetype='application/zip'
+            )
+        }
 
 class GetConstructsAsGenbankView(StartJobView):
     serializer_class = serializer_class

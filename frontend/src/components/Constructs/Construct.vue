@@ -1,20 +1,54 @@
+<template lang='pug'>
+.construct
+  textarea.name(v-model='constructName', placeholder='(Name this construct)' rows=1)
+  .construct-hover-only
+    toolbar(:construct='construct', @toggleOptions="showOptions = !showOptions")
+
+  .options.animated.flipInX(v-show='showOptions')
+    .construct-form(:is='forms[construct.templateName]', v-model='options')
+
+  .slots
+    transition-group(name='parts-list',
+                     enter-active-class='animated flipInX',
+                     leave-active-class='animated zoomOut absolute-animation',
+                     tag='div')
+      .part-slot(v-for='slotName in constructTemplate.slotNames', :key='slotName',
+                 v-if='optionsEnabled[slotName]', :slotName='slotName',
+                 is='part-slot',
+                 :categoriesEnabled='categoriesEnabled[slotName]',
+                 :zone='constructTemplate.slotInfos[slotName].zone',
+                 :construct='construct',
+                 :optionsLocked='optionsLocked[slotName]',
+                 :userEnabled='construct.userEnabled[slotName]')
+</template>
+
+
 <script>
-import partslot from './PartSlot'
-import construct from './Construct'
+import partslot from '../Parts/PartSlot'
 import download from 'downloadjs'
 import toolbar from './ConstructToolBar'
-import { mapMutations } from 'vuex'
+import { forms } from './ConstructForm'
+import { mapMutations, mapGetters } from 'vuex'
 
 export default {
   name: 'construct',
-  props: {construct},
+  props: {construct: {default: null}},
   data () {
     return {
       options: JSON.parse(JSON.stringify(this.construct.options)),
-      showOptions: false
+      showOptions: false,
+      forms: forms
     }
   },
   computed: {
+    ...mapGetters([
+      'getConstructOptionsEnabled',
+      'getConstructOptionsLocked',
+      'getConstructCategoriesEnabled',
+    ]),
+    constructTemplate () {
+      return this.$store.state.constructTemplates[this.construct.templateName]
+    },
     constructName: {
       get () {
         return this.construct.name
@@ -27,30 +61,13 @@ export default {
       }
     },
     optionsEnabled () {
-      var tpl = this.constructTemplate
-      var options = this.options
-      var result = {}
-      tpl.slotNames.map(function (name) {
-        result[name] = tpl.slotOptions[name].enabled(options)
-      })
-      return result
+      return this.getConstructOptionsEnabled(this.construct)
     },
     optionsLocked () {
-      var tpl = this.constructTemplate
-      var result = {}
-      tpl.slotNames.map(function (name) {
-        result[name] = tpl.slotOptions[name].locked
-      })
-      return result
+      return this.getConstructOptionsLocked(this.construct)
     },
     categoriesEnabled () {
-      var tpl = this.constructTemplate
-      var options = this.options
-      var result = {}
-      tpl.slotNames.map(function (name) {
-        result[name] = tpl.slotOptions[name].categoriesEnabled(options)
-      })
-      return result
+      return this.getConstructCategoriesEnabled(this.construct)
     }
   },
   watch: {
@@ -117,19 +134,6 @@ export default {
       .construct-hover-only {
         visibility: visible;
       }
-    }
-  }
-  .options {
-    width: 85%;
-    max-width: 55em;
-    margin: 1em auto;
-    .radio {
-      display: inline;
-      padding: 20px;
-    }
-    .el-checkbox, .el-select {
-      margin-right: 1em;
-      margin-left: 0;
     }
   }
 }

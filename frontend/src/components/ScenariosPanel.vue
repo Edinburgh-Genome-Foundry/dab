@@ -6,7 +6,7 @@ el-row
         img.icon(:src='scenario.infos.icon', alt='')
         .caption
           h3 {{scenario.infos.title}}
-          p.thumbnail-description {{scenario.infos.description}}
+          p.thumbnail-description(v-if='scenario.infos.description') {{scenario.infos.description}}
 </template>
 
 <script>
@@ -37,6 +37,9 @@ export default {
   text-align: center;
   &:hover {
     opacity: 1;
+  }
+  a:active {
+    outline: none;
   }
 }
 img {

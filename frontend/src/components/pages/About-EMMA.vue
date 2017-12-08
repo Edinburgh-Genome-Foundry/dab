@@ -29,17 +29,21 @@
 </template>
 
 <script>
-import template from '../SequenceDesigner/templates/EMMAConstruct.vue'
-import minipartslot from '../SequenceDesigner/MiniPartSlot'
+import minipartslot from '../Parts/MiniPartSlot'
 
 export default {
   data: function () {
     return {
-      template: template.constructTemplate,
+      templateName: 'EMMA'
     }
   },
   components: {
     minipartslot
+  },
+  computed: {
+    template () {
+      return this.$store.state.constructTemplates[this.templateName]
+    }
   }
 }
 </script>

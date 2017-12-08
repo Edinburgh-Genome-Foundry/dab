@@ -20,10 +20,29 @@ ADD requirements.txt /code/
 WORKDIR /code
 RUN pip install -r requirements.txt
 
-ARG CACHEBUST=28
-RUN pip install --upgrade git+ssh://git@git.genomefoundry.org:10022/valentin/dnacauldron.git
+# The next lines install wkhtmltopdf (for Caravagene)
+ENV QT_QPA_PLATFORM offscreen
+# ENV QT_QPA_FONTDIR=/usr/share/fonts
+RUN apt-get install -y fontconfig libfontconfig1 libfreetype6 libx11-6 libxext6 libxrender1 xfonts-base xfonts-75dpi
+RUN apt-get install -y xvfb wkhtmltopdf
+RUN apt-get install -y unzip
+ENV QT_QPA_FONTDIR=/root/.fonts/
+RUN wget -O "Raleway.zip" "https://fonts.google.com/download?family=Raleway" \
+    && unzip -u "Raleway.zip" -d /root/.fonts \
+    && rm -f "Raleway.zip"
+RUN wget -O "Inconsolata.zip" "https://fonts.google.com/download?family=Inconsolata" \
+    && unzip -u "Inconsolata.zip" -d /root/.fonts \
+    && rm -f "Inconsolata.zip"
+RUN wget -O "OpenSans.zip" "https://fonts.google.com/download?family=Open+Sans" \
+    && unzip -u "OpenSans.zip" -d /root/.fonts \
+    && rm -f "OpenSans.zip"
+RUN wget -O "CabinSketch.zip" "https://fonts.google.com/download?family=Cabin+Sketch" \
+    && unzip -u "CabinSketch.zip" -d /root/.fonts \
+    && rm -f "CabinSketch.zip"
+RUN fc-cache -f
 
-# Remove SSH keys
+ARG CACHEBUST=29
+RUN pip install --upgrade git+git://github.com/Edinburgh-Genome-Foundry/DnaCauldron.git
 RUN rm -rf /root/.ssh/
 
 

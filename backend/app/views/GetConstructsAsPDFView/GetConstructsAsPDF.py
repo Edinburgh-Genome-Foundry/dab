@@ -1,56 +1,65 @@
 """Bla."""
 
-from base64 import b64decode, b64encode
-
 from rest_framework import serializers
 from ..base import AsyncWorker, StartJobView, JobResult
-from ..tools import record_from_ice_database
-from ..common_data import connector_records, backbone
-from dnacauldron import full_assembly_report
-
-
-digestion = serializers.ListField(child=serializers.CharField())
-
-class ConstructSerializer(serializers.Serializer):
-    name = serializers.CharField()
-    parts_ids = serializers.ListField(
-        child=serializers.ListField(child=serializers.CharField()))
-
+from ..tools import data_to_html_data
+from caravagene import Part, Construct, ConstructList
 
 class serializer_class(serializers.Serializer):
-    database_token = serializers.CharField()
-    constructs = serializers.ListField(child=ConstructSerializer())
+    constructsData = serializers.JSONField()
 
 class worker_class(AsyncWorker):
 
     def work(self):
         self.set_progress_message("Reading Data...")
-        data = self.data
+        data = self.data.constructsData
 
-        records = [
-            record_from_ice_database(part_id, data.database_token,
-                                     linear=True, name=part_name)
-            for (part_id, part_name) in data.parts_ids
-        ]
-        print ([(r.id, r.name, len(r)) for r in records])
-        print (backbone.id, len(backbone))
+        def category_sanitizer(category):
+            if 'ATG' in category:
+                return 'ATG'
+            category = category.replace(' ', '-')
+            category = {
+                '5-3-homology-arm': 'five-prime-overhang',
+                '5-3-ITR': 'ITR',
+                '3-5-homology-arm': 'three-prime-overhang',
+            }.get(category, category)
+            return category.replace(' ', '-')
 
-        self.set_progress_message("Generating a report, be patient.")
+        constructs = []
+        for construct in data.constructs:
+            template = data.constructTemplates[construct.templateName]
+            enabled_slots = sorted([
+                slot for (slot, enabled) in construct.enabledSlots.items()
+                if enabled
+            ], key=template.slotNames.index)
+            parts = []
+            for slot in enabled_slots:
+                selected = construct.selectedParts[slot]
+                if selected == []:
+                    category = construct.categoriesEnabled[0]
+                    category = category_sanitizer(category)
+                    parts.append(Part(category=category, subscript=slot))
+                else:
+                    part = selected[0]
+                    others = len(selected) - 1
+                    sublabel = '' if (others == 0) else "+%d others" % others
+                    category = category_sanitizer(part.dbType)
+                    parts.append(Part(category=category, label=part.dbName,
+                                      sublabel=sublabel, subscript=slot))
+            constructs.append(Construct(parts, name=construct.name))
+        constructs = ConstructList(constructs, title=data.projectName,
+                                   font='Raleway')
+        pdf_data = constructs.to_pdf()
+        name = data.projectName if len(data.projectName) else 'schema'
 
-        nconstructs, zip_data = full_assembly_report(
-            [backbone] + records, target='@memory', enzyme='BsmBI',
-            connector_records=connector_records,
-            max_assemblies=40, fragments_filters='auto',
-            assemblies_prefix='assembly'
-        )
-        zip_data = ('data:application/zip;base64,' +
-                    b64encode(zip_data).decode("utf-8"))
-        if nconstructs == 0:
-            preview_html = 'No possible construct found, see report for more.'
-        elif nconstructs == 1:
-            preview_html = '1 construct was generated.'
-        else:
-            preview_html = "%d constructs were generated." % nconstructs
+        return {
+            'pdf_file': dict(
+               name=name + '.pdf',
+               data=data_to_html_data(pdf_data, datatype='pdf'),
+               mimetype='application/pdf'
+            )
+        }
+
 
         return JobResult(
             preview_html=preview_html,

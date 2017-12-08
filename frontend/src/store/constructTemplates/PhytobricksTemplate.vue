@@ -1,33 +1,4 @@
-<template lang='pug'>
-.construct
-  textarea.name(v-model='constructName', placeholder='(Name this construct)' rows=1)
-  .construct-hover-only
-    toolbar(:construct='construct', @toggleOptions="showOptions = !showOptions")
-
-  .options.animated.flipInX(v-show='showOptions')
-    el-checkbox(v-model='options.singlePartPromoterUTR')  Single-part (promoter + UTR)
-    el-checkbox(v-model='options.singlePartPromoter' v-if='!options.singlePartPromoterUTR') Single-part promoter
-    el-checkbox(v-model='options.singlePartCDS') Single-part CDS
-    el-checkbox(v-model='options.singlePartUTRTerminator') Single-part (UTR + terminator)
-
-
-  .slots
-    transition-group(name='parts-list',
-                     enter-active-class='animated flipInX',
-                     leave-active-class='animated zoomOut absolute-animation',
-                     tag='div')
-      .part-slot(v-for='slotName in constructTemplate.slotNames', :key='slotName',
-                 v-if='optionsEnabled[slotName]', :slotName='slotName',
-                 is='part-slot',
-                 :categoriesEnabled='categoriesEnabled[slotName]',
-                 :zone='constructTemplate.slotInfos[slotName].zone',
-                 :construct='construct',
-                 :optionsLocked='optionsLocked[slotName]',
-                 :userEnabled='construct.userEnabled[slotName]')
-</template>
 <script>
-import Construct from '../Construct'
-
 var slotNames = 'DIST PROX CORE PROM 5UTR NTAG PROM+5UTR CDS1 CDS2 CTAG CDS 3UTR TERM 3UTR+TERM'.split(' ')
 var defaultSlots = {}
 slotNames.map(function (slotName) {
@@ -37,7 +8,7 @@ slotNames.map(function (slotName) {
   }
 })
 
-var template = {
+export const PhytobricksTemplate = {
   name: 'Phytobricks',
   slotNames: slotNames,
   defaultSlots: defaultSlots,
@@ -293,15 +264,6 @@ var template = {
         'terminator': true
       })
     }
-  }
-}
-
-export default {
-  name: 'PythobricksConstruct',
-  extends: Construct,
-  constructTemplate: template,
-  beforeCreate () {
-    this.constructTemplate = template
   }
 }
 </script>

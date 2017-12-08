@@ -1,30 +1,14 @@
-export const STORAGE_KEY = 'constructs-vuejs'
-
-// for testing
-if (navigator.userAgent.indexOf('PhantomJS') > -1) {
-  window.localStorage.clear()
-}
-
-function guid () {
-  function s4 () {
-    return Math.floor((1 + Math.random()) * 0x10000)
-      .toString(16)
-      .substring(1)
-  }
-  return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4()
-}
-export const state = {
-  constructs: JSON.parse(window.localStorage.getItem(STORAGE_KEY) || '[]')
-}
+import { generateRandomID } from '../tools'
 
 export const mutations = {
-  addConstruct (state, { template }) {
+  addConstruct (state, { templateName }) {
     console.log(template)
+    var template = state.constructTemplates[templateName]
     var newConstruct = {
-      templateName: template.name,
+      templateName: templateName,
       userEnabled: {},
       selectedParts: {},
-      id: guid(),
+      id: generateRandomID(),
       name: 'Unnamed Construct',
       options: JSON.parse(JSON.stringify(template.defaultOptions))
     }
@@ -39,7 +23,7 @@ export const mutations = {
     var index = state.constructs.indexOf(construct)
     var newConstructs = state.constructs.slice()
     var newConstruct = JSON.parse(JSON.stringify(newConstructs[index]))
-    newConstruct.id = guid()
+    newConstruct.id = generateRandomID()
     newConstruct.name = newConstruct.name + ' (copy)'
     newConstructs.splice(index + 1, 0, newConstruct)
     state.constructs = newConstructs
@@ -70,7 +54,14 @@ export const mutations = {
   },
 
   loadConstructs (state, { constructs }) {
-    state.constructs += constructs
+    var newConstructs = state.constructs.slice()
+    constructs.map(function (c) {
+      console.log(c)
+      c.id = generateRandomID()
+      console.log(c)
+      newConstructs.push(c)
+    })
+    state.constructs = newConstructs
   },
 
   updateUserEnabled (state, {construct, slotName, bool}) {
@@ -88,5 +79,4 @@ export const mutations = {
   updateConstructName (state, {construct, name}) {
     construct.name = name
   },
-
 }

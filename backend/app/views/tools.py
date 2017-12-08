@@ -59,8 +59,14 @@ def records_from_data_file(data_file):
     records, fmt = string_to_record(content)
     return records, fmt
 
-def zip_data_to_html_data(zip_data):
-    return 'data:application/zip;base64,' + b64encode(zip_data).decode("utf-8")
+def data_to_html_data(data, datatype):
+    datatype = {
+        'zip': 'application/zip',
+        'genbank': 'application/genbank',
+        'fasta': 'application/fasta',
+        'pdf': 'application/pdf',
+    }.get(datatype, datatype)
+    return 'data:%s;base64,%s' % (datatype, b64encode(data).decode("utf-8"))
 
 LADDERS = {
    "100-4k": bw.ladders.LADDER_100_to_4k

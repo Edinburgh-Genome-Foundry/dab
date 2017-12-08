@@ -33,10 +33,7 @@
 
 <script>
 import learnmore from '../../components/widgets/LearnMore'
-import minipartslot from '../SequenceDesigner/MiniPartSlot'
-import emmaTemplate from '../SequenceDesigner/templates/EMMAConstruct'
-
-var emma = emmaTemplate.constructTemplate
+import minipartslot from '../Parts/MiniPartSlot'
 
 var infos = {
   title: 'Search the database',
@@ -49,8 +46,7 @@ var infos = {
 export default {
   data: function () {
     return {
-      slots: emma.slotInfos,
-      slotNames: emma.slotNames,
+      templateName: 'EMMA',
       selectedSlotCategory: null,
       foundParts: [],
       loading: false,
@@ -122,8 +118,17 @@ export default {
           return txt.toLowerCase().indexOf(self.search.toLowerCase()) >= 0
         })
       })
+    },
+    currentTemplate () {
+      return this.$store.state.constructTemplates[this.templateName]
+    },
+    slots () {
+      return this.currentTemplate.slotInfos
+    },
+    slotNames () {
+      return this.currentTemplate.slotNames
     }
-  }
+  },
 }
 </script>
 

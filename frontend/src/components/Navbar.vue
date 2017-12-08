@@ -5,9 +5,9 @@
       router-link(to='home')
         img(src='../assets/images/emma-title.svg')
     el-menu-item(index='home') Home
-    el-menu-item(index='repo')
+    a.el-menu-item(index='repo' href='https://emmadb.genomefoundry.org/')
       icon(name='external-link')
-      a(href='https://emmadb.genomefoundry.org/'  rel="noopener" target="_blank") Parts Repo
+      span Parts Repo
     el-submenu(index='2')
       template(slot='title') Scenarios
       el-menu-item(v-for='scenario in scenarios',  :key="scenario.infos.path" ,:index="scenario.infos.path") {{scenario.infos.navbarTitle}}
@@ -33,7 +33,6 @@
 <script>
 import scenarios from './scenarios/scenarios.js'
 import utils from '../utils.js'
-console.log(scenarios.list[0].infos)
 export default {
   data: () => ({
     scenarios: scenarios.list,
@@ -78,7 +77,6 @@ export default {
   mounted: function () {
     // (!this.$cookie.get('userId')) && utils.getToken(this) // new session
     this.handleResize()
-    console.log('we  check login')
     window.addEventListener('resize', this.handleResize)
   }
 }
@@ -104,6 +102,9 @@ export default {
     height:50px;
     img {
       height:180%;
+    }
+    a:active, a:focus {
+      outline: none;
     }
   }
 
