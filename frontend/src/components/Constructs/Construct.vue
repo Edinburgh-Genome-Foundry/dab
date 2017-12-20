@@ -116,7 +116,6 @@ export default {
     font-family: 'Raleway';
     font-size: 1em;
     resize: none;
-
   }
   .construct-hover-only {
     visibility: hidden;

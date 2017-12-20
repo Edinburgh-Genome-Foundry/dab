@@ -1,5 +1,6 @@
-export const STORAGE_KEY = 'constructs-vuejs'
 import constructTemplates from './constructTemplates'
+import settings from '../settings'
+export const STORAGE_KEY = 'constructs-vuejs'
 
 // for testing
 if (navigator.userAgent.indexOf('PhantomJS') > -1) {
@@ -8,5 +9,14 @@ if (navigator.userAgent.indexOf('PhantomJS') > -1) {
 
 export const state = {
   constructs: JSON.parse(window.localStorage.getItem(STORAGE_KEY) || '[]'),
-  constructTemplates: constructTemplates
+  constructTemplates,
+  settings,
+  auth: {
+    isLoggedIn: false,
+    accessToken: null,
+    refreshToken: null,
+  },
+  user: {
+    name: null
+  }
 }

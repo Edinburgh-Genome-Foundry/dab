@@ -1,5 +1,4 @@
 <script>
-
 var slotNames = '1 2 3 4 5 6 7 8 8a 8b 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25'.split(' ')
 var defaultSlots = {}
 slotNames.map(function (slotName) {
@@ -394,8 +393,8 @@ export const EMMAtemplate = {
     },
     '8a': {
       enabled: o => o.tuA.checked &&
-        ((o.tuA.sistrons === 'mono') && (!o.tuA.fusion)) ||
-        ((o.tuA.sistrons === 'bi') && (o.tuA.bisistron_type === 'IRES')),
+        (((o.tuA.sistrons === 'mono') && (!o.tuA.fusion)) ||
+        ((o.tuA.sistrons === 'bi') && (o.tuA.bisistron_type === 'IRES'))),
 
       locked: true,
       categoriesEnabled: o => ({

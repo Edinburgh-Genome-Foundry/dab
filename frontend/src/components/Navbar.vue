@@ -10,42 +10,33 @@
       span Parts Repo
     el-submenu(index='2')
       template(slot='title') Scenarios
-      el-menu-item(v-for='scenario in scenarios',  :key="scenario.infos.path" ,:index="scenario.infos.path") {{scenario.infos.navbarTitle}}
+      el-menu-item(v-for='scenario in scenarios',
+                   :key="scenario.infos.path",
+                   :index="scenario.infos.path") {{scenario.infos.navbarTitle}}
     el-submenu(index='3')
       template(slot='title') About
       el-menu-item(index='about-emma') About Emma
       el-menu-item(index='help') Help
 
-    li.el-menu-item-x.login(type="html" v-bind:userId='userId') Logged as <b>{{ userId }}</b>
-      a(type="text" size="mini" @click="switchUser" v-bind:loginAction='loginAction' ) ({{ loginAction }})
-  el-dialog(v-bind:visible.sync='showLoginDialog' size='tiny')
-    p
-      span username
-      el-input(v-model='username' value="visitor")
-    p
-      span password
-      el-input(v-model='password' type='password') visitor
-    p(v-if='loginMessage') {{loginMessage}}
-    div.center
-      el-button(type='primary' @click='tryLogin') submit
+    div.el-menu-item-x.login Logged as <b>{{ userName }}</b>
+      a(v-if='userName == settings.ANONYMOUS_USERNAME' @click='showLoginDialog = true') Switch account
+      a(v-else @click='logout') Log out
+  login(v-model='showLoginDialog')
 </template>
 
 <script>
 import scenarios from './scenarios/scenarios.js'
-import utils from '../utils.js'
+import Login from './Login'
+import Auth from '../auth'
 export default {
   data: () => ({
     scenarios: scenarios.list,
     fullWidth: 0,
-    userId: this.userIdLookup,
-    username: '',
-    password: '',
-    database: '',
-    loginMessage: 'Enter user and password',
-    showLoginDialog: false,
-    loginAction: 'Switch User',
-    // databases: globalSettings.DATABASES,
+    showLoginDialog: false
   }),
+  components: {
+    login: Login
+  },
   methods: {
     handleSelect: function (key, keyPath) {
       this.$router.push(key)
@@ -53,34 +44,26 @@ export default {
     handleResize: function (event) {
       this.fullWidth = document.documentElement.clientWidth
     },
-    tryLogin: function (event) {
-      utils.getToken(this)
-    },
-    userIdLookup: function (event) {
-      utils.userIdLookup(this)
-    },
-    switchUser: function (event) {
-      this.$set(this, 'userId', 'visitor')
-      if (this.$cookie.get('userId')) {
-        (this.$cookie.get('userId') !== '"visitor"') ? utils.tryLogout(this) : this.showLoginDialog = true
-      } else {
-        this.showLoginDialog = true
-      }
-    },
+    logout () {
+      Auth.logout()
+    }
   },
-  created: function () {
-    // !this.$cookie.get('userId') && utils.getToken(this) // new session
-    !this.$cookie.get('userId') && this.$router.push('Home')  // go home
-    // we have to go home as the loading is parallel and no cookie is present.
-    this.$set(this, 'userId', utils.userIdLookup(this)) // reactive
+  computed: {
+    auth () {
+      return this.$store.state.auth
+    },
+    userName () {
+      return this.$store.state.user.name
+    },
+    settings () {
+      return this.$store.state.settings
+    }
   },
   mounted: function () {
-    // (!this.$cookie.get('userId')) && utils.getToken(this) // new session
     this.handleResize()
     window.addEventListener('resize', this.handleResize)
   }
 }
-
 </script>
 <style lang='scss' scoped>
 

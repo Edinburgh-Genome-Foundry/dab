@@ -66,8 +66,9 @@ export default {
       this.search = ''
       this.queryError = null
       this.foundParts = []
+      console.log(this.$store.state.settings.ICE_REPO_API_URL + 'entries/filterlist', 'BLAAAAAAA')
       this.$http.post(
-        '//ice.dev.genomefoundry.org/ICE-REST/rest/entries/filterlist',
+        this.$store.state.settings.ICE_REPO_API_URL + 'entries/filterlist',
         {
           filter: JSON.stringify({
             type: category,

@@ -1,25 +1,22 @@
-var globalSettings = require('setting.js')
-var exports = module.exports = {}
-// var Vue = require('vue')
-// var VueCookie = require('vue-cookie')
-// Vue.use(VueCookie)
-exports.userIdLookup = function (data) {
+var globalSettings = require('settings')
+
+function userIdLookup (data) {
   if (data.$cookie.get('userId')) {
     data.userId = data.$cookie.get('userId').replace(/"/g, '')
   } else {
     data.userId = 'visitor'
-    exports.getToken(data)
+    getToken(data)
   }
   return data.userId
 }
 
-exports.getToken = function (data) {
+function getToken (data) {
   if (!data.hasOwnProperty || !data.username) {
     data.$set(data, 'username', globalSettings.ANONYMOUS_USERNAME)
     data.$set(data, 'password', globalSettings.ANONYMOUS_PASSWORD)
   }
   data.$http.post(
-    globalSettings.AUTH_URL,
+    globalSettings.API_AUTH_URL,
     {},
     {
       headers: {
@@ -29,7 +26,7 @@ exports.getToken = function (data) {
     },
   ).then((result) => {
     if (result.status === 200) {
-      let parentUrl = exports.getDomain(data)
+      let parentUrl = getDomain(data)
       document.cookie = 'sessionId="' + result.body.data.token + '"; domain=' + parentUrl
       document.cookie = 'userId="' + data.username + '"; domain=' + parentUrl
       this.showLoginDialog = false
@@ -47,7 +44,7 @@ exports.getToken = function (data) {
 )
 }
 
-exports.getDomain = function (data) {
+function getDomain (data) {
   let parentUrl = location.hostname.split('.').slice(1).join('.')
   if (!parentUrl) {
     parentUrl = 'localhost'
@@ -55,10 +52,29 @@ exports.getDomain = function (data) {
   return parentUrl
 }
 
-exports.tryLogout = function (data) {
-  let url = exports.getDomain(data)
+function tryLogout (data) {
+  let url = getDomain(data)
   data.username = '' // So we get a visitor cookie!
   document.cookie = 'sessionId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + url
   document.cookie = 'userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + url
-  exports.getToken(data) // we have to login as a visitor now.. so not logout..
+  getToken(data) // we have to login as a visitor now.. so not logout..
+}
+
+/**
+ * Get the error from a response.
+ *
+ * @param {Response} response The Vue-resource Response that we will try to get errors from.
+ */
+function getError (response) {
+  return response.body['error_description']
+    ? response.body.error_description
+    : response.statusText
+}
+
+module.exports = {
+  userIdLookup,
+  getToken,
+  getDomain,
+  tryLogout,
+  getError
 }

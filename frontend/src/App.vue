@@ -6,27 +6,43 @@
     footersection
 </template>
 
-
-
 <script>
-import auth from './auth'
+import auth from './auth.js'
 import navbar from './components/Navbar'
 import footersection from './components/Footer'
-
+import { mapMutations } from 'vuex'
 export default {
   data () {
     return {
       user: auth.user
     }
   },
-  methods: {
-    logout () {
-      auth.logout()
-    }
-  },
   components: {
     navbar,
     footersection
+  },
+  created () {
+    var cookieUserId = this.$cookie.get('userId')
+    var cookieToken = this.$cookie.get('userId')
+    if (cookieUserId && cookieToken) {
+      this.update_user({name: cookieUserId.replace(/['"]+/g, '')})
+      this.update_auth({
+        isLoggedIn: true,
+        accessToken: cookieToken.replace(/['"]+/g, ''),
+        refreshToken: null,
+      })
+    } else {
+      auth.login({
+        username: this.$store.state.settings.ANONYMOUS_USERNAME,
+        password: this.$store.state.settings.ANONYMOUS_PASSWORD
+      })
+    }
+  },
+  methods: {
+    ...mapMutations([
+      'update_auth',
+      'update_user',
+    ])
   }
 }
 </script>

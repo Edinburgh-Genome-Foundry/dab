@@ -52,7 +52,6 @@
 </template>
 
 <script>
-let globalSetting = require('../../setting.js')
 import partcard from './PartCard'
 import { mapMutations } from 'vuex'
 
@@ -123,9 +122,8 @@ export default {
     }
   },
   mounted: function () {
-    let iceUrl = globalSetting.ICE_URL
     this.$http.post(
-      iceUrl + 'entries/filterlist',
+      this.$store.state.settings.ICE_REPO_API_URL + 'entries/filterlist',
       {
         filter: JSON.stringify({
           type: 'N/A',

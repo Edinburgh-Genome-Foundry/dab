@@ -2,7 +2,6 @@ import { generateRandomID } from '../tools'
 
 export const mutations = {
   addConstruct (state, { templateName }) {
-    console.log(template)
     var template = state.constructTemplates[templateName]
     var newConstruct = {
       templateName: templateName,
@@ -79,4 +78,25 @@ export const mutations = {
   updateConstructName (state, {construct, name}) {
     construct.name = name
   },
+
+  update_auth (state, auth) {
+    state.auth = auth
+  },
+
+  update_user (state, user) {
+    state.user = user
+  },
+
+  clear_all_data (state) {
+    // Auth
+    state.auth.isLoggedIn = false
+    state.auth.accessToken = null
+    state.auth.refreshToken = null
+
+    // User
+    state.user.name = ''
+
+    // Constructs
+    state.constructs = []
+  }
 }

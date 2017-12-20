@@ -1,21 +1,23 @@
 {
   "presets": [
-    "es2017",
+    ["env", { "modules": false }],
     "stage-2"
   ],
   "plugins": [
     ["component", [
       {
         "libraryName": "element-ui",
-        "styleLibraryName": "theme-default"
+        "styleLibraryName": "theme-chalk"
       }
     ],
-    "transform-runtime"]
+    "transform-runtime"],
+    "transform-es2015-modules-commonjs",
+    "dynamic-import-node"
   ],
   "comments": false,
   "env": {
     "test": {
-      "plugins": [ "istanbul", "syntax-trailing-function-commas" ]
+      "plugins": [ "istanbul" ]
     }
   }
 }
