@@ -35,6 +35,6 @@
 <script>
 export default {
   name: 'EMMAForm',
-  extends: require('./ConstructForm')
+  extends: require('./ConstructForm').default
 }
 </script>

@@ -40,8 +40,7 @@ function getToken (data) {
   (result) => {
     this.password = ''
     data.$set(data, 'loginMessage', 'bad password.Error:' + result.status)
-  }
-)
+  })
 }
 
 function getDomain (data) {

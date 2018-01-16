@@ -8,6 +8,6 @@
 <script>
 export default {
   name: 'PhytobricksForm',
-  extends: require('./ConstructForm')
+  extends: require('./ConstructForm').default
 }
 </script>

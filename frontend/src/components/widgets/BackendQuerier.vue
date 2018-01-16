@@ -1,17 +1,15 @@
 <template lang='pug'>
 .backend-querier
   input(type='text', size='25', value='', v-model='honeypot', :style="{display: 'none'}")
-  el-button.center(v-if='submitButtonText.length > 0' @click='submit()',
-          :disabled='status.polling.inProgress')
+  el-button.center(v-if='submitButtonText.length > 0' @click='submit()', :disabled='status.polling.inProgress')
     slot(name='button')
   .polling(v-if='status.polling.inProgress && showProgress')
-
-    .polling-message {{status.polling.data.message}}
-    el-steps(:space='100', :active='progressStage')
-      el-step(icon='upload')
-      el-step(icon='setting')
-      el-step.last-step(icon='message')
     img.spinner(src='../../assets/images/loading_plasmid.svg')
+    el-steps.steps(:active='progressStage', finish-status='success' align-center)
+      el-step(title='send' icon='el-icon-upload')
+      el-step(title='run' icon='el-icon-setting')
+      el-step.last-step(title='get' icon='el-icon-message')
+    .polling-message {{status.polling.data.message}}
 </template>
 
 <script>
@@ -29,8 +27,7 @@ export default {
     showProgress: {default: true},
     submitTrigger: {default: false}
   },
-  data: function () {
-    console.log(this.backendIP === 'auto' ? this.computeBackendIP() : this.backendIP)
+  data () {
     return {
       honeypot: '',
       backendRoot: this.backendIP === 'auto' ? this.computeBackendIP() : this.backendIP,
@@ -50,37 +47,37 @@ export default {
   },
   watch: {
     value: {
-      handler: function (val) {
+      handler (val) {
         this.status = val
       },
       deep: true
     },
     status: {
-      handler: function (val) {
+      handler (val) {
         console.log(val)
         this.$emit('input', val)
       },
       deep: true
     },
-    submitTrigger: function (value) {
+    submitTrigger (value) {
       if (value) {
         this.submit()
       }
     }
   },
   computed: {
-    fulldata: function () {
+    fulldata () {
       return {
         data: this.form,
         honeypot: this.honeypot
       }
     },
-    progressStage: function () {
-      return ['sending', 'queued', 'started', 'finished'].indexOf(this.status.polling.status)
+    progressStage () {
+      return ['sending', 'queued', 'started', 'finished'].indexOf(this.status.polling.status) - 1
     }
   },
   methods: {
-    submit: function () {
+    submit () {
       var errors = this.validateForm()
       if (errors.length) {
         this.status.requestError = 'Invalid form: ' + errors.join('   ')
@@ -88,7 +85,8 @@ export default {
       }
       this.status.polling.inProgress = true
       this.status.polling.data = {message: 'Contacting the server...'}
-
+      console.log(this.backendRoot)
+      console.log(JSON.stringify(this.form))
       this.$http.post(
         this.backendRoot + this.backendUrl,
         this.form
@@ -106,7 +104,7 @@ export default {
         }
       })
     },
-    startPolling: function (jobId) {
+    startPolling (jobId) {
       var self = this
       this.status.polling.inProgress = true
       var jobPoller = setInterval(function () {
@@ -144,7 +142,7 @@ export default {
         })
       }.bind(this), 250)
     },
-    computeBackendIP: function () {
+    computeBackendIP () {
       var location = window.location.origin
       if (location[location.length - 5] === ':') {
         location = location.slice(0, location.length - 5)
@@ -156,6 +154,9 @@ export default {
 </script>
 
 <style scoped>
+.backend-querier {
+  max-width: 100%;
+}
 
 .submit-button {
   margin-top: 20px;
@@ -173,16 +174,14 @@ export default {
 
 .polling {
   text-align:center;
-  margin-top: 50px
-}
-
-.last-step {
-  width: 40px !important;
+  margin-top: 50px;
 }
 
 .spinner {
   width: 120px;
-  margin-top: 2em;
 }
 
+.steps {
+  margin-top: 1em;
+}
 </style>

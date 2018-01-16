@@ -1,7 +1,7 @@
 export default {
   list: [
-    require('./SearchDatabase'),
-    require('./DesignConstructs'),
-    require('./DomesticateParts')
+    require('./SearchDatabase').default,
+    require('./DesignConstructs').default,
+    require('./DomesticateParts').default
   ]
 }

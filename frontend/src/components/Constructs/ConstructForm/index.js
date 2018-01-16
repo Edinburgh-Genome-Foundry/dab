@@ -1,4 +1,4 @@
 export const forms = {
-  'EMMA': require('./EMMAForm'),
-  'Phytobricks': require('./PhytobricksForm'),
+  'EMMA': require('./EMMAForm').default,
+  'Phytobricks': require('./PhytobricksForm').default,
 }

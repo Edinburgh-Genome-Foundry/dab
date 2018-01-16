@@ -2,8 +2,7 @@ git+git://github.com/Edinburgh-Genome-Foundry/DnaCauldron.git
 git+git://github.com/Edinburgh-Genome-Foundry/DnaFeaturesViewer
 git+git://github.com/Edinburgh-Genome-Foundry/DnaChisel
 git+git://github.com/Edinburgh-Genome-Foundry/Caravagene.git
-git+ssh://git@git.genomefoundry.org:10022/valentin/bandwitch.git
-git+ssh://git@git.genomefoundry.org:10022/valentin/dnachisel.git
+git+git://github.com/Edinburgh-Genome-Foundry/bandwitch.git
 
 git+https://github.com/pygraphviz/pygraphviz.git
 

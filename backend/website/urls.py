@@ -22,11 +22,13 @@ from django.contrib import admin
 import app.views as views
 
 urlpatterns = [
-    url(r'^api/poll$', views.PollJobView.as_view()),
+    url(r'^api/poll$', views.PollJobView.as_view(), name='poll'),
     url(r'^api/start/get_constructs_as_genbanks$',
-        views.GetConstructsAsGenbankView.as_view()),
+        views.GetConstructsAsGenbankView.as_view(),
+        name='get_constructs_as_genbanks'),
     url(r'^api/start/get_constructs_as_pdf$',
-        views.GetConstructsAsPDFView.as_view()),
+        views.GetConstructsAsPDFView.as_view(),
+        name='get_constructs_as_pdf'),
 
 
     url(r'^api/docs/', include('rest_framework_docs.urls')),

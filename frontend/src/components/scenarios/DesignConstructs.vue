@@ -26,23 +26,27 @@
       :form='{constructsData: constructsData, database_token: database_token}',
       :validateForm='validateForm',
       backendUrl='start/get_constructs_as_genbanks',
-      v-model='queryStatus'
+      v-model='queryStatusGenbank'
     )
       span(slot='button') <icon name='download'></icon> As Genbank
-    .results(v-if='!queryStatus.polling.inProgress')
-      download-button(v-if='queryStatus.result.zip_file',
+    .results(v-if='!queryStatusGenbank.polling.inProgress')
+      download-button(v-if='queryStatusGenbank.result.zip_file',
                       button_text='Download sequences',
-                      :filedata='queryStatus.result.zip_file')
+                      :filedata='queryStatusGenbank.result.zip_file')
+    el-alert(v-if='queryStatusGenbank.requestError', :title="queryStatusGenbank.requestError",
+             type="error", :closable="false")
 
 
     backend-querier.querier(:form='{constructsData: constructsData, withLinkers: form.withLinkers}',
                     backendUrl='start/get_constructs_as_pdf',
-                    v-model='queryStatus')
+                    v-model='queryStatusPDF')
       span(slot='button') <icon name='download'></icon> As PDF
-    .results(v-if='!queryStatus.polling.inProgress')
-      download-button(v-if='queryStatus.result.pdf_file',
+    .results(v-if='!queryStatusPDF.polling.inProgress')
+      download-button(v-if='queryStatusPDF.result.pdf_file',
                       button_text='Download PDF',
-                      :filedata='queryStatus.result.pdf_file')
+                      :filedata='queryStatusPDF.result.pdf_file')
+    el-alert(v-if='queryStatusPDF.requestError', :title="queryStatusPDF.requestError",
+             type="error", :closable="false")
     //- .center.checkbox
     //-   el-checkbox(v-model='form.withLinkers') (include linkers)
   collapsible-button(v-if='constructs.length' text='Send order to EGF...')
@@ -52,17 +56,17 @@
     el-input(type="textarea", placeholder='Comments')
     backend-querier.querier(:form='{constructs: constructs}',
                     backendUrl='start/get_constructs_as_genbanks',
-                    v-model='queryStatus')
+                    v-model='queryStatusEGF')
       span(slot='button') <icon name='envelope-o'></icon> Send
 
-  el-alert(v-if='queryStatus.requestError', :title="queryStatus.requestError",
-           type="error", :closable="false")
-  .results(v-if='!queryStatus.polling.inProgress')
-    download-button(v-if='queryStatus.result.file',
-                    button_text='Download PDF',
-                    :filedata='queryStatus.result.file')
-    .results-summary(v-if='queryStatus.result.preview',
-                     v-html="queryStatus.result.preview.html")
+
+
+  //- .results(v-if='!queryStatusGenbank.polling.inProgress')
+  //-   download-button(v-if='queryStatus.result.file',
+  //-                   button_text='Download PDF',
+  //-                   :filedata='queryStatus.result.file')
+  //-   .results-summary(v-if='queryStatus.result.preview',
+  //-                    v-html="queryStatus.result.preview.html")
 </template>
 
 <script>
@@ -95,11 +99,22 @@ export default {
         userName: '',
         userEmail: ''
       },
-      queryStatus: {
+      queryStatusPDF: {
         polling: {},
         result: {},
         requestError: ''
-      }
+      },
+      queryStatusGenbank: {
+        polling: {},
+        result: {},
+        requestError: ''
+      },
+      queryStatusEGF: {
+        polling: {},
+        result: {},
+        requestError: ''
+      },
+
     }
   },
   computed: {
@@ -148,8 +163,11 @@ export default {
       'loadConstructs'
     ]),
     downloadJSON () {
-      download(JSON.stringify(this.constructsData, null, ' '),
-               'constructs.json', 'application/json;charset=utf8')
+      download(
+        JSON.stringify(this.constructsData, null, ' '),
+        'constructs.json',
+        'application/json;charset=utf8'
+      )
     },
     validateForm () {
       var errors = []

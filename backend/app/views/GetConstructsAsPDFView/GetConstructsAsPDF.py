@@ -21,6 +21,7 @@ class worker_class(AsyncWorker):
             category = {
                 '5-3-homology-arm': 'five-prime-overhang',
                 '5-3-ITR': 'ITR',
+                '5-3-UTR': 'UTR',
                 '3-5-homology-arm': 'three-prime-overhang',
             }.get(category, category)
             return category.replace(' ', '-')
@@ -36,7 +37,14 @@ class worker_class(AsyncWorker):
             for slot in enabled_slots:
                 selected = construct.selectedParts[slot]
                 if selected == []:
-                    category = construct.categoriesEnabled[0]
+                    print ("CATS", construct.categoriesEnabled)
+                    enabled_categories = construct.categoriesEnabled[slot]
+                    categories = [
+                        category
+                        for category, enabled in enabled_categories.items()
+                        if enabled
+                    ]
+                    category = categories[0]
                     category = category_sanitizer(category)
                     parts.append(Part(category=category, subscript=slot))
                 else:

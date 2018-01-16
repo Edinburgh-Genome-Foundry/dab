@@ -1,0 +1,1153 @@
+{
+  "constructsData": {
+    "projectName": "Project1",
+    "constructs": [{
+      "templateName": "EMMA",
+      "userEnabled": {
+        "1": false,
+        "2": true,
+        "3": true,
+        "4": false,
+        "5": false,
+        "6": true,
+        "7": true,
+        "8": true,
+        "9": true,
+        "10": false,
+        "11": true,
+        "12": true,
+        "13": true,
+        "14": true,
+        "15": true,
+        "16": true,
+        "17": true,
+        "18": true,
+        "19": true,
+        "20": true,
+        "21": true,
+        "22": true,
+        "23": true,
+        "24": true,
+        "25": true,
+        "8a": true,
+        "8b": true
+      },
+      "selectedParts": {
+        "1": [],
+        "2": [],
+        "3": [{
+          "dbDescription": "Tetracycline repressible CMV promoter. CMV promoter with downstream operator sequences for TetRepressor.",
+          "dbName": "p3_CMVp_Tet",
+          "dbId": "549",
+          "dbType": "promoter",
+          "dbPosition": "3"
+        }],
+        "4": [],
+        "5": [],
+        "6": [{
+          "dbDescription": "N-terminal leader sequence from mouse immunoglobulin Îº light chain. Peptide tag that targets the protein to the secretion pathway for protein secretion",
+          "dbName": "p6_Nt-IgKL sequence",
+          "dbId": "558",
+          "dbType": "protein tag",
+          "dbPosition": "6"
+        }],
+        "7": [{
+          "dbDescription": "Fluorescent reporter - Far red - Î»ex (nm) = 588, Î»em (nm) = 633 doi: 10.1042/bj20081949",
+          "dbName": "p7_mKate2",
+          "dbId": "567",
+          "dbType": "CDS",
+          "dbPosition": "7"
+        }],
+        "8": [{
+          "dbDescription": "âself-cleavingâ 2A peptide. Nat. Biotechnol. (2004) 22, 589â594",
+          "dbName": "p8_p2A-Porcine teschovirus-1 ",
+          "dbId": "574",
+          "dbType": "p2A",
+          "dbPosition": "8"
+        }],
+        "9": [{
+          "dbDescription": "Fluorescent reporter - Red - Î»ex (nm) = 559 Î»em (nm) = 600  . doi: 10.1038/nmeth.2171",
+          "dbName": "p9_mRuby2",
+          "dbId": "582",
+          "dbType": "CDS",
+          "dbPosition": "9"
+        }],
+        "10": [],
+        "11": [{
+          "dbDescription": "Simian virus 40 PolyA",
+          "dbName": "p11_SV40polyA",
+          "dbId": "586",
+          "dbType": "terminator",
+          "dbPosition": "11"
+        }],
+        "12": [],
+        "13": [],
+        "14": [],
+        "15": [],
+        "16": [],
+        "17": [],
+        "18": [],
+        "19": [],
+        "20": [],
+        "21": [],
+        "22": [],
+        "23": [],
+        "24": [],
+        "25": [],
+        "8a": [],
+        "8b": []
+      },
+      "id": "e2a8d73c-0461-49e3-8b83-0262da2b0733",
+      "name": "Construct 1",
+      "options": {
+        "homologyArms": false,
+        "insulators": false,
+        "recombinationSites": false,
+        "replicationOrigin": false,
+        "tuA": {
+          "checked": true,
+          "sistrons": "bi",
+          "bisistron_type": "p2A",
+          "fusion": true
+        },
+        "selectionMarker": false,
+        "tuB": {
+          "checked": false,
+          "sistrons": "bi",
+          "bisistron_type": "p2A",
+          "fusion": true
+        }
+      },
+      "categoriesEnabled": {
+        "1": {
+          "5-3 homology arm": false,
+          "5-3 ITR": true,
+          "5-3 LTR": true,
+          "recombinase recognition sequence": false
+        },
+        "2": {
+          "insulator": false,
+          "recombinase recognition sequence": false
+        },
+        "3": {
+          "promoter": true
+        },
+        "4": {
+          "RNA stability sequence": true,
+          "DNA binding element": true
+        },
+        "5": {
+          "5-3 UTR": true
+        },
+        "6": {
+          "kozak-ATG": true,
+          "protein tag": true
+        },
+        "7": {
+          "CDS": true
+        },
+        "8": {
+          "p2A": true,
+          "peptide linker": false
+        },
+        "9": {
+          "CDS": true
+        },
+        "10": {
+          "5-3 UTR": true,
+          "5-3 LTR": true
+        },
+        "11": {
+          "terminator": true
+        },
+        "12": {
+          "insulator": true
+        },
+        "13": {
+          "recombinase recognition sequence": true
+        },
+        "14": {
+          "promoter": true
+        },
+        "15": {
+          "CDS": true
+        },
+        "16": {
+          "terminator": true
+        },
+        "17": {
+          "recombinase recognition sequence": false
+        },
+        "18": {
+          "promoter": true
+        },
+        "19": {
+          "CDS": true
+        },
+        "20": {
+          "p2A": true,
+          "IRES": false,
+          "protein tag": false,
+          "peptide linker": false
+        },
+        "21": {
+          "CDS": true
+        },
+        "22": {
+          "terminator": true
+        },
+        "23": {
+          "insulator": false
+        },
+        "24": {
+          "5-3 homology arm": false,
+          "recombinase recognition sequence": false
+        },
+        "25": {
+          "origin of replication": true
+        },
+        "8a": {
+          "protein tag": true
+        },
+        "8b": {
+          "IRES": true
+        }
+      },
+      "enabledSlots": {
+        "1": false,
+        "2": false,
+        "3": true,
+        "4": false,
+        "5": false,
+        "6": true,
+        "7": true,
+        "8": true,
+        "9": true,
+        "10": false,
+        "11": true,
+        "12": false,
+        "13": false,
+        "14": false,
+        "15": false,
+        "16": false,
+        "17": false,
+        "18": false,
+        "19": false,
+        "20": false,
+        "21": false,
+        "22": false,
+        "23": false,
+        "24": false,
+        "25": false,
+        "8a": false,
+        "8b": false
+      }
+    }, {
+      "templateName": "EMMA",
+      "userEnabled": {
+        "1": false,
+        "2": true,
+        "3": true,
+        "4": false,
+        "5": false,
+        "6": true,
+        "7": true,
+        "8": true,
+        "9": true,
+        "10": false,
+        "11": true,
+        "12": true,
+        "13": true,
+        "14": true,
+        "15": true,
+        "16": true,
+        "17": true,
+        "18": true,
+        "19": true,
+        "20": true,
+        "21": true,
+        "22": true,
+        "23": true,
+        "24": true,
+        "25": true,
+        "8a": true,
+        "8b": true
+      },
+      "selectedParts": {
+        "1": [],
+        "2": [],
+        "3": [{
+          "dbDescription": "Tetracycline repressible CMV promoter. CMV promoter with downstream operator sequences for TetRepressor.",
+          "dbName": "p3_CMVp_Tet",
+          "dbId": "549",
+          "dbType": "promoter",
+          "dbPosition": "3"
+        }],
+        "4": [],
+        "5": [],
+        "6": [{
+          "dbDescription": "N-terminal leader sequence from mouse immunoglobulin Îº light chain. Peptide tag that targets the protein to the secretion pathway for protein secretion",
+          "dbName": "p6_Nt-IgKL sequence",
+          "dbId": "558",
+          "dbType": "protein tag",
+          "dbPosition": "6"
+        }, {
+          "dbDescription": "N-terminal nuclear localization signal of SV40 large T antigen. Peptide tag for targeting the protein to the nucleus ",
+          "dbName": "p6_Nt-SV40_NLS",
+          "dbId": "562",
+          "dbType": "protein tag",
+          "dbPosition": "6"
+        }],
+        "7": [{
+          "dbDescription": "Fluorescent reporter - Far red - Î»ex (nm) = 588, Î»em (nm) = 633 doi: 10.1042/bj20081949",
+          "dbName": "p7_mKate2",
+          "dbId": "567",
+          "dbType": "CDS",
+          "dbPosition": "7"
+        }],
+        "8": [{
+          "dbDescription": "âself-cleavingâ 2A peptide. Nat. Biotechnol. (2004) 22, 589â594",
+          "dbName": "p8_p2A-Porcine teschovirus-1 ",
+          "dbId": "574",
+          "dbType": "p2A",
+          "dbPosition": "8"
+        }],
+        "9": [{
+          "dbDescription": "Fluorescent reporter - Red - Î»ex (nm) = 559 Î»em (nm) = 600  . doi: 10.1038/nmeth.2171",
+          "dbName": "p9_mRuby2",
+          "dbId": "582",
+          "dbType": "CDS",
+          "dbPosition": "9"
+        }],
+        "10": [],
+        "11": [{
+          "dbDescription": "Simian virus 40 PolyA",
+          "dbName": "p11_SV40polyA",
+          "dbId": "586",
+          "dbType": "terminator",
+          "dbPosition": "11"
+        }],
+        "12": [],
+        "13": [],
+        "14": [],
+        "15": [],
+        "16": [],
+        "17": [],
+        "18": [],
+        "19": [],
+        "20": [],
+        "21": [],
+        "22": [],
+        "23": [],
+        "24": [],
+        "25": [],
+        "8a": [],
+        "8b": []
+      },
+      "id": "e8117b45-2128-4c64-8912-fb26a953c352",
+      "name": "Construct 2",
+      "options": {
+        "homologyArms": false,
+        "insulators": false,
+        "recombinationSites": false,
+        "replicationOrigin": false,
+        "tuA": {
+          "checked": true,
+          "sistrons": "bi",
+          "bisistron_type": "p2A",
+          "fusion": true
+        },
+        "selectionMarker": false,
+        "tuB": {
+          "checked": false,
+          "sistrons": "bi",
+          "bisistron_type": "p2A",
+          "fusion": true
+        }
+      },
+      "categoriesEnabled": {
+        "1": {
+          "5-3 homology arm": false,
+          "5-3 ITR": true,
+          "5-3 LTR": true,
+          "recombinase recognition sequence": false
+        },
+        "2": {
+          "insulator": false,
+          "recombinase recognition sequence": false
+        },
+        "3": {
+          "promoter": true
+        },
+        "4": {
+          "RNA stability sequence": true,
+          "DNA binding element": true
+        },
+        "5": {
+          "5-3 UTR": true
+        },
+        "6": {
+          "kozak-ATG": true,
+          "protein tag": true
+        },
+        "7": {
+          "CDS": true
+        },
+        "8": {
+          "p2A": true,
+          "peptide linker": false
+        },
+        "9": {
+          "CDS": true
+        },
+        "10": {
+          "5-3 UTR": true,
+          "5-3 LTR": true
+        },
+        "11": {
+          "terminator": true
+        },
+        "12": {
+          "insulator": true
+        },
+        "13": {
+          "recombinase recognition sequence": true
+        },
+        "14": {
+          "promoter": true
+        },
+        "15": {
+          "CDS": true
+        },
+        "16": {
+          "terminator": true
+        },
+        "17": {
+          "recombinase recognition sequence": false
+        },
+        "18": {
+          "promoter": true
+        },
+        "19": {
+          "CDS": true
+        },
+        "20": {
+          "p2A": true,
+          "IRES": false,
+          "protein tag": false,
+          "peptide linker": false
+        },
+        "21": {
+          "CDS": true
+        },
+        "22": {
+          "terminator": true
+        },
+        "23": {
+          "insulator": false
+        },
+        "24": {
+          "5-3 homology arm": false,
+          "recombinase recognition sequence": false
+        },
+        "25": {
+          "origin of replication": true
+        },
+        "8a": {
+          "protein tag": true
+        },
+        "8b": {
+          "IRES": true
+        }
+      },
+      "enabledSlots": {
+        "1": false,
+        "2": false,
+        "3": true,
+        "4": false,
+        "5": false,
+        "6": true,
+        "7": true,
+        "8": true,
+        "9": true,
+        "10": false,
+        "11": true,
+        "12": false,
+        "13": false,
+        "14": false,
+        "15": false,
+        "16": false,
+        "17": false,
+        "18": false,
+        "19": false,
+        "20": false,
+        "21": false,
+        "22": false,
+        "23": false,
+        "24": false,
+        "25": false,
+        "8a": false,
+        "8b": false
+      }
+    }],
+    "constructTemplates": {
+      "EMMA": {
+        "name": "EMMA",
+        "slotNames": ["1", "2", "3", "4", "5", "6", "7", "8", "8a", "8b", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25"],
+        "defaultSlots": {
+          "1": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "2": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "3": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "4": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "5": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "6": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "7": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "8": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "9": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "10": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "11": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "12": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "13": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "14": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "15": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "16": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "17": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "18": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "19": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "20": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "21": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "22": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "23": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "24": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "25": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "8a": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "8b": {
+            "userEnabled": true,
+            "selectedParts": []
+          }
+        },
+        "overhangs": ["ACGA", "ACTG", "AGCG", "AGGC", "ATCC", "ATGG", "CACG", "CAGC", "CCAG", "CCCT", "CGAA", "CGGT", "CGTC", "CTAC", "GACT", "GCAA", "GCGT", "GCTC", "GGAC", "GGTA", "GTGC", "GTTG", "TAGG", "TCAC", "TCCG", "TGCT", "TGGA"],
+        "compatibleOverhangs": ["AACC", "AACG", "AAGC", "AAGG", "ACAC", "ACAG", "ACCA", "ACTC", "AGAC", "AGAG", "AGGA", "AGGT", "AGTG", "ATCG", "ATGC", "CAAG", "GAAC", "GAAG", "GATG", "TACG", "TAGC", "TCAG", "TCTC", "TCTG", "TGAC", "TGAG", "TGTC", "TGTG", "TTCC", "TTGG"],
+        "defaultOptions": {
+          "homologyArms": true,
+          "insulators": true,
+          "recombinationSites": false,
+          "replicationOrigin": true,
+          "tuA": {
+            "checked": true,
+            "sistrons": "bi",
+            "bisistron_type": "p2A",
+            "fusion": true
+          },
+          "selectionMarker": true,
+          "tuB": {
+            "checked": true,
+            "sistrons": "bi",
+            "bisistron_type": "p2A",
+            "fusion": true
+          }
+        },
+        "slotInfos": {
+          "1": {
+            "zone": ["none"],
+            "overhangs": {
+              "left": "TAGG",
+              "right": "ATGG"
+            },
+            "categories": ["5-3 homology arm", "5-3 ITR", "5-3 LTR", "recombinase recognition sequence"]
+          },
+          "2": {
+            "zone": ["none"],
+            "overhangs": {
+              "left": "ATGG",
+              "right": "GACT"
+            },
+            "categories": ["insulator", "recombinase recognition sequence"]
+          },
+          "3": {
+            "zone": ["tuA"],
+            "overhangs": {
+              "left": "GACT",
+              "right": "GGAC"
+            },
+            "categories": ["promoter"]
+          },
+          "4": {
+            "zone": ["tuA"],
+            "overhangs": {
+              "left": "GGAC",
+              "right": "TCCG"
+            },
+            "categories": ["RNA stability sequence", "DNA binding element"]
+          },
+          "5": {
+            "zone": ["tuA"],
+            "overhangs": {
+              "left": "TCCG",
+              "right": "CCAG"
+            },
+            "categories": ["5-3 UTR"]
+          },
+          "6": {
+            "zone": ["tuA"],
+            "overhangs": {
+              "left": "CCAG",
+              "right": "CAGC"
+            },
+            "categories": ["kozak-ATG", "protein tag"]
+          },
+          "7": {
+            "zone": ["tuA"],
+            "overhangs": {
+              "left": "CAGC",
+              "right": "AGGC"
+            },
+            "categories": ["CDS"]
+          },
+          "8": {
+            "zone": ["tuA"],
+            "overhangs": {
+              "left": "AGGC",
+              "right": "GCGT"
+            },
+            "categories": ["p2A", "peptide linker"]
+          },
+          "9": {
+            "zone": ["tuA"],
+            "overhangs": {
+              "left": "GCGT",
+              "right": "TGCT"
+            },
+            "categories": ["CDS"]
+          },
+          "10": {
+            "zone": ["tuA"],
+            "overhangs": {
+              "left": "TGCT",
+              "right": "GGTA"
+            },
+            "categories": ["5-3 UTR", "5-3 LTR"]
+          },
+          "11": {
+            "zone": ["tuA"],
+            "overhangs": {
+              "left": "GGTA",
+              "right": "CGTC"
+            },
+            "categories": ["terminator"]
+          },
+          "12": {
+            "zone": ["none"],
+            "overhangs": {
+              "left": "CGTC",
+              "right": "TCAC"
+            },
+            "categories": ["insulator"]
+          },
+          "13": {
+            "zone": ["none"],
+            "overhangs": {
+              "left": "TCAC",
+              "right": "CTAC"
+            },
+            "categories": ["recombinase recognition sequence"]
+          },
+          "14": {
+            "zone": ["selection-marker"],
+            "overhangs": {
+              "left": "CTAC",
+              "right": "GCAA"
+            },
+            "categories": ["promoter"]
+          },
+          "15": {
+            "zone": ["selection-marker"],
+            "overhangs": {
+              "left": "GCAA",
+              "right": "CCCT"
+            },
+            "categories": ["CDS"]
+          },
+          "16": {
+            "zone": ["selection-marker"],
+            "overhangs": {
+              "left": "CCCT",
+              "right": "GCTC"
+            },
+            "categories": ["terminator"]
+          },
+          "17": {
+            "zone": ["none"],
+            "overhangs": {
+              "left": "GCTC",
+              "right": "CGGT"
+            },
+            "categories": ["recombinase recognition sequence"]
+          },
+          "18": {
+            "zone": ["tuB"],
+            "overhangs": {
+              "left": "CGGT",
+              "right": "GTGC"
+            },
+            "categories": ["promoter"]
+          },
+          "19": {
+            "zone": ["tuB"],
+            "overhangs": {
+              "left": "GTGC",
+              "right": "AGCG"
+            },
+            "categories": ["CDS"]
+          },
+          "20": {
+            "zone": ["tuB"],
+            "overhangs": {
+              "left": "AGCG",
+              "right": "TGGA"
+            },
+            "categories": ["p2A", "peptide linker", "IRES", "protein tag"]
+          },
+          "21": {
+            "zone": ["tuB"],
+            "overhangs": {
+              "left": "TGGA",
+              "right": "GTTG"
+            },
+            "categories": ["CDS"]
+          },
+          "22": {
+            "zone": ["tuB"],
+            "overhangs": {
+              "left": "GTTG",
+              "right": "CGAA"
+            },
+            "categories": ["terminator"]
+          },
+          "23": {
+            "zone": ["none"],
+            "overhangs": {
+              "left": "CGAA",
+              "right": "CACG"
+            },
+            "categories": ["insulator"]
+          },
+          "24": {
+            "zone": ["none"],
+            "overhangs": {
+              "left": "CACG",
+              "right": "ACTG"
+            },
+            "categories": ["5-3 homology arm", "recombinase recognition sequence"]
+          },
+          "25": {
+            "zone": ["none"],
+            "overhangs": {
+              "left": "ACTG",
+              "right": "ACGA"
+            },
+            "categories": ["origin of replication"]
+          },
+          "8a": {
+            "zone": ["tuA"],
+            "overhangs": {
+              "left": "AGGC",
+              "right": "ATCC"
+            },
+            "categories": ["protein tag"]
+          },
+          "8b": {
+            "zone": ["tuA"],
+            "overhangs": {
+              "left": "ATCC",
+              "right": "GCGT"
+            },
+            "categories": ["IRES"]
+          }
+        },
+        "slotOptions": {
+          "1": {},
+          "2": {
+            "locked": false
+          },
+          "3": {
+            "locked": true
+          },
+          "4": {
+            "locked": false
+          },
+          "5": {
+            "locked": false
+          },
+          "6": {
+            "locked": true
+          },
+          "7": {
+            "locked": true
+          },
+          "8": {
+            "locked": true
+          },
+          "9": {
+            "locked": true
+          },
+          "10": {
+            "locked": false
+          },
+          "11": {
+            "locked": true
+          },
+          "12": {
+            "locked": false
+          },
+          "13": {
+            "locked": false
+          },
+          "14": {
+            "locked": true
+          },
+          "15": {
+            "locked": true
+          },
+          "16": {
+            "locked": true
+          },
+          "17": {
+            "locked": false
+          },
+          "18": {
+            "locked": true
+          },
+          "19": {
+            "locked": true
+          },
+          "20": {
+            "locked": true
+          },
+          "21": {
+            "locked": true
+          },
+          "22": {
+            "locked": true
+          },
+          "23": {
+            "locked": false
+          },
+          "24": {
+            "locked": true
+          },
+          "25": {
+            "locked": false
+          },
+          "8a": {
+            "locked": true
+          },
+          "8b": {
+            "locked": true
+          }
+        }
+      },
+      "Phytobricks": {
+        "name": "Phytobricks",
+        "slotNames": ["DIST", "PROX", "CORE", "PROM", "5UTR", "NTAG", "PROM+5UTR", "CDS1", "CDS2", "CTAG", "CDS", "3UTR", "TERM", "3UTR+TERM"],
+        "defaultSlots": {
+          "DIST": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "PROX": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "CORE": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "PROM": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "5UTR": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "NTAG": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "PROM+5UTR": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "CDS1": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "CDS2": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "CTAG": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "CDS": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "3UTR": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "TERM": {
+            "userEnabled": true,
+            "selectedParts": []
+          },
+          "3UTR+TERM": {
+            "userEnabled": true,
+            "selectedParts": []
+          }
+        },
+        "overhangs": ["GGAG", "TGAC", "TCCC", "TACT", "CCAT", "AATG", "AGCC", "TTCG", "GCTT", "GGTA", "CGCT"],
+        "compatibleOverhangs": [],
+        "defaultOptions": {
+          "singlePartPromoterUTR": true,
+          "singlePartPromoter": true,
+          "singlePartCDS": true,
+          "singlePartUTRTerminator": true
+        },
+        "slotInfos": {
+          "DIST": {
+            "zone": ["promoter"],
+            "overhangs": {
+              "left": "GGAG",
+              "right": "TGAC"
+            },
+            "categories": ["DNA binding element"]
+          },
+          "PROX": {
+            "zone": ["promoter"],
+            "overhangs": {
+              "left": "ATGG",
+              "right": "GACT"
+            },
+            "categories": ["DNA binding element"]
+          },
+          "CORE": {
+            "zone": ["promoter"],
+            "overhangs": {
+              "left": "GACT",
+              "right": "GGAC"
+            },
+            "categories": ["promoter"]
+          },
+          "PROM": {
+            "zone": ["promoter"],
+            "overhangs": {
+              "left": "GGAC",
+              "right": "TCCG"
+            },
+            "categories": ["promoter"]
+          },
+          "5UTR": {
+            "zone": ["promoter"],
+            "overhangs": {
+              "left": "TCCG",
+              "right": "CCAG"
+            },
+            "categories": ["5-3 UTR"]
+          },
+          "NTAG": {
+            "zone": ["cds"],
+            "overhangs": {
+              "left": "CCAG",
+              "right": "CAGC"
+            },
+            "categories": ["protein tag"]
+          },
+          "PROM+5UTR": {
+            "zone": ["promoter"],
+            "overhangs": {
+              "left": "CAGC",
+              "right": "AGGC"
+            },
+            "categories": ["promoter"]
+          },
+          "CDS1": {
+            "zone": ["cds"],
+            "overhangs": {
+              "left": "AGGC",
+              "right": "GCGT"
+            },
+            "categories": ["CDS"]
+          },
+          "CDS2": {
+            "zone": ["cds"],
+            "overhangs": {
+              "left": "AGGC",
+              "right": "ATCC"
+            },
+            "categories": ["CDS"]
+          },
+          "CTAG": {
+            "zone": ["cds"],
+            "overhangs": {
+              "left": "ATCC",
+              "right": "GCGT"
+            },
+            "categories": ["protein tag"]
+          },
+          "CDS": {
+            "zone": ["cds"],
+            "overhangs": {
+              "left": "GCGT",
+              "right": "TGCT"
+            },
+            "categories": ["CDS"]
+          },
+          "3UTR": {
+            "zone": ["terminator"],
+            "overhangs": {
+              "left": "TGCT",
+              "right": "GGTA"
+            },
+            "categories": ["3-5 UTR"]
+          },
+          "TERM": {
+            "zone": ["terminator"],
+            "overhangs": {
+              "left": "GGTA",
+              "right": "CGTC"
+            },
+            "categories": ["terminator"]
+          },
+          "3UTR+TERM": {
+            "zone": ["terminator"],
+            "overhangs": {
+              "left": "CGTC",
+              "right": "TCAC"
+            },
+            "categories": ["insulator"]
+          }
+        },
+        "slotOptions": {
+          "DIST": {},
+          "PROX": {},
+          "CORE": {},
+          "PROM": {
+            "locked": true
+          },
+          "5UTR": {
+            "locked": true
+          },
+          "NTAG": {
+            "locked": false
+          },
+          "PROM+5UTR": {
+            "locked": true
+          },
+          "CDS1": {
+            "locked": true
+          },
+          "CDS2": {
+            "locked": true
+          },
+          "CTAG": {
+            "locked": true
+          },
+          "CDS": {
+            "locked": true
+          },
+          "3UTR": {
+            "locked": false
+          },
+          "TERM": {
+            "locked": true
+          },
+          "3UTR+TERM": {
+            "locked": true
+          }
+        }
+      }
+    }
+  },
+  "database_token": "30fbe937-5dc4-406c-871f-dc26b2129d1f"
+}

@@ -99,7 +99,7 @@ class StartJobView(SerializerView, LoggingMixin):
         data = self.serialize(request)
         if not isinstance(data, dict):
             return data
-        data["domain_name"] = request.META['HTTP_HOST']
+        data["domain_name"] = request.META.get('HTTP_HOST', '')
         job = django_rq.get_queue("default").enqueue(
             self.worker_class.run, data)
         return Response({"job_id": job.id}, status=status.HTTP_200_OK)
