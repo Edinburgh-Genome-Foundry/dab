@@ -23,3 +23,13 @@ class GetConstructsAsPDFTests(AppTestCase):
         json = load_json('emma_no_annotation_to_pdf.json')
         response = self.run_job(json_request=json)
         self.assertTrue('pdf_file' in response)
+
+class SendOrderToEGFTests(AppTestCase):
+    endpoint = 'send_order_to_egf'
+    defaults = dict(constructsData={}, customer={})
+
+    def test_send_order_to_egf(self):
+        json = load_json('emma_send_order_to_egf.json')
+        response = self.run_job(json_request=json)
+        assert 'message' in response
+        self.assertTrue('order was sent' in response['message'])

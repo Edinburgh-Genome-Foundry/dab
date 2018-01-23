@@ -1,1 +1,1 @@
-from .GetConstructsAsPDF import GetConstructsAsPDFView
+from .GetConstructsAsPDF import GetConstructsAsPDFView, constructs_to_pdf_data

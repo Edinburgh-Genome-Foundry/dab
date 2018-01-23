@@ -1,5 +1,6 @@
 import json
 import os
+import traceback
 
 from rest_framework_tracking.mixins import LoggingMixin
 
@@ -7,6 +8,7 @@ from rest_framework import status, serializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer
+from proglog import RqWorkerBarLogger
 
 import django_rq
 import rq
@@ -135,26 +137,22 @@ class AsyncWorker:
 
         self.job = job
         self.data = data
-
-    def set_progress_message(self, message):
-        self.update_progress_data(message=message)
-
-    def set_progress_data(self, **new_data):
-        self.job.meta['progress_data'] = new_data
-        self.job.save()
-
-    def update_progress_data(self, **new_data):
-        if 'progress_data' not in self.job.meta:
-            self.job.meta['progress_data'] = {}
-        self.job.meta['progress_data'].update(new_data)
-        self.job.save()
+        self.logger = RqWorkerBarLogger(job, min_time_interval=0.2)
 
     @classmethod
     def run(cls, data):
-        # worker = django_rq.get_worker('default')
         job = rq.get_current_job()
         agent = cls(data, job)
-        result = agent.work()
-        if isinstance(result, JobResult):
-            result = result.as_json()
-        return ObjectDict(result)
+        try:
+            result = agent.work()
+            if isinstance(result, JobResult):
+                result = result.as_json()
+            return ObjectDict(result)
+        except Exception as error:
+            trace = traceback.format_exc()
+            print (trace)
+            return ObjectDict(
+                error={'class': error.__class__.__name__,
+                       'message': str(error),
+                       'trace': trace}
+            )

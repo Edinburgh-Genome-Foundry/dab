@@ -20,53 +20,65 @@
                        text='...or provide constructs from a previous project.')
 
   collapsible-button.query-button(v-if='constructs.length' text='Export project')
-    .querier
+
+    .json-querier.querier
       el-button.center(@click='downloadJSON') <icon name='download'></icon> As JSON
-    backend-querier.querier(
-      :form='{constructsData: constructsData, database_token: database_token}',
-      :validateForm='validateForm',
-      backendUrl='start/get_constructs_as_genbanks',
-      v-model='queryStatusGenbank'
-    )
-      span(slot='button') <icon name='download'></icon> As Genbank
-    .results(v-if='!queryStatusGenbank.polling.inProgress')
-      download-button(v-if='queryStatusGenbank.result.zip_file',
-                      button_text='Download sequences',
-                      :filedata='queryStatusGenbank.result.zip_file')
-    el-alert(v-if='queryStatusGenbank.requestError', :title="queryStatusGenbank.requestError",
-             type="error", :closable="false")
 
+    .genbank-querier(:class='{withbackground: queriesStatus.genbank.polling.inProgress}')
+      backend-querier.querier(
+        :form='{constructsData: constructsData, database_token: database_token}',
+        :validateForm='validateGenbankForm',
+        backendUrl='start/get_constructs_as_genbanks',
+        v-model='queriesStatus.genbank'
+      )
+        span(slot='button') <icon name='download'></icon> As Genbank
+      progress-bars(:bars='queriesStatus.genbank.polling.data.bars',
+                    :order="['construct']"
+                    v-if='queriesStatus.genbank.polling.inProgress && queriesStatus.genbank.polling.data')
+      .results(v-if='!queriesStatus.genbank.polling.inProgress')
+        download-button(v-if='queriesStatus.genbank.result.zip_file',
+                        button_text='Download sequences',
+                        :filedata='queriesStatus.genbank.result.zip_file')
+      el-alert(v-if='queriesStatus.genbank.requestError',
+               title='Program Error', :description='queriesStatus.genbank.requestError',
+               type="error", :closable="false")
 
-    backend-querier.querier(:form='{constructsData: constructsData, withLinkers: form.withLinkers}',
-                    backendUrl='start/get_constructs_as_pdf',
-                    v-model='queryStatusPDF')
-      span(slot='button') <icon name='download'></icon> As PDF
-    .results(v-if='!queryStatusPDF.polling.inProgress')
-      download-button(v-if='queryStatusPDF.result.pdf_file',
-                      button_text='Download PDF',
-                      :filedata='queryStatusPDF.result.pdf_file')
-    el-alert(v-if='queryStatusPDF.requestError', :title="queryStatusPDF.requestError",
-             type="error", :closable="false")
+    .pdf-querier(:class='{withbackground: queriesStatus.pdf.polling.inProgress}')
+      backend-querier.querier(:form='{constructsData: constructsData, withLinkers: form.withLinkers}',
+                      backendUrl='start/get_constructs_as_pdf',
+                      v-model='queriesStatus.pdf')
+        span(slot='button') <icon name='download'></icon> As PDF
+      .results(v-if='!queriesStatus.pdf.polling.inProgress')
+        download-button(v-if='queriesStatus.pdf.result.pdf_file',
+                        button_text='Download PDF',
+                        :filedata='queriesStatus.pdf.result.pdf_file')
+      el-alert(v-if='queriesStatus.pdf.requestError', :title="queriesStatus.pdf.requestError",
+               type="error", :closable="false")
     //- .center.checkbox
     //-   el-checkbox(v-model='form.withLinkers') (include linkers)
   collapsible-button(v-if='constructs.length' text='Send order to EGF...')
-    p Provide your contact informations, we will contact you shortly
-    el-input(placeholder='Name')
-    el-input(placeholder='Email address')
-    el-input(type="textarea", placeholder='Comments')
-    backend-querier.querier(:form='{constructs: constructs}',
-                    backendUrl='start/get_constructs_as_genbanks',
-                    v-model='queryStatusEGF')
-      span(slot='button') <icon name='envelope-o'></icon> Send
-
-
-
-  //- .results(v-if='!queryStatusGenbank.polling.inProgress')
-  //-   download-button(v-if='queryStatus.result.file',
-  //-                   button_text='Download PDF',
-  //-                   :filedata='queryStatus.result.file')
-  //-   .results-summary(v-if='queryStatus.result.preview',
-  //-                    v-html="queryStatus.result.preview.html")
+    p Provide your contact informations, we will contact you shortly.
+    el-input(placeholder='Name' v-model='customer.name')
+    el-input(placeholder='Email address', v-model='customer.email')
+    el-input(type="textarea", placeholder='Comment', v-model='customer.comment', :rows='8')
+    .order-querier(:class='{withbackground: queriesStatus.order.polling.inProgress}')
+      backend-querier.querier(
+        :form='{constructsData: constructsData, database_token: database_token, customer: customer}',
+        :validateForm='validateOrderForm',
+        backendUrl='start/send_order_to_egf',
+        v-model='queriesStatus.order'
+      )
+        span(slot='button') <icon name='envelope-o'></icon> Send Order
+      progress-bars(:bars='queriesStatus.order.polling.data.bars',
+                    :order="['construct']"
+                    v-if='queriesStatus.order.polling.inProgress && queriesStatus.order.polling.data')
+    .results(v-if='!queriesStatus.order.polling.inProgress')
+      p {{ queriesStatus.order.result.message}}
+      download-button(v-if='queriesStatus.order.result.zip_file',
+                      button_text='Download assembly checking report',
+                      :filedata='queriesStatus.order.result.zip_file')
+      el-alert(v-if='queriesStatus.order.requestError', :title="queriesStatus.order.requestError",
+               type="error", :closable="false")
 </template>
 
 <script>
@@ -96,25 +108,29 @@ export default {
       database_token: this.$cookie.get('sessionId').slice(1, -1),
       form: {
         withLinkers: false,
-        userName: '',
-        userEmail: ''
       },
-      queryStatusPDF: {
-        polling: {},
-        result: {},
-        requestError: ''
+      customer: {
+        name: '',
+        email: '',
+        comment: ''
       },
-      queryStatusGenbank: {
-        polling: {},
-        result: {},
-        requestError: ''
-      },
-      queryStatusEGF: {
-        polling: {},
-        result: {},
-        requestError: ''
-      },
-
+      queriesStatus: {
+        pdf: {
+          polling: {},
+          result: {},
+          requestError: ''
+        },
+        genbank: {
+          polling: {},
+          result: {},
+          requestError: ''
+        },
+        order: {
+          polling: {},
+          result: {},
+          requestError: ''
+        }
+      }
     }
   },
   computed: {
@@ -142,8 +158,6 @@ export default {
         data.constructTemplates[key] = self.$store.state.constructTemplates[key]
       })
       data.constructs.map(function (construct) {
-        // construct.optionsEnabled = this.getConstructOptionsEnabled(construct)
-        // construct.optionsLocked = this.getConstructOptionsLocked(construct)
         construct.categoriesEnabled = self.getConstructCategoriesEnabled(construct)
         construct.enabledSlots = self.getConstructEnabled(construct)
         console.log(construct.enabledSlots)
@@ -169,7 +183,7 @@ export default {
         'application/json;charset=utf8'
       )
     },
-    validateForm () {
+    validateGenbankForm () {
       var errors = []
       var self = this
       console.log(this.allConstructsEmptySlots)
@@ -180,6 +194,46 @@ export default {
                     emptySlots.join(', ') + ')')
       })
       return errors
+    },
+    validateOrderForm () {
+      var errors = []
+      if (this.customer.name === '') {
+        errors.push('Name required.')
+      }
+      if (this.customer.email === '') {
+        errors.push('Email required.')
+      }
+      if (this.customer.comment === '') {
+        errors.push('Comment required.')
+      }
+
+      return errors
+    },
+    sendOrderToEGF: function () {
+      var errors = this.validateSendForm()
+      var subject = 'New EMMAdb order by ' + this.customer.email
+      var content = this.$el.querySelector('.email').innerHTML
+      if (errors.length === 0) {
+        this.$http.post(
+          'https://utils.genomefoundry.org/rest/sendEmail',
+          {
+            replyTo: this.customer.email,
+            To: 'EGF_WETLAB_EMAIL_GROUP',
+            subject: subject,
+            body64: window.btoa(unescape(encodeURIComponent(content)))
+          }, {
+            emulateJSON: true
+          }).then((response) => {
+          // SUCCESS
+          console.log('success', response)
+          this.form.cart = []
+          this.$message('Your order has been sent. We will contact you soon.')
+        },
+        function (response) {
+          // FAILURE
+          this.$message.error('Connexion error. Please contact the EGF if the problem persists')
+        })
+      }
     }
   },
   watch: {
@@ -312,5 +366,23 @@ h4.formlabel {
   .collapsible-button-move {
     transition: transform 1s;
   }
+  .hidden {
+    visibility: hidden;
+    margin: 0;
+  }
 }
+.genbank-querier, .pdf-querier, .order-querier {
+
+
+  &.withbackground {
+    padding: 1em;
+    border-radius: 1em;
+    border: 2px solid grey;
+    width: 80%;
+    margin-left: 10%;
+    margin-top: 1em;
+  }
+}
+
+
 </style>

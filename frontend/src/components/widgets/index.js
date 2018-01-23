@@ -5,4 +5,5 @@ export default function install (Vue) {
   Vue.component('helper', require('./Helper').default)
   Vue.component('powered-by', require('./PoweredBy').default)
   Vue.component('files-uploader', require('./FilesUploader').default)
+  Vue.component('progress-bars', require('./ProgressBars').default)
 }

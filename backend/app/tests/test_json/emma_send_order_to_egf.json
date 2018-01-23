@@ -1,6 +1,6 @@
 {
   "constructsData": {
-    "projectName": "My assembly project 12",
+    "projectName": "Test Suite Project",
     "constructs": [{
       "templateName": "EMMA",
       "userEnabled": {
@@ -45,12 +45,6 @@
           "dbDescription": "strong synthetic promoter used to drive high levels of gene expression in mammalian expression vectors. constructed in the lab of Dr Jun-ichi Miyazaki [3][4] from the following sequences: (C) the cytomegalovirus (CMV) early enhancer element + (A) the promoter, the first exon and the first intron of chicken beta-actin gene + (G) the splice acceptor of the rabbit beta-globin gene. ",
           "dbName": "p3_CAGp",
           "dbId": "548",
-          "dbType": "promoter",
-          "dbPosition": "3"
-        }, {
-          "dbDescription": "Tetracycline repressible CMV promoter. CMV promoter with downstream operator sequences for TetRepressor.",
-          "dbName": "p3_CMVp_Tet",
-          "dbId": "549",
           "dbType": "promoter",
           "dbPosition": "3"
         }],
@@ -121,7 +115,7 @@
         "8a": [],
         "8b": []
       },
-      "id": "f10101cf-a916-4f2c-9e34-922b08cee734",
+      "id": "c1331289-47df-475f-9be4-52098bc9f047",
       "name": "Construct A",
       "options": {
         "homologyArms": false,
@@ -374,7 +368,7 @@
         "8a": [],
         "8b": []
       },
-      "id": "bc81a409-7599-470b-abc9-10f7fa7e99c5",
+      "id": "151ff8d4-6b5c-419b-b291-13c1c9fc51b9",
       "name": "Construct B",
       "options": {
         "homologyArms": true,
@@ -1179,5 +1173,10 @@
       }
     }
   },
-  "database_token": "19b52e6d-3c9f-416e-9609-be9574a2c913"
+  "database_token": "6130afe1-68c3-4d8e-a501-9138d76c6629",
+  "customer": {
+    "name": "Test Suite",
+    "email": "test.suite@tdd.com",
+    "comment": "I am just the test suite ignore me"
+  }
 }

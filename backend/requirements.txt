@@ -3,6 +3,7 @@ git+git://github.com/Edinburgh-Genome-Foundry/DnaFeaturesViewer
 git+git://github.com/Edinburgh-Genome-Foundry/DnaChisel
 git+git://github.com/Edinburgh-Genome-Foundry/Caravagene.git
 git+git://github.com/Edinburgh-Genome-Foundry/bandwitch.git
+git+git://github.com/Edinburgh-Genome-Foundry/Proglog
 
 git+https://github.com/pygraphviz/pygraphviz.git
 

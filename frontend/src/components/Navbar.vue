@@ -19,7 +19,7 @@
       el-menu-item(index='help') Help
 
     div.el-menu-item-x.login Logged as <b>{{ userName }}</b>
-      a(v-if='userName == settings.ANONYMOUS_USERNAME' @click='showLoginDialog = true') Switch account
+      a(v-if='userName == settings.ANONYMOUS_USERNAME' @click='showLoginDialog = true') (switch)
       a(v-else @click='logout') Log out
   login(v-model='showLoginDialog')
 </template>
@@ -111,8 +111,10 @@ export default {
     margin-bottom: -0.25em;
     margin-right: 0.5em;
   }
-  .login a {
-    margin-left: 1em;
+  .login {
+    a {
+      margin-left: 1em;
+    }
   }
 }
 

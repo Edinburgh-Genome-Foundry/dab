@@ -4,7 +4,7 @@
   .construct-hover-only
     toolbar(:construct='construct', @toggleOptions="showOptions = !showOptions")
 
-  .options.animated.flipInX(v-show='showOptions')
+  .options.animated.flipInX(v-if='showOptions')
     .construct-form(:is='forms[construct.templateName]', v-model='options')
 
   .slots

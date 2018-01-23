@@ -1,3 +1,4 @@
 from .base import PollJobView
 from .GetConstructsAsGenbankView import GetConstructsAsGenbankView
 from .GetConstructsAsPDFView import GetConstructsAsPDFView
+from .SendOrderToEGFView import SendOrderToEGFView

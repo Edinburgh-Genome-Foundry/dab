@@ -48,7 +48,7 @@ export default {
     transition: height 1s;
     transition: max-height 0.5s ease-out;
     &.visible {
-      max-height: 500px;
+      max-height: 800px;
       transition: max-height 0.5s ease-in;
     }
   }

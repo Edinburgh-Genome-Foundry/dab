@@ -19,10 +19,10 @@ export default {
 }
 </script>
 <style lang='scss' scoped>
-.options {
+.construct-form {
   width: 85%;
   max-width: 55em;
-  margin: 1em auto;
+  margin: 1em auto 1em;
   .radio {
     display: inline;
     padding: 20px;

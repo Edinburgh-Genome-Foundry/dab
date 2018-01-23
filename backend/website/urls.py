@@ -29,6 +29,9 @@ urlpatterns = [
     url(r'^api/start/get_constructs_as_pdf$',
         views.GetConstructsAsPDFView.as_view(),
         name='get_constructs_as_pdf'),
+    url(r'^api/start/send_order_to_egf$',
+        views.SendOrderToEGFView.as_view(),
+        name='send_order_to_egf'),
 
 
     url(r'^api/docs/', include('rest_framework_docs.urls')),
