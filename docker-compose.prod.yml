@@ -22,6 +22,9 @@ services:
       - ./nginx/nginx.prod.conf:/etc/nginx/nginx.conf
       - /cert:/cert
       - website-dist:/website
+    ports:
+      - "443:443"
+
 
 volumes:
      website-dist:
