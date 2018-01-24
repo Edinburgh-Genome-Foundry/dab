@@ -40,7 +40,6 @@ services:
     volumes:
       - ./frontend:/code
       - /code/node_modules
-      - /code/dist
 
   nginx:
     restart: always
@@ -52,3 +51,4 @@ services:
       - django
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - /var/log/nginx_emmadb:/var/log/nginx
