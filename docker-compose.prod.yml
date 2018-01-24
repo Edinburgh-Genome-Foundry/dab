@@ -16,6 +16,8 @@ services:
       - website-dist:/code/dist
 
   nginx:
+    depends_on:
+      - django
     volumes:
       - ./nginx/nginx.prod.conf:/etc/nginx/nginx.conf
       - /cert:/cert
