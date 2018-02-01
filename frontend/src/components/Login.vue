@@ -1,6 +1,7 @@
 <template lang="pug">
 .login
-  el-dialog(v-bind:visible.sync='showDialog' size='tiny')
+  el-dialog(v-bind:visible.sync='showDialog' width="400px")
+    h3.center Log in
     el-form
       el-form-item(label="Username")
         el-input(v-model='credentials.username')
@@ -81,8 +82,6 @@ export default {
 }
 </script>
 <style lang='scss' scoped>
-
-
 .submit {
   margin-bottom: 1em;
 }

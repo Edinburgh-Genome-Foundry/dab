@@ -1,4 +1,4 @@
-import constructTemplates from './constructTemplates'
+import templates from './constructTemplates'
 import settings from '../settings'
 export const STORAGE_KEY = 'constructs-vuejs'
 
@@ -9,7 +9,8 @@ if (navigator.userAgent.indexOf('PhantomJS') > -1) {
 
 export const state = {
   constructs: JSON.parse(window.localStorage.getItem(STORAGE_KEY) || '[]'),
-  constructTemplates,
+  constructTemplates: templates.constructTemplates,
+  templatesTree: [templates.templatesTree],
   settings,
   auth: {
     isLoggedIn: false,

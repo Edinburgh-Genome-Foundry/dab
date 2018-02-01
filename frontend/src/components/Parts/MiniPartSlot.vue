@@ -1,12 +1,12 @@
 <template lang="pug">
-.mini-part-slot(:class="['zone-' + zone, {disabled: disabled}]",
+.mini-part-slot(:class="[{disabled: disabled}, 'zone-' + zoneIndex]",
                 :style="{'font-size': size + 'px'}")
   .slot-name {{slotName}}
   .icons
-    el-tooltip(v-for='category in categories', :key='category',
+    el-tooltip(v-for='category, i in categories', :key='category',
                effect="light", :content="category", :transition='null',
                :enterable='false', transition='el-fade-in')
-      .icon(:style="backgroundImageStyle(category)",
+      .icon(:style="[backgroundImageStyle(category), i === 0 ? {'background-color': color} : {}]",
             :key='category', @click="$emit('click', slotName, category)")
 </template>
 
@@ -16,7 +16,8 @@ export default {
   props: {
     slotName: {default: '1'}, // The slot is of the form '1', '2', '8A', '8B', etc.
     size: {default: 15},
-    zone: {default: 'none'}, // If not active, will be smaller, greyer, no inputs
+    color: {default: 'none'},
+    zoneIndex: {default: 'none'}, // If not active, will be smaller, greyer, no inputs
     categories: {default: () => ([])}, // Locked means you can't add or remove a block
     disabled: {default: false}
   },
@@ -32,8 +33,8 @@ export default {
 <style lang='scss' scoped>
 .mini-part-slot {
   display: inline-block;
-  height: 10em;
-  width: 2.85em;
+  // height: 10em;
+  // width: 2.85em;
   vertical-align: top;
   margin-bottom: 2em;
   &.zone-tuA {
@@ -42,8 +43,13 @@ export default {
   &.zone-tuB { background-color: #fff7f7}
   &.zone-selection-marker { background-color: #fef8fe}
   .slot-name {
+    font-size: 0.85em;
     font-weight: bold;
     text-align: center;
+    padding-left: 1.2em;
+    padding-right: 1.2em;
+
+
 
   }
   .icons {
@@ -63,6 +69,19 @@ export default {
       width: 60%;
       margin-left: 20%;
     }
+  }
+}
+
+$linecolor: #ccc;
+$linestyle: 2px dashed;
+
+@each $zone in zone-0, zone-1, zone-2, zone-3, zone-4, zone-5 {
+
+  :not(.#{$zone}) + .#{$zone} {
+    border-left: #{$linestyle} #{$linecolor};
+  }
+  .#{$zone} + :not(.#{$zone}) {
+    border-left: #{$linestyle} #{$linecolor};
   }
 }
 </style>

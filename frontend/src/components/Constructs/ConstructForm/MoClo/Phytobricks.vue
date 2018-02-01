@@ -7,7 +7,7 @@
 </template>
 <script>
 export default {
-  name: 'PhytobricksForm',
-  extends: require('./ConstructForm').default
+  name: 'MoClo-Phytobricks-Form',
+  extends: require('./../ConstructForm').default
 }
 </script>

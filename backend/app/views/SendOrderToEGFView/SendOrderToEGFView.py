@@ -68,7 +68,6 @@ class worker_class(AsyncWorker):
             construct_templates=data.constructsData.constructTemplates,
             project_name=data.constructsData.projectName
         )
-        print (type(pdf_data))
         pdf_b64_data = base64.b64encode(pdf_data).decode()
 
         schema_json_data = json.dumps(self.data.constructsData, indent=2)
@@ -84,17 +83,17 @@ class worker_class(AsyncWorker):
                                           comment=comment,
                                           n_constructs=n_constructs)
         body_b64 = base64.b64encode(bytes(body.encode('utf8'))).decode()
-        attachments = ([
+        attachments = [
             dict(file_name="sequences.zip", content=sequences_b64_data),
             dict(file_name="designs_plots.pdf", content=pdf_b64_data),
             dict(file_name="designs.json", content=schema_json_b64_data)
-        ])
-        attachments = ",".join([json.dumps(a) for a in attachments])
+        ]
+        # attachments = ",".join([json.dumps(a) for a in attachments])
         email_api_json = dict(
             to="VZ",
             subject="New order from %s" % data.customer.name,
             body64=body_b64,
-            attachments=attachments
+            attachments=json.dumps(attachments)
         )
         api = 'https://utils.genomefoundry.org/rest/sendEmail'
         self.logger(message='Order validated. Sending to EGF...')

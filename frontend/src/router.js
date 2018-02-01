@@ -21,24 +21,17 @@ const routes = [{
   }
 }, {
   path: '/about-emma',
-  component: require('./components/pages/About-EMMA'),
+  component: require('./components/pages/About-EMMA').default,
   meta: {
     title: 'EMMA-DB - About EMMA',
     description: 'About the EMMA assembly standard'
   }
 }, {
   path: '/help',
-  component: require('./components/pages/Help'),
+  component: require('./components/pages/Help').default,
   meta: {
     title: 'EMMA-DB - Help',
     description: 'How to use EMMA-DB'
-  }
-}, {
-  path: '/login',
-  component: require('./auth/Login'),
-  meta: {
-    title: 'EMMA-DB - Login',
-    description: 'Login'
   }
 }
 ]

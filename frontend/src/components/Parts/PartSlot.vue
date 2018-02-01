@@ -1,5 +1,5 @@
 <template lang="pug">
-.part-slot(:class='[{inactive: !active}, zone]')
+.part-slot(:class="[{inactive: !active}, 'zone-' + zoneIndex]")
 
   .slot-name {{slotName}}
 
@@ -18,11 +18,11 @@
                            :content="partsTooltip", effect="light", :transition='null',
                            :enterable='false', transition='el-fade-in')
           .and-others {{andOthers}}
-      .icons
+      .icons(:style="{'background-color': color}")
         el-tooltip.tooltip(v-for="value, category in categoriesEnabled", v-if='value', :key='category',
                      effect="light", :content="category", :transition='null',
                      :enterable='false', transition='el-fade-in')
-          .icon(v-bind:style="backgroundImageStyle(category)", @click="dialogVisible = true")
+          .icon(:style="backgroundImageStyle(category)", @click="dialogVisible = true")
       el-icon.center.delete(icon='delete', v-if='!optionsLocked',
                        size='small', @click="$emit('userDisable', slotName)")
 
@@ -30,12 +30,12 @@
     .inactive-display(v-if='!active' @click="toggleUserEnabled(true)")
       .controls.construct-hover-only
         icon(name='plus')
-      .icons
+      .icons(:style="{'background-color': color}")
         .icon.active(v-bind:style="backgroundImageStyle('none')")
         el-tooltip.tooltip(v-for="value, category in categoriesEnabled", v-if='value', :key='category',
                      effect="light", :content="category", :transition='null',
                      :enterable='false', transition='el-fade-in')
-          .icon.inactive(v-bind:style="backgroundImageStyle(category)").construct-hover-only
+          .icon.inactive(:style="backgroundImageStyle(category)").construct-hover-only
 
   el-dialog.part-selector(title="Select parts", :visible.sync="dialogVisible", size='large')
     .show-selected
@@ -61,7 +61,8 @@ export default {
     optionsLocked: {default: false}, // Locked means you can't add or remove a block
     userEnabled: {default: true}, // If not active, will be smaller, greyer, no inputs
     categoriesEnabled: {default: () => ({})}, // categories of parts filtered in the dropdown
-    zone: {default: 'nozone'},
+    zoneIndex: {default: 'none'},
+    color: {default: 'none'},
     construct: {default: null}
   },
   data: function () {
@@ -90,7 +91,7 @@ export default {
       }
     },
     active: function () {
-      return (this.ckecklistLocked || this.userEnabled)
+      return (this.optionsLocked || this.userEnabled)
     },
     categoryFilteredParts: function () {
       var self = this
@@ -327,18 +328,16 @@ $colors: (
     terminator: #fff5ff
 );
 
-@each $zone in tuA, tuB, selection-marker, promoter, cds, terminator {
+$linecolor: #ccc;
+$linestyle: 2px dashed;
+
+@each $zone in zone-0, zone-1, zone-2, zone-3, zone-4, zone-5 {
 
   :not(.#{$zone}) + .#{$zone} {
     border-left: #{$linestyle} #{$linecolor};
   }
   .#{$zone} + :not(.#{$zone}) {
     border-left: #{$linestyle} #{$linecolor};
-  }
-  .#{$zone} {
-    .icons {
-      background-color: map-get($colors, $zone);
-    }
   }
 }
 </style>

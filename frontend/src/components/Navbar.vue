@@ -5,20 +5,33 @@
       router-link(to='home')
         img(src='../assets/images/emma-title.svg')
     el-menu-item(index='home') Home
-    a.el-menu-item(index='repo' href='https://emmadb.genomefoundry.org/')
-      icon(name='external-link')
-      span Parts Repo
-    el-submenu(index='2')
-      template(slot='title') Scenarios
-      el-menu-item(v-for='scenario in scenarios',
-                   :key="scenario.infos.path",
-                   :index="scenario.infos.path") {{scenario.infos.navbarTitle}}
-    el-submenu(index='3')
-      template(slot='title') About
-      el-menu-item(index='about-emma') About Emma
-      el-menu-item(index='help') Help
 
-    div.el-menu-item-x.login Logged as <b>{{ userName }}</b>
+    el-menu-item(index="design")
+      icon(name='pencil')
+      span Design
+    el-menu-item(index="explore")
+      icon(name='search')
+      span Explore
+    el-menu-item(index="polish")
+      icon(name='diamond')
+      span Polish
+    a.el-menu-item(index='repo' href='https://emmadb.genomefoundry.org/')
+      icon(name='link')
+      span Repo
+    //- el-menu-item(index="design-constructs")
+    //-   icon(name='diamond')
+    //-     span Polish
+    //- el-submenu(index='2')
+    //-   template(slot='title') Scenarios
+    //-   el-menu-item(v-for='scenario in scenarios',
+    //-                :key="scenario.infos.path",
+    //-                :index="scenario.infos.path") {{scenario.infos.navbarTitle}}
+    //- el-submenu(index='3')
+    //-   template(slot='title') About
+    //-   el-menu-item(index='about-emma') About Emma
+    //-   el-menu-item(index='help') Help
+
+    div.el-menu-item-x.login Hiya <b>{{ userName }}</b> !
       a(v-if='userName == settings.ANONYMOUS_USERNAME' @click='showLoginDialog = true') (switch)
       a(v-else @click='logout') Log out
   login(v-model='showLoginDialog')
@@ -108,7 +121,7 @@ export default {
       text-decoration: none;
   }
   .fa-icon {
-    margin-bottom: -0.25em;
+    // margin-bottom: -0.05em;
     margin-right: 0.5em;
   }
   .login {

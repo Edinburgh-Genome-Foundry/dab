@@ -2,7 +2,7 @@
   "constructsData": {
     "projectName": "My assembly project 12",
     "constructs": [{
-      "templateName": "EMMA",
+      "templateName": "EMMA / Standard",
       "userEnabled": {
         "1": true,
         "2": true,
@@ -267,7 +267,7 @@
         }
       }
     }, {
-      "templateName": "EMMA",
+      "templateName": "EMMA / Standard",
       "userEnabled": {
         "1": true,
         "2": false,
@@ -521,8 +521,8 @@
       }
     }],
     "constructTemplates": {
-      "EMMA": {
-        "name": "EMMA",
+      "EMMA / Standard": {
+        "name": "EMMA / Standard",
         "slotNames": ["1", "2", "3", "4", "5", "6", "7", "8", "8a", "8b", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25"],
         "defaultSlots": {
           "1": {

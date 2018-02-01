@@ -1,6 +1,6 @@
 <template lang='pug'>
 .toolbar
-  .control.options(@click="$emit('toggleOptions')") <icon name='sliders'></icon> {{construct.templateName}} Options
+  .control.options(@click="$emit('toggleOptions')") <icon name='sliders'></icon> Construct options
   .control(@click="deleteConstruct({construct: construct})") <icon name='trash-o'></icon> Delete
   .control(@click="duplicateConstruct({construct: construct})") <icon name='files-o'></icon> Duplicate
   .control(@click="moveConstructUp({construct: construct})") <icon name='arrow-up'></icon> Move up

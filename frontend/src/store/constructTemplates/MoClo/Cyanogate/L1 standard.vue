@@ -1,5 +1,5 @@
 <script>
-var slotNames = 'DIST PROX CORE PROM 5UTR NTAG PROM+5UTR CDS1 CDS2 CTAG CDS 3UTR TERM 3UTR+TERM'.split(' ')
+var slotNames = 'DIST PROX CORE PROM 5UTR PROM+5UTR NTAG CDS1 CDS2 CTAG CDS 3UTR TERM 3UTR+TERM'.split(' ')
 var defaultSlots = {}
 slotNames.map(function (slotName) {
   defaultSlots[slotName] = {
@@ -22,6 +22,11 @@ export const PhytobricksTemplate = {
     singlePartPromoter: true,
     singlePartCDS: true,
     singlePartUTRTerminator: true
+  },
+  zoneColors: {
+    promoter: '#f6faff',
+    cds: '#f4fefa',
+    terminator: '#fff5ff'
   },
   slotInfos: {
     'DIST': {

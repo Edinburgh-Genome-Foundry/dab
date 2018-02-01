@@ -8,8 +8,8 @@ slotNames.map(function (slotName) {
   }
 })
 
-export const EMMAtemplate = {
-  name: 'EMMA',
+export const EmmaStandard = {
+  name: 'EMMA / Standard',
   slotNames: slotNames,
   defaultSlots: defaultSlots,
   overhangs: [
@@ -40,6 +40,11 @@ export const EMMAtemplate = {
       bisistron_type: 'p2A',
       fusion: true
     }
+  },
+  zoneColors: {
+    tuA: '#f6faff',
+    tuB: '#f4fefa',
+    'selection-marker': '#fff5ff'
   },
   slotInfos: {
     '1': {
@@ -490,7 +495,7 @@ export const EMMAtemplate = {
     },
     '20': {
       enabled: o => o.tuB.checked,
-      locked: true,
+      locked: o => !((o.tuB.sistrons === 'mono') && (!o.tuB.fusion)),
       categoriesEnabled: o => ({
         'p2A': (o.tuB.sistrons === 'bi') && (o.tuB.bisistron_type === 'p2A'),
         'IRES': (o.tuB.sistrons === 'bi') && (o.tuB.bisistron_type === 'IRES'),

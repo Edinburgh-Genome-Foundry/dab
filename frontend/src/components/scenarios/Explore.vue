@@ -1,13 +1,54 @@
 <template lang="pug">
 .page
 
-  h1 Explore the database
+  h1 Explore the repository
 
-  h3 Select a position:
-  .minischema
-    minipartslot(v-for='slotName in slotNames', :zone='slots[slotName].zone', :key='slotName',
-                 :size='16',
-                 :categories='slots[slotName].categories', :slotName='slotName', @click='selectCategory')
+  h3 Select an assembly standard
+
+  templates-tree(:singleRoot='false' @click='function (name) {templateName = name}')
+
+  //- el-select(v-model='templateName' placeholder="Select a standard")
+  //-     el-option(v-for='o, name in $store.state.constructTemplates', :label='name', :value='name', :key='name')
+
+  el-tabs.main-menu(v-if='templateName')
+    el-tab-pane
+      span(slot='label') Parts
+      h2.center <b>{{currentTemplate.name}}</b><br /> parts in the repository
+      h3 Select a position on the schema:
+      .minischema
+        minipartslot(v-for='slotName in slotNames', :key='slotName',
+                     :size='16',
+                     :color='currentTemplate.zoneColors[slots[slotName].zone]',
+                     :zoneIndex='Object.keys(currentTemplate.zoneColors).indexOf(slots[slotName].zone[0])',
+                     :categories='slots[slotName].categories', :slotName='slotName', @click='selectCategory')
+
+    el-tab-pane
+      span(slot='label') Overhangs
+      h2.center <b>{{currentTemplate.name}}</b><br /> overhangs information
+      el-card(:header="templateName + ' overhangs'").overhangs-list
+        .overhangs-schema.center
+          .part-and-overhangs(v-for='slotName in currentTemplate.slotNames', :key='slotName')
+            minipartslot.overhang(:size='13', :categories="['overhang']", :slotName='currentTemplate.slotInfos[slotName].overhangs.left')
+            minipartslot(:size='13', :categories='[currentTemplate.slotInfos[slotName].categories[0]]', :slotName='slotName')
+            minipartslot.overhang(:size='13', :categories="['overhang']", :slotName='currentTemplate.slotInfos[slotName].overhangs.right')
+
+
+      el-card.overhangs-list(:header="templateName + ': alphabetical overhangs list'")
+        .overhang-seq(v-for='seq in currentTemplate.overhangs', :key='seq') {{seq}}&nbsp
+
+      el-card(header='Overhangs compatible with this standard:').overhangs-list
+        .overhang-seq(v-for='seq in currentTemplate.compatibleOverhangs', :key='seq') {{seq}}&nbsp
+      el-tab-pane
+        span(slot='label') Infos
+
+
+  //- h3 Select a position:
+  //- .minischema
+  //-   minipartslot(v-for='slotName in slotNames', :key='slotName',
+  //-                :size='16',
+  //-                :color='currentTemplate.zoneColors[slots[slotName].zone]',
+  //-                :zoneIndex='Object.keys(currentTemplate.zoneColors).indexOf(slots[slotName].zone[0])',
+  //-                :categories='slots[slotName].categories', :slotName='slotName', @click='selectCategory')
 
 
   .parts-viewer(v-if='selectedSlotCategory')
@@ -36,17 +77,17 @@ import learnmore from '../../components/widgets/LearnMore'
 import minipartslot from '../Parts/MiniPartSlot'
 
 var infos = {
-  title: 'Search the database',
-  navbarTitle: 'Search the database',
-  path: 'search-the-database',
+  title: 'Explore the database',
+  navbarTitle: 'Explore the database',
+  path: 'explore',
   description: '',
-  icon: require('assets/images/search.svg')
+  icon: require('assets/images/explore.svg')
 }
 
 export default {
   data: function () {
     return {
-      templateName: 'EMMA',
+      templateName: null,
       selectedSlotCategory: null,
       foundParts: [],
       loading: false,
@@ -106,6 +147,9 @@ export default {
         errors.push('Provide at least one construct file')
       }
       return errors
+    },
+    selectTemplate (name) {
+      this.templateName = name
     }
   },
   computed: {
@@ -201,4 +245,38 @@ export default {
   }
 }
 
+.overhangs-schema {
+  margin-top: 2em;
+  .part-and-overhangs {
+    display: inline-block;
+    margin-right: 3em;
+    margin-bottom: 0;
+    margin-top: 0;
+  .slot-name {
+    color: #999
+  }
+  .mini-part-slot {
+    height: 3em;
+    font-family: 'Inconsolata', Courier;
+  }
+  .overhang .slot-name {
+      color: #000;
+    }
+  }
+}
+.overhangs-list {
+  width: 80%;
+  margin-left: 10%;
+  margin-bottom: 1.5em;
+  margin-top: 1.5em;
+  .overhang-seq {
+    display: inline-block;
+    margin-right: 1em;
+    font-family: 'Inconsolata';
+  }
+}
+
+.main-menu {
+  margin-top: 3em;
+}
 </style>

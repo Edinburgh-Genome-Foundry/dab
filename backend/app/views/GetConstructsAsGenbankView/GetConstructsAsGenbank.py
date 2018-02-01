@@ -31,7 +31,8 @@ def construct_data_to_assemblies_sequences(constructs, database_token, logger):
                 parts_records, "@memory", enzyme='BsmBI',
                 assemblies_prefix=construct.name,
                 connector_records=connector_records,
-                include_fragments=False, include_parts=False)
+                include_fragments=False, include_parts=False,
+                include_assembly_plots=False)
             folder = results_zip_root._dir(construct.name)
             ziproot = file_tree(zipdata)
             for d in ziproot._dirs:

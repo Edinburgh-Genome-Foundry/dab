@@ -47,17 +47,15 @@ export const getters = {
         optionsLocked = tpl.slotOptions[name].locked
       }
       var userEnabled = construct.userEnabled[name]
-      console.log(name)
       result[name] = (optionsEnabled && (optionsLocked || userEnabled))
     })
-    console.log(result)
     return result
   },
   getConstructEmptySlots: (state, getters) => (construct) => {
     var result = []
     var enabledSlots = getters.getConstructEnabled(construct)
     Object.keys(enabledSlots).map(function (slot) {
-      console.log(slot, enabledSlots[slot], construct.selectedParts[slot])
+      // console.log(slot, enabledSlots[slot], construct.selectedParts[slot])
       if (enabledSlots[slot] && (construct.selectedParts[slot].length === 0)) {
         result.push(slot)
       }

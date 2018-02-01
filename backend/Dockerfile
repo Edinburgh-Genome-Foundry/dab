@@ -31,9 +31,9 @@ RUN wget -O "CabinSketch.zip" "https://fonts.google.com/download?family=Cabin+Sk
     && rm -f "CabinSketch.zip"
 RUN fc-cache -f
 
-ARG CACHEBUST=29
+ARG CACHEBUST=30
 RUN pip install --upgrade git+git://github.com/Edinburgh-Genome-Foundry/DnaCauldron.git
-RUN rm -rf /root/.ssh/
 
+RUN rm -rf /root/.ssh/
 
 ADD . /code/

@@ -9,15 +9,11 @@
 This repository contains the source code of [design.emmadb.genomefoundry.org](design.emmadb.genomefoundry.org),
 a website of the Edinburgh Genome Foundry enabling anyone to design and order DNA assemblies.
 
-![screenshots](https://github.com/Edinburgh-Genome-Foundry/CUBA/raw/master/docs/imgs/screenshots.png)
-
-
-
-
 ## How is it built ?
 
-CUBA provides a programming environment that makes it easy to create new apps with
-a form in the frontend and custom computations in the backend. It features job
+This project is based on the [CAB](https://github.com/Edinburgh-Genome-Foundry/CAB)
+boilerplate, making it easy to create new apps with a form in the frontend and
+custom computations in the backend. It features job
 queues (with progress feedback for the user), form widgets like file uploaders,
 help buttons, and many more.
 
@@ -39,7 +35,6 @@ This comes with the following advantages:
   headache, using [Element](http://element.eleme.io/#/en-US).
 - Works on any nachine: one-line install, one-line deploy. No
   clash with the rest of your system since everything runs inside containers.
-
 
 ## User Guide
 
@@ -74,38 +69,7 @@ docker-compose up
    ``docker-compose`` will keep printing logs of the different components
    (django, vue) so you can keep track and debug.
 
-### Creating a new app
-
-The next steps will add a new app to the CUBA project.
-
-1. Go to ``frontend/src/components/scenarios`` and create a new scenario view
-   with a form, for instance by duplicating the file
-   [ExampleScenario.vue](https://github.com/Edinburgh-Genome-Foundry/CUBA/blob/master/frontend/src/components/scenarios/ExampleScenario.vue).
-
-2. Register your scenario in file ``scenarios.js`` (in the same folder)
-   by adding ``require('./ExampleScenario')`` under the category you want.
-   You should now see your new scenario in the home page and the menu of the
-   website.
-
-3. Next we will add some backend computations to process the form and return a
-   result. First go to ``backend/app/views`` and create a new folder
-   on the model of [``/example_scenario``](https://github.com/Edinburgh-Genome-Foundry/CUBA/tree/master/backend/app/views/example_scenario).
-
-4. Register the scenario in ``backend/app/views/__init__.py`` by adding
-
-```
-from .example_scenario import ExampleScenarioView
-```
-
-5. Register the URL by adding the following line at the end of
-   ``backend/website/urls.py``:
-
-```
-url(r'^api/start/example_scenario$',
-      views.ExampleScenarioView.as_view()),
-```
-
-6. That's it. You now have a new app with frontend and backend !
+### How standards are stored / adding a new standard
 
 ### Deploying the website on the web
 

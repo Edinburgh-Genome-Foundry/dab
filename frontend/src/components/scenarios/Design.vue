@@ -2,7 +2,10 @@
 .page
   h1  {{ infos.title }}
   .constructs-designer
+
     textarea.project-name(v-model='projectName', placeholder='(Name this project)' rows=1)
+
+
     transition-group(name='constructs-list',
                      enter-active-class='animated flipInX',
                      leave-active-class='animated fadeOut',
@@ -11,90 +14,99 @@
                 :construct='construct',
                 :key='construct.id')
 
-      collapsible-button(text='Add constructs' key='collapsible-button')
-        el-button.add-construct(icon='plus' v-for='component, name in $store.state.constructTemplates',
-                                size='small', :key='name',
-                                @click='addConstruct({templateName: name}); dialogVisible=false') {{name}}
-        files-uploader(v-model='file', :showSelected='false', :multiple='false',
-                       help='Click here or drag/drop a .project',
-                       text='...or provide constructs from a previous project.')
 
-  collapsible-button.query-button(v-if='constructs.length' text='Export project')
 
-    .json-querier.querier
-      el-button.center(@click='downloadJSON') <icon name='download'></icon> As JSON
+    el-tabs.main-menu.navbar
 
-    .genbank-querier(:class='{withbackground: queriesStatus.genbank.polling.inProgress}')
-      backend-querier.querier(
-        :form='{constructsData: constructsData, database_token: database_token}',
-        :validateForm='validateGenbankForm',
-        backendUrl='start/get_constructs_as_genbanks',
-        v-model='queriesStatus.genbank'
-      )
-        span(slot='button') <icon name='download'></icon> As Genbank
-      progress-bars(:bars='queriesStatus.genbank.polling.data.bars',
-                    :order="['construct']"
-                    v-if='queriesStatus.genbank.polling.inProgress && queriesStatus.genbank.polling.data')
-      .results(v-if='!queriesStatus.genbank.polling.inProgress')
-        download-button(v-if='queriesStatus.genbank.result.zip_file',
-                        button_text='Download sequences',
-                        :filedata='queriesStatus.genbank.result.zip_file')
-      el-alert(v-if='queriesStatus.genbank.requestError',
-               title='Program Error', :description='queriesStatus.genbank.requestError',
-               type="error", :closable="false")
+      el-tab-pane
+        span(slot="label") <i class="el-icon-plus"></i> Add constructs
+        el-row.add-constructs(:gutter='60')
+          el-col(:lg='12', :md="12", :sm='12', :xs='24')
+            h4.center Choose a template
+            templates-tree(@click='function (n) {addConstruct({templateName: n})}',
+                           :singleRoot='false')
+          el-col(:lg='12', :md="12", :sm='12', :xs='24')
+            h4.center ...or upload designs from previous projects
+            files-uploader(v-model='file', :showSelected='false', :multiple='false',
+                           help='Click here or drag/drop a .project',
+                           text='Provide JSON designs exported from previous projects.')
 
-    .pdf-querier(:class='{withbackground: queriesStatus.pdf.polling.inProgress}')
-      backend-querier.querier(:form='{constructsData: constructsData, withLinkers: form.withLinkers}',
-                      backendUrl='start/get_constructs_as_pdf',
-                      v-model='queriesStatus.pdf')
-        span(slot='button') <icon name='download'></icon> As PDF
-      .results(v-if='!queriesStatus.pdf.polling.inProgress')
-        download-button(v-if='queriesStatus.pdf.result.pdf_file',
-                        button_text='Download PDF',
-                        :filedata='queriesStatus.pdf.result.pdf_file')
-      el-alert(v-if='queriesStatus.pdf.requestError', :title="queriesStatus.pdf.requestError",
-               type="error", :closable="false")
-    //- .center.checkbox
-    //-   el-checkbox(v-model='form.withLinkers') (include linkers)
-  collapsible-button(v-if='constructs.length' text='Send order to EGF...')
-    p Provide your contact informations, we will contact you shortly.
-    el-input(placeholder='Name' v-model='customer.name')
-    el-input(placeholder='Email address', v-model='customer.email')
-    el-input(type="textarea", placeholder='Comment', v-model='customer.comment', :rows='8')
-    .order-querier(:class='{withbackground: queriesStatus.order.polling.inProgress}')
-      backend-querier.querier(
-        :form='{constructsData: constructsData, database_token: database_token, customer: customer}',
-        :validateForm='validateOrderForm',
-        backendUrl='start/send_order_to_egf',
-        v-model='queriesStatus.order'
-      )
-        span(slot='button') <icon name='envelope-o'></icon> Send Order
-      progress-bars(:bars='queriesStatus.order.polling.data.bars',
-                    :order="['construct']"
-                    v-if='queriesStatus.order.polling.inProgress && queriesStatus.order.polling.data')
-    .results(v-if='!queriesStatus.order.polling.inProgress')
-      p {{ queriesStatus.order.result.message}}
-      download-button(v-if='queriesStatus.order.result.zip_file',
-                      button_text='Download assembly checking report',
-                      :filedata='queriesStatus.order.result.zip_file')
-      el-alert(v-if='queriesStatus.order.requestError', :title="queriesStatus.order.requestError",
-               type="error", :closable="false")
+      el-tab-pane(v-if='constructs.length')
+        span(slot="label") <i class="el-icon-download"></i> Export project
+        el-row(:gutter='30')
+          el-col(:lg='8', :md="8", :sm='8', :xs='24')
+            .json-querier.querier
+              el-button.center(@click='downloadJSON') <icon name='download'></icon> Save the designs
+          el-col(:lg='8', :md="8", :sm='8', :xs='24')
+            backend-querier.querier(
+              :form='{constructsData: constructsData, database_token: database_token}',
+              :validateForm='validateGenbankForm',
+              backendUrl='start/get_constructs_as_genbanks',
+              v-model='queriesStatus.genbank'
+            )
+              span(slot='button') <icon name='download'></icon> Constructs sequences (.gb)
+            progress-bars(:bars='queriesStatus.genbank.polling.data.bars',
+                          :order="['construct']"
+                          v-if='queriesStatus.genbank.polling.inProgress && queriesStatus.genbank.polling.data')
+            .results(v-if='!queriesStatus.genbank.polling.inProgress')
+              download-button(v-if='queriesStatus.genbank.result.zip_file',
+                              button_text='Download sequences',
+                              :filedata='queriesStatus.genbank.result.zip_file')
+            el-alert(v-if='queriesStatus.genbank.requestError',
+                     title='Program Error', :description='queriesStatus.genbank.requestError',
+                     type="error", :closable="false")
+          el-col(:lg='8', :md="8", :sm='8', :xs='24')
+
+            backend-querier.querier(:form='{constructsData: constructsData, withLinkers: form.withLinkers}',
+                            backendUrl='start/get_constructs_as_pdf',
+                            v-model='queriesStatus.pdf')
+              span(slot='button') <icon name='download'></icon> Designs as PDF
+            .results(v-if='!queriesStatus.pdf.polling.inProgress')
+              download-button(v-if='queriesStatus.pdf.result.pdf_file',
+                              button_text='Download PDF',
+                              :filedata='queriesStatus.pdf.result.pdf_file')
+            el-alert(v-if='queriesStatus.pdf.requestError', :title="queriesStatus.pdf.requestError",
+                     type="error", :closable="false")
+
+      el-tab-pane(v-if='constructs.length')
+        span(slot="label") <i class="el-icon-goods"></i> Order the constructs
+        .form.center
+          p Provide your contact informations, we will get in touch shortly.
+          p
+            el-input(placeholder='Name' v-model='customer.name')
+          p
+            el-input(placeholder='Email address', v-model='customer.email')
+          p
+            el-input(type="textarea", placeholder='Comment', v-model='customer.comment', :rows='8')
+          backend-querier.querier(
+            :form='{constructsData: constructsData, database_token: database_token, customer: customer}',
+            :validateForm='validateOrderForm',
+            backendUrl='start/send_order_to_egf',
+            v-model='queriesStatus.order'
+          )
+            span(slot='button')  <i class="el-icon-goods"></i> Order the constructs
+          progress-bars(:bars='queriesStatus.order.polling.data.bars',
+                        :order="['construct']"
+                        v-if='queriesStatus.order.polling.inProgress && queriesStatus.order.polling.data')
+          .results(v-if='!queriesStatus.order.polling.inProgress')
+            p {{ queriesStatus.order.result.message}}
+            download-button(v-if='queriesStatus.order.result.zip_file',
+                            button_text='Download assembly checking report',
+                            :filedata='queriesStatus.order.result.zip_file')
+            el-alert(v-if='queriesStatus.order.requestError', :title="queriesStatus.order.requestError",
+                     type="error", :closable="false")
 </template>
 
 <script>
-import learnmore from '../widgets/LearnMore'
-import CollapsibleButton from '../widgets/CollapsibleButton'
 import construct from '../Constructs/Construct'
 import download from 'downloadjs'
 import { mapMutations, mapGetters } from 'vuex'
 import utf8 from 'utf8'
 
 var infos = {
-  title: 'Design constructs',
-  navbarTitle: 'Design constructs',
-  path: 'design-constructs',
-  backendUrl: 'start/simulate_cloning',
-  description: '',
+  title: 'Design new assemblies',
+  navbarTitle: 'Design',
+  path: 'design',
   icon: require('assets/images/pencil.svg')
 }
 
@@ -166,9 +178,7 @@ export default {
     }
   },
   components: {
-    learnmore,
     construct,
-    'collapsible-button': CollapsibleButton
   },
   infos: infos,
   methods: {
@@ -234,6 +244,9 @@ export default {
           this.$message.error('Connexion error. Please contact the EGF if the problem persists')
         })
       }
+    },
+    addConstructTemplate (templateName) {
+      this.addConstruct({templateName: templateName})
     }
   },
   watch: {
@@ -343,23 +356,7 @@ h4.formlabel {
     font-family: 'Raleway' !important;
 
   }
-  .add-construct {
-    margin-bottom: 1em;
-  }
-  .add-a-construct {
-    width: 95%;
-    max-width: 500px;
-    margin: 0 auto;
-    text-align: center;
-    h3 {
-      font-size: 1.5em;
-      // text-align: center;
-    }
-    .files-uploader {
-      margin-top: 1em;
-    }
 
-  }
   .constructs-list-move {
     transition: transform 1s;
   }
@@ -373,7 +370,6 @@ h4.formlabel {
 }
 .genbank-querier, .pdf-querier, .order-querier {
 
-
   &.withbackground {
     padding: 1em;
     border-radius: 1em;
@@ -384,5 +380,8 @@ h4.formlabel {
   }
 }
 
+.main-menu {
+  margin-top: 2em;
+}
 
 </style>

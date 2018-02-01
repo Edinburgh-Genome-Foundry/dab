@@ -1,6 +1,6 @@
 <template lang='pug'>
 .construct
-  textarea.name(v-model='constructName', placeholder='(Name this construct)' rows=1)
+  textarea.name(v-model='constructName', placeholder='(Name this construct)', :rows='1')
   .construct-hover-only
     toolbar(:construct='construct', @toggleOptions="showOptions = !showOptions")
 
@@ -16,7 +16,8 @@
                  v-if='optionsEnabled[slotName]', :slotName='slotName',
                  is='part-slot',
                  :categoriesEnabled='categoriesEnabled[slotName]',
-                 :zone='constructTemplate.slotInfos[slotName].zone',
+                 :color='constructTemplate.zoneColors[constructTemplate.slotInfos[slotName].zone]',
+                 :zoneIndex='Object.keys(constructTemplate.zoneColors).indexOf(constructTemplate.slotInfos[slotName].zone[0]) + 1',
                  :construct='construct',
                  :optionsLocked='optionsLocked[slotName]',
                  :userEnabled='construct.userEnabled[slotName]')
