@@ -1,6 +1,7 @@
 <template lang='pug'>
 .construct
   textarea.name(v-model='constructName', placeholder='(Name this construct)', :rows='1')
+  .template-name From {{construct.templateName}}
   .construct-hover-only
     toolbar(:construct='construct', @toggleOptions="showOptions = !showOptions")
 
@@ -136,7 +137,14 @@ export default {
       }
     }
   }
+  .template-name {
+    color: grey;
+    font-size: 0.8em;
+    margin-top: -0.5em;
+    margin-left: 0.3em;
+  }
 }
+
 
 .part-slot {
   display: inline-block;;

@@ -1,4 +1,3 @@
-<script>
 var slotNames = 'DIST PROX CORE PROM 5UTR PROM+5UTR NTAG CDS1 CDS2 CTAG CDS 3UTR TERM 3UTR+TERM'.split(' ')
 var defaultSlots = {}
 slotNames.map(function (slotName) {
@@ -8,7 +7,7 @@ slotNames.map(function (slotName) {
   }
 })
 
-export const PhytobricksTemplate = {
+export const template = {
   name: 'Phytobricks',
   slotNames: slotNames,
   defaultSlots: defaultSlots,
@@ -271,4 +270,3 @@ export const PhytobricksTemplate = {
     }
   }
 }
-</script>

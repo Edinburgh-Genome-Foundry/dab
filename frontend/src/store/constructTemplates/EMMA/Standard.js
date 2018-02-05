@@ -1,4 +1,3 @@
-<script>
 var slotNames = '1 2 3 4 5 6 7 8 8a 8b 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25'.split(' ')
 var defaultSlots = {}
 slotNames.map(function (slotName) {
@@ -8,8 +7,8 @@ slotNames.map(function (slotName) {
   }
 })
 
-export const EmmaStandard = {
-  name: 'EMMA / Standard',
+export const template = {
+  name: 'EMMA-Standard',
   slotNames: slotNames,
   defaultSlots: defaultSlots,
   overhangs: [
@@ -541,4 +540,3 @@ export const EmmaStandard = {
     }
   }
 }
-</script>

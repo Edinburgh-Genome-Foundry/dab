@@ -1,5 +1,5 @@
 <template lang='pug'>
-el-tree(:data='treeData', @node-click='templateTreeClick',
+el-tree.template-tree(:data='treeData', @node-click='templateTreeClick',
         :render-content='renderContent')
 </template>
 
@@ -22,11 +22,33 @@ export default {
       }
     },
     renderContent (h, { node, data, store }) {
-      return h('b', null, [h('span', null, node.label)])
+      console.log(node, data)
+      var icon = data.templateName ? 'circle-plus-outline' : 'tickets'
+
+      return h('span', {
+        attrs: {
+          class: data.templateName ? 'leaf' : 'folder'
+        },
+      }, [h('i', {attrs: {class: 'el-icon-' + icon}}), h('span', null, ' ' + node.label)])
     }
   }
 }
 </script>
 
 <style lang='scss' scoped>
+.template-tree /deep/ {
+  .el-tree-node__content{
+    background-color: white !important;
+  }
+  .el-tree-node__content:hover{
+    background-color: #f3f9ff !important;
+  }
+  .leaf {
+    color: #409eff;
+    &:hover {
+      // background-color: #eeeeff
+    }
+
+  }
+}
 </style>
