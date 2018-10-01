@@ -18,6 +18,8 @@ export const state = {
     refreshToken: null,
   },
   user: {
-    name: null
+    name: null,
+    email: null,
+    authenticated: false
   }
 }

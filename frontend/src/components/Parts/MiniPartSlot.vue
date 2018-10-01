@@ -19,7 +19,8 @@ export default {
     color: {default: 'none'},
     zoneIndex: {default: 'none'}, // If not active, will be smaller, greyer, no inputs
     categories: {default: () => ([])}, // Locked means you can't add or remove a block
-    disabled: {default: false}
+    disabled: {default: false},
+    selected: {default: false}
   },
   methods: {
     backgroundImageStyle: function (category) {
@@ -37,11 +38,6 @@ export default {
   // width: 2.85em;
   vertical-align: top;
   margin-bottom: 2em;
-  &.zone-tuA {
-    background-color: #f8f9fe;
-  }
-  &.zone-tuB { background-color: #fff7f7}
-  &.zone-selection-marker { background-color: #fef8fe}
   .slot-name {
     font-size: 0.85em;
     font-weight: bold;
@@ -59,11 +55,11 @@ export default {
 
   }
   .icon {
-    background-size: auto 150%;
+    background-size: auto 125%;
     background-repeat: no-repeat;
     background-position: 50% 50%;
     width: 100%;
-    height: 2em;
+    height: 2.5em;
     margin-top: -0.28em;
     &:not(:first-child) {
       width: 60%;
@@ -71,6 +67,9 @@ export default {
     }
   }
 }
+
+$linecolor: #ccc;
+$linestyle: 2px dashed;
 
 $linecolor: #ccc;
 $linestyle: 2px dashed;

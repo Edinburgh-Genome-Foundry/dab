@@ -1,7 +1,8 @@
 <template lang='pug'>
 .backend-querier
   input(type='text', size='25', value='', v-model='honeypot', :style="{display: 'none'}")
-  el-button.center(v-if='submitButtonText.length > 0' @click='submit()', :disabled='status.polling.inProgress')
+  el-button(v-if='submitButtonText.length > 0' @click='submit()', :disabled='status.polling.inProgress'
+                   :icon='icon')
     slot(name='button')
   .polling(v-if='status.polling.inProgress && showProgress')
     img.spinner(src='../../assets/images/loading_plasmid.svg')
@@ -25,7 +26,8 @@ export default {
     form: {default: () => ({})},
     validateForm: {default: () => () => ([])},
     showProgress: {default: true},
-    submitTrigger: {default: false}
+    submitTrigger: {default: false},
+    icon: {default: null}
   },
   data () {
     return {

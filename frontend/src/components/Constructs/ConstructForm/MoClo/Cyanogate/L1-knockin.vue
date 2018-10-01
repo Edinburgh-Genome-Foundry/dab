@@ -1,10 +1,12 @@
 <template lang='pug'>
 .construct-form
-  el-select(v-model='options.mode')
-    el-option(label='Up flank' value='up flank')
-    el-option(label='Down flank' value='down flank')
-    el-option(label='Expression cassette' value='expression')
-    el-option(label='Selection marker(s)' value='selection')
+  el-radio(v-model='options.mode' label='up flank') Up flank
+  br
+  el-radio(v-model='options.mode' label='down flank') Down flank
+  br
+  el-radio(v-model='options.mode' label='expression') Expression cassette
+  br
+  el-radio(v-model='options.mode' label='selection') Selection marker(s)
 </template>
 <script>
 export default {

@@ -2,10 +2,9 @@
 
 from rest_framework import serializers
 from ..base import AsyncWorker, StartJobView
-from ..tools import record_from_ice_database, data_to_html_data
 from ..common_data import connector_records, backbone
 from flametree import file_tree
-from dnacauldron import full_assembly_report
+from dnacauldron import full_assembly_plan_report
 
 
 def construct_data_to_assemblies_sequences(constructs, database_token, logger):
@@ -27,7 +26,7 @@ def construct_data_to_assemblies_sequences(constructs, database_token, logger):
             for part_id, part_name in parts
         ] + [backbone]
         try:
-            nassemblies, zipdata = full_assembly_report(
+            nassemblies, zipdata = full_assembly_plan_report(
                 parts_records, "@memory", enzyme='BsmBI',
                 assemblies_prefix=construct.name,
                 connector_records=connector_records,

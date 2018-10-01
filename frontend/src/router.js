@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import scenarios from './components/scenarios/scenarios'
 import Home from './components/pages/Home'
 // import auth from './auth'
 // import BootstrapVue from 'bootstrap-vue'
@@ -16,43 +15,38 @@ const routes = [{
   path: '/home',
   component: Home,
   meta: {
-    title: 'EMMA-DB - Home',
-    description: 'Store design and order EMMA constructs and parts'
+    title: 'EGF DAB - Home',
+    description: 'Design and Build with the Edinburgh Genome Foundry'
   }
 }, {
-  path: '/about-emma',
-  component: require('./components/pages/About-EMMA').default,
-  meta: {
-    title: 'EMMA-DB - About EMMA',
-    description: 'About the EMMA assembly standard'
-  }
-}, {
-  path: '/help',
+  path: '/about',
   component: require('./components/pages/Help').default,
   meta: {
-    title: 'EMMA-DB - Help',
-    description: 'How to use EMMA-DB'
+    title: 'EGF DAB - Help',
+    description: 'How to use EGF DAB'
   }
-}
-]
-
-scenarios.list.forEach(function (scenario) {
-  routes.push({
-    path: '/' + scenario.infos.path,
-    component: scenario,
-    meta: {
-      title: scenario.infos.title + '- EMMA-DB',
-      description: 'EMMA-DB is a website of the EGF}'
-    }
-  })
-})
+}, {
+  path: '/manage_parts',
+  component: require('./components/pages/ManageParts').default,
+  meta: {
+    title: 'Manage Parts',
+    description: 'EGF DAB: Manage parts'
+  }
+}, {
+  path: '/design_assemblies',
+  component: require('./components/pages/DesignAssemblies').default,
+  meta: {
+    title: 'Design Assemblies',
+    description: 'EGF DAB: Design Assemblies'
+  }
+}]
 
 routes.push({
   path: '*',
   component: Home,
   meta: {
-    title: 'EMMA-DB - Home',
-    description: 'Store design and order EMMA constructs and parts'
+    title: 'EGF DAB - Home',
+    description: 'Design and Build with the Edinburgh Genome Foundry'
   }
 })
 

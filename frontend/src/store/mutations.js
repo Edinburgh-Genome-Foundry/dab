@@ -40,24 +40,25 @@ export const mutations = {
     var newConstructs = state.constructs.slice()
     newConstructs[index] = state.constructs[indexUp]
     newConstructs[indexUp] = construct
+    console.log(index, indexUp)
     state.constructs = newConstructs
   },
 
   moveConstructDown (state, { construct }) {
+    console.log('BEEN HERE')
     var index = state.constructs.indexOf(construct)
     var indexDown = Math.min(state.constructs.length - 1, index + 1)
     var newConstructs = state.constructs.slice()
     newConstructs[index] = state.constructs[indexDown]
     newConstructs[indexDown] = construct
+    console.log(index, indexDown)
     state.constructs = newConstructs
   },
 
   loadConstructs (state, { constructs }) {
     var newConstructs = state.constructs.slice()
     constructs.map(function (c) {
-      console.log(c)
       c.id = generateRandomID()
-      console.log(c)
       newConstructs.push(c)
     })
     state.constructs = newConstructs

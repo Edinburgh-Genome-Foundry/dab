@@ -37,7 +37,6 @@ export const getters = {
     var tpl = state.constructTemplates[construct.templateName]
     var options = construct.options
     var result = {}
-    console.log(tpl.slotNames)
     tpl.slotNames.map(function (name) {
       var optionsEnabled = tpl.slotOptions[name].enabled(options)
       var optionsLocked = null
@@ -55,7 +54,6 @@ export const getters = {
     var result = []
     var enabledSlots = getters.getConstructEnabled(construct)
     Object.keys(enabledSlots).map(function (slot) {
-      // console.log(slot, enabledSlots[slot], construct.selectedParts[slot])
       if (enabledSlots[slot] && (construct.selectedParts[slot].length === 0)) {
         result.push(slot)
       }

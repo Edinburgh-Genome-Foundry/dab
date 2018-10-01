@@ -1,49 +1,30 @@
 <template lang="pug">
 .navbar
   el-menu(:mode="fullWidth > 1020 ? 'horizontal' : 'vertical'" @select="handleSelect")
-    .logo(v-if='fullWidth > 1020')
-      router-link(to='home')
-        img(src='../assets/images/emma-title.svg')
-    el-menu-item(index='home') Home
+    el-menu-item(index="home")
+      center
+        .logo
+          img(src='/static/logo.svg')
+    el-menu-item(index="design_assemblies")
+      i.el-icon-edit-outline
+      span Design assemblies
+    el-menu-item(index="manage_parts")
+      i.el-icon-menu
+      span Manage parts
+    el-menu-item(index="about")
+      i.el-icon-location-outline
+      span About
 
-    el-menu-item(index="design")
-      icon(name='pencil')
-      span Design
-    el-menu-item(index="explore")
-      icon(name='search')
-      span Explore
-    el-menu-item(index="polish")
-      icon(name='diamond')
-      span Polish
-    a.el-menu-item(index='repo' href='https://emmadb.genomefoundry.org/')
-      icon(name='link')
-      span Repo
-    //- el-menu-item(index="design-constructs")
-    //-   icon(name='diamond')
-    //-     span Polish
-    //- el-submenu(index='2')
-    //-   template(slot='title') Scenarios
-    //-   el-menu-item(v-for='scenario in scenarios',
-    //-                :key="scenario.infos.path",
-    //-                :index="scenario.infos.path") {{scenario.infos.navbarTitle}}
-    //- el-submenu(index='3')
-    //-   template(slot='title') About
-    //-   el-menu-item(index='about-emma') About Emma
-    //-   el-menu-item(index='help') Help
-
-    div.el-menu-item-x.login Hiya <b>{{ userName }}</b> !
-      a(v-if='userName == settings.ANONYMOUS_USERNAME' @click='showLoginDialog = true') (switch)
+    div.el-menu-item-x.login Logged as <b>{{ userName }}</b>
+      a(v-if="userName == 'visitor'" @click='showLoginDialog = true') (change)
       a(v-else @click='logout') Log out
   login(v-model='showLoginDialog')
 </template>
 
 <script>
-import scenarios from './scenarios/scenarios.js'
 import Login from './Login'
-import Auth from '../auth'
 export default {
   data: () => ({
-    scenarios: scenarios.list,
     fullWidth: 0,
     showLoginDialog: false
   }),
@@ -57,8 +38,15 @@ export default {
     handleResize: function (event) {
       this.fullWidth = document.documentElement.clientWidth
     },
-    logout () {
-      Auth.logout()
+    async logout () {
+      await this.$iceClient.setApiToken(
+        'visitor.dab.genomefoundry.org',
+        'Yp530IQZeyIZ4+hdrTTwM31IhacEB44Uv0RPWBq+O2k='
+      )
+      this.$store.state.user = {
+        name: 'visitor',
+        email: 'unknown'
+      }
     }
   },
   computed: {
@@ -83,21 +71,21 @@ export default {
 .navbar {
   .el-menu, .el-submenu {
     background-color: white;
-    max-width: 90%;
   }
 
   .el-menu {
     border-bottom: 2px solid #dddddd;
+    margin: 0 auto;
+    
   }
 
   .logo {
     // display: inline-block;
-    float: left;
     margin-left: 20px;
     margin-right: 20px;
-    height:50px;
+    height:30px;
     img {
-      height:180%;
+      height:99%;
     }
     a:active, a:focus {
       outline: none;
@@ -105,6 +93,7 @@ export default {
   }
 
   .el-menu-item-x {
+    
       font-size: 14px;
       color: #48576a;
       padding: 0 20px;

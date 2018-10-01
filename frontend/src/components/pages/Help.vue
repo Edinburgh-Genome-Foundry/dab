@@ -1,7 +1,7 @@
 <template lang='pug'>
 .page
 
-  h1  EMMA-DB HELP
+  h1  EGF DAB HELP
 
   .reduced-width
     :markdown-it
@@ -13,7 +13,7 @@
 
   .reduced-width
     :markdown-it
-      EMMA-DB is composed of:
+      EGF DAB is composed of:
 
       - A [parts repository](https://emmadb.genomefoundry.org) which you can
         use to store and manage your genetic parts, and browse parts from other
@@ -39,7 +39,7 @@
       (indicating the EMMA position of the part) and ``Category``
       (see [here](#/about-emma#categories) for a list of accepted categories).
 
-      Your part will now be available in the relevant EMMA-DB design apps.
+      Your part will now be available in the relevant EGF DAB design apps.
 
       ![Part submission form](static/imgs/ice_part_screenshot.png)
 

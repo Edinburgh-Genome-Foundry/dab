@@ -4,7 +4,7 @@
   div
     h1 EMMA Designer
     .login-form
-      p Welcome ! Please Connect with your EMMA-DB identifier and password
+      p Welcome ! Please Connect with your EGF DAB identifier and password
 
       p Username:
       el-input(placeholder="username" v-model="form.username")

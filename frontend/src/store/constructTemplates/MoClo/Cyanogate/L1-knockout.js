@@ -1,4 +1,4 @@
-var slotNames = ['UP', 'sacB', 'ABR', 'DOWN']
+var slotNames = ['BACKBONE', 'UP', 'sacB', 'ABR', 'DOWN']
 var defaultSlots = {}
 slotNames.map(function (slotName) {
   defaultSlots[slotName] = {

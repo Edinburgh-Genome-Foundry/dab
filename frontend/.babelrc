@@ -1,7 +1,7 @@
 {
   "presets": [
     ["env", { "modules": false }],
-    "stage-2"
+    "stage-3"
   ],
   "plugins": [
     ["component", [
@@ -9,8 +9,12 @@
         "libraryName": "element-ui",
         "styleLibraryName": "theme-chalk"
       }
-    ],
-    "transform-runtime"],
+    ]],
+    ["transform-runtime", {
+      polyfill: false,
+      regenerator: true
+    }],
+    "transform-regenerator",
     "transform-es2015-modules-commonjs",
     "dynamic-import-node"
   ],

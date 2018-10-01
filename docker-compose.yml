@@ -13,8 +13,10 @@ services:
     command: ./rqworker_reload.sh
     links:
       - redis
+      - ice
     depends_on:
       - redis
+      - ice
     volumes:
       - ./backend:/code
 
@@ -25,9 +27,11 @@ services:
     links:
       - redis
       - rqworker
+      - ice
     depends_on:
       - redis
       - rqworker
+      - ice
     volumes:
       - ./backend:/code
 
@@ -40,7 +44,37 @@ services:
     volumes:
       - ./frontend:/code
       - /code/node_modules
+  
+  ice:
+    build: ice
+    image: jbei/ice:latest
+    restart: always
+    links:
+      - postgres
+    ports:
+      - '127.0.0.1:9999:8080'
+    volumes:
+      - index:/var/lib/ice/lucene
+      - localdata:/usr/local/tomcat/data
 
+  postgres:
+    image: library/postgres:9.6
+    restart: always
+    environment:
+      POSTGRES_DB: ice
+      POSTGRES_PASSWORD: icepass
+      POSTGRES_USER: iceuser
+    volumes:
+      - postgres:/var/lib/postgresql/data
+      - /backups:/backups
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: 1m
+        max-file: '5'
+    expose:
+      - '5432'
+  
   nginx:
     restart: always
     image: nginx
@@ -49,6 +83,12 @@ services:
     links:
       - vue
       - django
+      - ice
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - /var/log/nginx_emmadb:/var/log/nginx
+      - /var/log/nginx_dab:/var/log/nginx
+
+volumes:
+  postgres: {}
+  index: {}
+  localdata: {}

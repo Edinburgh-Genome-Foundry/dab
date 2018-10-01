@@ -1,29 +1,58 @@
 <template lang="pug">
 .page
 
-  h1 Explore the repository
+  h1.app-title
+    .absolute: .relative1 Manage Parts
+    .absolute: .relative2 Manage Parts
 
-  h3 Select an assembly standard
 
-  templates-tree(:singleRoot='false' @click='function (name) {templateName = name}')
-
-  //- el-select(v-model='templateName' placeholder="Select a standard")
-  //-     el-option(v-for='o, name in $store.state.constructTemplates', :label='name', :value='name', :key='name')
-
-  el-tabs.main-menu(v-if='templateName')
-    el-tab-pane
-      span(slot='label') Parts
-      h2.center <b>{{currentTemplate.name}}</b><br /> parts in the repository
-      h3 Select a position on the schema:
-      .minischema
+  el-row(:gutter='30')
+    el-col(:xs='24', :sm='24', :md='6', :lg='6')
+      h3 Select a standard
+      templates-tree(:singleRoot='false' @click='function (name) {templateName = name}')
+    el-col(:xs='24', :sm='24', :md='18', :lg='18')
+      .minischema(v-if='templateName')
+        h3 {{templateName}}
         minipartslot(v-for='slotName in slotNames', :key='slotName',
+                     :selected="{selected: selectedSlotCategory.slot === slotName}",
                      :size='16',
                      :color='currentTemplate.zoneColors[slots[slotName].zone]',
                      :zoneIndex='Object.keys(currentTemplate.zoneColors).indexOf(slots[slotName].zone[0])',
                      :categories='slots[slotName].categories', :slotName='slotName', @click='selectCategory')
 
+  el-tabs.main-menu(v-if='templateName && selectedSlotCategory.slot')
     el-tab-pane
-      span(slot='label') Overhangs
+      span(slot='label') <icon name='search'/> All Parts
+
+      .parts-viewer(v-if='selectedSlotCategory')
+        h3.
+          Available <i class='selected-category-txt'>{{selectedSlotCategory.category}}</i>
+          parts at position {{selectedSlotCategory.slot}}:
+        .loading-icon(v-if='loading')
+          img(src='/static/loading_plasmid.svg')
+
+        el-input.search-box(v-model='search', placeholder='Enter a search term' v-if='foundParts.length > 4')
+        .cards(v-if='foundParts.length')
+
+          el-card.part-card(v-for='part in selectedParts', :key='part.dbName')
+            .part_header(slot='header')
+              p.part-name {{part.dbName}}
+              a.database-link(:href="'https://emmadb.genomefoundry.org/ICE-REST/rest/entries/genbank/' +  part.dbId") <i class="el-icon-document"></i> genbank
+              a.database-link(:href="'https://emmadb.genomefoundry.org/entry/' + part.dbId") <i class="el-icon-share"></i> ICE page
+
+            p(v-if='part.dbDescription') <b>Description:</b> {{part.dbDescription}}
+        el-alert(v-if='queryError', type='error', title='', show-icon) {{queryError.body.error}}
+
+    el-tab-pane
+      span(slot='label') <icon name='book'/> Your parts
+
+
+
+    el-tab-pane
+      span(slot='label') <icon name='diamond'/> Domesticate parts
+
+    el-tab-pane
+      span(slot='label') <icon name='link'/> Overhangs Infos
       h2.center <b>{{currentTemplate.name}}</b><br /> overhangs information
       el-card(:header="templateName + ' overhangs'").overhangs-list
         .overhangs-schema.center
@@ -40,36 +69,6 @@
         .overhang-seq(v-for='seq in currentTemplate.compatibleOverhangs', :key='seq') {{seq}}&nbsp
       el-tab-pane
         span(slot='label') Infos
-
-
-  //- h3 Select a position:
-  //- .minischema
-  //-   minipartslot(v-for='slotName in slotNames', :key='slotName',
-  //-                :size='16',
-  //-                :color='currentTemplate.zoneColors[slots[slotName].zone]',
-  //-                :zoneIndex='Object.keys(currentTemplate.zoneColors).indexOf(slots[slotName].zone[0])',
-  //-                :categories='slots[slotName].categories', :slotName='slotName', @click='selectCategory')
-
-
-  .parts-viewer(v-if='selectedSlotCategory')
-
-    h3.
-       Available <i class='selected-category-txt'>{{selectedSlotCategory.category}}</i>
-       parts at position {{selectedSlotCategory.slot}}:
-    .loading-icon(v-if='loading')
-      img(src='/static/loading_plasmid.svg')
-
-    el-input.search-box(v-model='search', placeholder='Enter a search term' v-if='foundParts.length > 4')
-    .cards(v-if='foundParts.length')
-
-      el-card.part-card(v-for='part in selectedParts', :key='part.dbName')
-        .part_header(slot='header')
-          p.part-name {{part.dbName}}
-          a.database-link(:href="'https://emmadb.genomefoundry.org/ICE-REST/rest/entries/genbank/' + part.dbId") <i class="el-icon-document"></i> genbank
-          a.database-link(:href="'https://emmadb.genomefoundry.org/entry/' + part.dbId") <i class="el-icon-share"></i> ICE page
-
-        p(v-if='part.dbDescription') <b>Description:</b> {{part.dbDescription}}
-    el-alert(v-if='queryError', type='error', title='', show-icon) {{queryError.body.error}}
 </template>
 
 <script>
@@ -77,18 +76,18 @@ import learnmore from '../../components/widgets/LearnMore'
 import minipartslot from '../Parts/MiniPartSlot'
 
 var infos = {
-  title: 'Explore the database',
-  navbarTitle: 'Explore the database',
-  path: 'explore',
+  title: 'Manage Parts',
+  navbarTitle: 'Manage Parts',
+  path: 'manage_parts',
   description: '',
-  icon: require('assets/images/explore.svg')
+  icon: require('assets/images/diamond.svg')
 }
 
 export default {
   data: function () {
     return {
       templateName: null,
-      selectedSlotCategory: null,
+      selectedSlotCategory: {slot: null, category: null},
       foundParts: [],
       loading: false,
       queryError: null,
@@ -197,51 +196,55 @@ export default {
   }
 }
 
-</style>
+/deep/ .el-tabs__header {
+  /deep/ .fa-icon {
+    margin-bottom: -0.2em;
+  }
+}
 
-<style lang='scss'>
 .parts-viewer {
   .search-box {
     width: 80%;
     margin-left: 10%;
     margin-bottom: 2em;
   }
-  .cards {
+  /deep/ .cards {
     max-height: 40em;
     overflow-y: auto;
-  }
-  .part-card {
-    width: 80%;
-    margin-left: 10%;
-    margin-bottom: 2em;
-    .el-card__header {
-      padding: 10px;
-      font-weight: bold;
-      color: white;
-      background-color: #52a2e0;
-      p.part-name {
-        display: inline-block;
-        margin-right: 2em;
-        margin:0;
-        // width: 200px;
-      }
-      a.database-link {
+    .el-card.part-card {
+      width: 80%;
+      margin-left: 10%;
+      margin-bottom: 2em;
+      .el-card__header {
+        padding: 10px;
+        font-weight: bold;
         color: white;
-        text-decoration: none;
-        font-weight: normal;
-        text-align: right;
-        margin-left: 15px;
-        float: right;
+        background-color: #52a2e0 !important;
+        p.part-name {
+          display: inline-block;
+          margin-right: 2em;
+          margin:0;
+          // width: 200px;
+        }
+        a.database-link {
+          color: white;
+          text-decoration: none;
+          font-weight: normal;
+          text-align: right;
+          margin-left: 15px;
+          float: right;
+        }
+      }
+      .el-card__body {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        p {
+          margin-top: 0.5em;
+          margin-bottom: 0.5em;
+        }
       }
     }
-    .el-card__body {
-      padding-top: 5px;
-      padding-bottom: 5px;
-      p {
-        margin-top: 0.5em;
-        margin-bottom: 0.5em;
-      }
-    }
+
   }
 }
 
@@ -279,4 +282,6 @@ export default {
 .main-menu {
   margin-top: 3em;
 }
+
+
 </style>

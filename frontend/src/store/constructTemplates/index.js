@@ -1,6 +1,7 @@
 var constructTemplates = {
   'EMMA / Standard': require('./EMMA/Standard.js').template,
-  'MoClo / Phytobricks': require('./MoClo/Phytobricks.js').template,
+  'MoClo / Phytobricks-L1': require('./MoClo/Phytobricks-L1.js').template,
+  'MoClo / MoCloPlant-L1': require('./MoClo/MocloPlant-L1.js').template,
   'MoClo / Cyanogate / L1-knockin': require('./MoClo/Cyanogate/L1-knockin.js').template,
   'MoClo / Cyanogate / L1-knockout': require('./MoClo/Cyanogate/L1-knockout.js').template,
   'MoClo / Cyanogate / L1-standard': require('./MoClo/Cyanogate/L1-standard.js').template,

@@ -63,7 +63,8 @@ export default {
     categoriesEnabled: {default: () => ({})}, // categories of parts filtered in the dropdown
     zoneIndex: {default: 'none'},
     color: {default: 'none'},
-    construct: {default: null}
+    construct: {default: null},
+    noConnection: {default: false}
   },
   data: function () {
     return {
@@ -123,6 +124,9 @@ export default {
     }
   },
   mounted: function () {
+    if (this.noConnection) {
+      return
+    }
     this.$http.post(
       this.$store.state.settings.ICE_REPO_API_URL + 'entries/filterlist',
       {
@@ -313,20 +317,8 @@ export default {
   }
 }
 
-
-</style>
-
-<style lang='scss'>
 $linecolor: #ccc;
 $linestyle: 2px dashed;
-$colors: (
-    tuA: #f6faff,
-    tuB: #f4fefa,
-    selection-marker: #fff5ff,
-    promoter: #f6faff,
-    cds: #f4fefa,
-    terminator: #fff5ff
-);
 
 $linecolor: #ccc;
 $linestyle: 2px dashed;

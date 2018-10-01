@@ -1,36 +1,39 @@
 <template lang='pug'>
-.construct-form
+el-form.construct-form(style='width: 300px')
   el-checkbox(v-model='options.selectionMarker') Selection marker
+  <br/>
   el-checkbox(v-model='options.homologyArms') Homology arms
+  <br/>
   el-checkbox(v-model='options.recombinationSites') Recombination sites
+  <br/>
   el-checkbox(v-model='options.insulators') Insulators
+  <br/>
   el-checkbox(v-model='options.replicationOrigin') Replication origin
-
-  hr
+  <br/>
   el-checkbox(v-model='options.tuA.checked') Transcription Unit A
-  el-select(v-if='options.tuA.checked' v-model='options.tuA.sistrons')
-    el-option(label='Monosistronic' value='mono')
-    el-option(label='Bisistronic' value='bi')
+  <br/>
+  .div(v-if='options.tuA.checked' style='margin-left: 10px;')
+    el-radio(v-model='options.tuA.sistrons' label='mono') Monosistronic
+    el-radio(v-model='options.tuA.sistrons' label='bi') Bisistronic
+    <br/>
+    el-checkbox(v-model='options.tuA.fusion'
+                v-if="options.tuA.sistrons === 'mono'") Fusion
+    span(v-else)
+      el-radio(v-model='options.tuA.bisistron_type', label='IRES') IRES
+      el-radio(v-model='options.tuA.bisistron_type', label='p2A') p2A
+    <br/>
 
-  el-checkbox(v-if="options.tuA.checked && (options.tuA.sistrons === 'mono')",
-              v-model='options.tuA.fusion') Fusion
-
-  span(v-if="options.tuA.checked && (options.tuA.sistrons === 'bi')")
-    el-radio(v-model='options.tuA.bisistron_type', label='IRES') IRES
-    el-radio(v-model='options.tuA.bisistron_type', label='p2A') p2A
-
-  hr
   el-checkbox(v-model='options.tuB.checked') Transcription Unit B
-  el-select(v-if='options.tuB.checked' v-model='options.tuB.sistrons')
-    el-option(label='Monosistronic' value='mono')
-    el-option(label='Bisistronic' value='bi')
+  <br/>
+  .div(v-if='options.tuB.checked' style='margin-left: 10px;')
+    el-radio(v-model='options.tuB.sistrons' label='mono') Monosistronic
+    el-radio(v-model='options.tuB.sistrons' label='bi') Bisistronic
 
-  el-checkbox(v-if="options.tuB.checked && (options.tuB.sistrons === 'mono')",
-              v-model='options.tuB.fusion') Fusion
-
-  span(v-if="options.tuB.checked && (options.tuB.sistrons === 'bi')")
-    el-radio(v-model='options.tuB.bisistron_type', label='IRES') IRES
-    el-radio(v-model='options.tuB.bisistron_type', label='p2A') p2A
+    el-checkbox(v-model='options.tuB.fusion'
+                v-if="options.tuB.sistrons === 'mono'") Fusion
+    span(v-else)
+      el-radio(v-model='options.tuB.bisistron_type', label='IRES') IRES
+      el-radio(v-model='options.tuB.bisistron_type', label='p2A') p2A
 </template>
 <script>
 export default {

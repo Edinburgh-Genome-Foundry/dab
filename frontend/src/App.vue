@@ -21,22 +21,27 @@ export default {
     navbar,
     footersection
   },
-  created () {
-    var cookieUserId = this.$cookie.get('userId')
-    var cookieToken = this.$cookie.get('userId')
-    if (cookieUserId && cookieToken) {
-      this.update_user({name: cookieUserId.replace(/['"]+/g, '')})
-      this.update_auth({
-        isLoggedIn: true,
-        accessToken: cookieToken.replace(/['"]+/g, ''),
-        refreshToken: null,
-      })
-    } else {
-      auth.login({
-        username: this.$store.state.settings.ANONYMOUS_USERNAME,
-        password: this.$store.state.settings.ANONYMOUS_PASSWORD
-      })
+  async created () {
+    await this.$iceClient.setApiToken(
+      'visitor.dab.genomefoundry.org',
+      'Yp530IQZeyIZ4+hdrTTwM31IhacEB44Uv0RPWBq+O2k='
+    )
+    this.$store.state.user = {
+      name: 'visitor',
+      email: 'unknown'
     }
+
+    //   this.update_auth({
+    //     isLoggedIn: true,
+    //     accessToken: cookieToken.replace(/['"]+/g, ''),
+    //     refreshToken: null,
+    //   })
+    // } else {
+    //   auth.login({
+    //     username: this.$store.state.settings.ANONYMOUS_USERNAME,
+    //     password: this.$store.state.settings.ANONYMOUS_PASSWORD
+    //   })
+    // }
   },
   methods: {
     ...mapMutations([
@@ -107,6 +112,15 @@ h1, h2 {
 h1 { font-size: 3em; }
 h2 { font-size: 2em; }
 
+h1.title {
+  width:1050px;
+  max-width:95%;
+  margin: 0 auto 1em;
+  padding: 0.5em;
+  font-size: 2em;
+  border-bottom: 2px solid #dddddd;
+}
+
 img.icon {
   display: block;
   margin: 0 auto;
@@ -124,5 +138,38 @@ a {
 
 .router-link-active {
     color: "black";
+}
+
+.app-title {
+  color: #0c7694;
+  font-size: 3em;
+  font-weight: 1000;
+  width:100%;
+  height: 2em;
+  margin-top: 2em;
+  margin-bottom: 1em;
+  
+  font-family: Comfortaa;
+  text-align: center;
+  position: relative;
+  display: block;
+  .absolute {
+    position: absolute;
+    left: 50%;
+    
+    .relative1, .relative2 {
+      left: -50%;
+      position: relative;
+      color: #0f9ac0;
+    }
+    .relative1 {
+      transform: rotate(1.2deg);
+      color: hsla(193, 50%, 41%, 0.2);
+    }
+  }
+}
+
+.el-tooltip__popper {
+  font-family: Comfortaa !important;
 }
 </style>

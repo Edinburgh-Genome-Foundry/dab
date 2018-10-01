@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+docker exec docker_postgres_1 bash -lc 'pg_dump --format custom --username iceuser ice' > /backups/ice_backup_$(date +%Y_%m_%d).dmp
+

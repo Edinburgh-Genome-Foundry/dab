@@ -3,8 +3,8 @@
   el-dialog(v-bind:visible.sync='showDialog' width="400px")
     h3.center Log in
     el-form
-      el-form-item(label="Username")
-        el-input(v-model='credentials.username')
+      el-form-item(label="Email or username")
+        el-input(v-model='credentials.email')
       el-form-item(label="Password")
         el-input(v-model='credentials.password' type='password')
       div.center.submit
@@ -15,8 +15,6 @@
 </template>
 
 <script>
-import utils from '../utils.js'
-import auth from '../auth'
 export default {
   props: {
     value: {default: false}
@@ -24,7 +22,7 @@ export default {
   data () {
     return {
       credentials: {
-        username: '',
+        email: '',
         password: ''
       },
       loggingIn: false,
@@ -47,27 +45,27 @@ export default {
     handleResize: function (event) {
       this.fullWidth = document.documentElement.clientWidth
     },
-    submit () {
+    async submit () {
       this.loggingIn = true
       this.error = ''
-      auth.login(this.credentials).then((response) => {
-        console.log(response)
+      try {
+        var response = await this.$iceClient.getNewSessionId(this.credentials)
+      } catch (error) {
+        this.error = 'Authentication failed'
         this.loggingIn = false
-        if (response.status !== 200) {
-          this.error = 'Authentication error. ' + utils.getError(response)
-        } else {
-          this.showDialog = false
-        }
-      })
-    },
-    logout () {
-      auth.logout()
+        return
+      }
+      console.log(response)
+      this.$store.state.user = {
+        email: response['email'],
+        name: response.firstName + ' ' + response.lastName,
+        institution: response.institution
+      }
+      this.loggingIn = false
+      this.showDialog = false
     },
   },
   computed: {
-    auth () {
-      return this.$store.state.auth
-    },
     userName () {
       return this.$store.state.user.name
     },

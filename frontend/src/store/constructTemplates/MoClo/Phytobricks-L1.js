@@ -8,7 +8,7 @@ slotNames.map(function (slotName) {
 })
 
 export const template = {
-  name: 'Phytobricks',
+  name: 'Phytobricks-L1',
   slotNames: slotNames,
   defaultSlots: defaultSlots,
   overhangs: [
@@ -81,8 +81,8 @@ export const template = {
     'NTAG': {
       zone: ['cds'],
       overhangs: {
-        left: 'CCAG',
-        right: 'CAGC'
+        left: 'CCAT',
+        right: 'AATG'
       },
       categories: [
         'protein tag'
@@ -141,7 +141,7 @@ export const template = {
     '3UTR': {
       zone: ['terminator'],
       overhangs: {
-        left: 'TGCT',
+        left: 'GCTT',
         right: 'GGTA'
       },
       categories: [
@@ -152,7 +152,7 @@ export const template = {
       zone: ['terminator'],
       overhangs: {
         left: 'GGTA',
-        right: 'CGTC'
+        right: 'CGCT'
       },
       categories: [
         'terminator'
@@ -162,7 +162,7 @@ export const template = {
       zone: ['terminator'],
       overhangs: {
         left: 'CGTC',
-        right: 'TCAC'
+        right: 'CGCT'
       },
       categories: [
         'insulator'

@@ -20,6 +20,7 @@ export default {
 </script>
 <style lang='scss' scoped>
 .construct-form {
+  font-family: Comfortaa;
   width: 85%;
   max-width: 55em;
   margin: 1em 1em 1em;

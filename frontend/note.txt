@@ -1,0 +1,63 @@
+CREATE FOLDER:
+
+POST /rest/folders
+{folderName: "test"}
+
+RESPONSE:
+{
+  "folderName": "test2",
+  "count": 0,
+  "propagatePermission": false,
+  "type": "PRIVATE",
+  "publicReadAccess": false,
+  "canEdit": true,
+  "id": 3,
+  "creationTime": 1538086258556,
+  "entries": []
+}
+
+--------------------------------------------
+SHARE FOLDER:
+
+POST /rest/folders/{folderId}/permissions
+{"canWrite":false,
+"canRead":true,
+"article":"GROUP",
+"typeId":2,
+"articleId":3,
+"type":"READ_FOLDER"
+}
+
+RESPONSE:
+{
+  "id": 1,
+  "type": "READ_FOLDER",
+  "article": "GROUP",
+  "typeId": 2,
+  "articleId": 3,
+  "display": "ALL_MEMBERS",
+  "group": {
+    "id": 3,
+    "uuid": "7247e63a-ecb8-4321-93ad-7e7d6870b9ad",
+    "label": "ALL_MEMBERS",
+    "parentId": 0,
+    "description": "everyone with an account",
+    "children": [],
+    "members": [],
+    "remoteMembers": [],
+    "memberCount": 0,
+    "type": "PUBLIC",
+    "ownerEmail": "Administrator",
+    "autoJoin": true,
+    "creationTime": 1538085948247
+  }
+}
+----------------------------------------
+
+
+
+
+SNIPPETS:
+
+ice.create_folder()
+ice.share_folder(id, )

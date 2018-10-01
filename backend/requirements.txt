@@ -4,7 +4,9 @@ git+git://github.com/Edinburgh-Genome-Foundry/DnaChisel
 git+git://github.com/Edinburgh-Genome-Foundry/Caravagene.git
 git+git://github.com/Edinburgh-Genome-Foundry/bandwitch.git
 git+git://github.com/Edinburgh-Genome-Foundry/Proglog
-
+git+git://github.com/Edinburgh-Genome-Foundry/SnapGeneReader
+git+git://github.com/Edinburgh-Genome-Foundry/crazydoc
+git+git://github.com/Edinburgh-Genome-Foundry/icebreaker
 git+https://github.com/pygraphviz/pygraphviz.git
 
 redis==2.10.5

@@ -1,34 +1,56 @@
 <template lang='pug'>
-.construct
-  textarea.name(v-model='constructName', placeholder='(Name this construct)', :rows='1')
-  .template-name From {{construct.templateName}}
-  .construct-hover-only
-    toolbar(:construct='construct', @toggleOptions="showOptions = !showOptions")
-
-  .options.animated.flipInX(v-if='showOptions')
-    .construct-form(:is='forms[construct.templateName]', v-model='options')
-
-  .slots
-    transition-group(name='parts-list',
-                     enter-active-class='animated flipInX',
-                     leave-active-class='animated zoomOut absolute-animation',
-                     tag='div')
-      .part-slot(v-for='slotName in constructTemplate.slotNames', :key='slotName',
-                 v-if='optionsEnabled[slotName]', :slotName='slotName',
-                 is='part-slot',
-                 :categoriesEnabled='categoriesEnabled[slotName]',
-                 :color='constructTemplate.zoneColors[constructTemplate.slotInfos[slotName].zone]',
-                 :zoneIndex='Object.keys(constructTemplate.zoneColors).indexOf(constructTemplate.slotInfos[slotName].zone[0]) + 1',
-                 :construct='construct',
-                 :optionsLocked='optionsLocked[slotName]',
-                 :userEnabled='construct.userEnabled[slotName]')
+.construct(:class="{'no-hover': construct.noHover}")
+  el-menu.construct-hover-only(:collapse='true',
+                               style='float: left; position: absolute;'
+                               v-if="!(construct.hideHeader) && showMenu",
+                               :collapse-transition='false')
+    
+    el-menu-item(index='2', @click="moveConstructUp({construct: construct})")
+      i.el-icon-arrow-up
+      span(slot='title' ) Move up
+    el-menu-item(index='3' @click="moveConstructDown({construct: construct})")
+      i.el-icon-arrow-down
+      span(slot='title') Move down
+    el-menu-item(index='4', @click="duplicateConstruct({construct: construct})")
+      i.el-icon-plus
+      span(slot='title') Duplicate
+    el-menu-item(index='5', @click="downloadSchema")
+      i.el-icon-download
+      span(slot='title') Download schema
+    el-menu-item(index='6', @click="deleteConstruct({construct: construct})")
+      i.el-icon-delete
+      span(slot='title') Delete
+    el-submenu(index='1')
+      template(slot="title")
+        i.el-icon-setting
+        span(slot="title") Settings
+      .construct-form(:is='forms[construct.templateName]', v-model='options')
+    
+    
+  .div(:style="{marginLeft: construct.hideHeader ? '0px' : '80px'}")
+    .construct-header(v-if="!(construct.hideHeader)")
+      textarea.name(v-model='constructName', placeholder='(Name this construct)', :rows='1')
+      .template-name From {{construct.templateName}}
+    .slots()
+      transition-group(name='parts-list',
+                      enter-active-class='animated flipInX',
+                      leave-active-class='animated zoomOut absolute-animation',
+                      tag='div')
+        .part-slot(v-for='slotName in constructTemplate.slotNames', :key='slotName',
+                  v-if='optionsEnabled[slotName]', :slotName='slotName',
+                  is='part-slot',
+                  :categoriesEnabled='categoriesEnabled[slotName]',
+                  :color='constructTemplate.zoneColors[constructTemplate.slotInfos[slotName].zone]',
+                  :zoneIndex='Object.keys(constructTemplate.zoneColors).indexOf(constructTemplate.slotInfos[slotName].zone[0]) + 1',
+                  :construct='construct',
+                  :noConnection='construct.doNotConnect'
+                  :optionsLocked='optionsLocked[slotName]',
+                  :userEnabled='construct.userEnabled[slotName]')
 </template>
-
 
 <script>
 import partslot from '../Parts/PartSlot'
 import download from 'downloadjs'
-import toolbar from './ConstructToolBar'
 import { forms } from './ConstructForm'
 import { mapMutations, mapGetters } from 'vuex'
 
@@ -39,7 +61,8 @@ export default {
     return {
       options: JSON.parse(JSON.stringify(this.construct.options)),
       showOptions: false,
-      forms: forms
+      forms: forms,
+      showMenu: false
     }
   },
   computed: {
@@ -72,6 +95,9 @@ export default {
       return this.getConstructCategoriesEnabled(this.construct)
     }
   },
+  mounted () {
+    this.showMenu = true
+  },
   watch: {
     options: {
       deep: true,
@@ -84,16 +110,22 @@ export default {
     }
   },
   components: {
-    'part-slot': partslot,
-    'toolbar': toolbar
+    'part-slot': partslot
   },
   methods: {
     ...mapMutations([
       'updateOptions',
-      'updateConstructName'
+      'updateConstructName',
+      'deleteConstruct',
+      'duplicateConstruct',
+      'moveConstructUp',
+      'moveConstructDown',
     ]),
     downloadSchema: function () {
-      download(JSON.stringify(this.constructData, null, ' '), 'json')
+      download(
+        JSON.stringify(this.construct, null, ' '),
+        this.constructName + '.json'
+      )
     }
   }
 }
@@ -127,7 +159,7 @@ export default {
       visibility: hidden;
     }
   }
-  &:hover {
+  &:hover:not(.no-hover) {
     .construct-hover-only {
       visibility: visible;
     }
@@ -144,6 +176,16 @@ export default {
     margin-left: 0.3em;
   }
 }
+
+.construct-form /deep/ {
+  .el-form-item {
+    margin-bottom: 1px !important;
+  }
+  .el-form-item__label {
+
+  }
+}
+
 
 
 .part-slot {

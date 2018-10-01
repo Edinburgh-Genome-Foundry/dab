@@ -2,18 +2,28 @@
 
 <template lang="pug">
 .page
-  h1 Welcome !
-  .description
-    :markdown-it
-      EMMA-DB is a web plateform to manage genetic parts for the
-      [EMMA assembly standard](http://pubs.acs.org/doi/abs/10.1021/acssynbio.7b00016),
-      and design new constructs from these parts. Read our [help page](help) for more.
-
-  scenariospanel
+  center
+    img.title(src='/static/dab_title.svg')
+    animated-construct
+    el-row.app-icons
+      el-col(:span='8')
+        router-link(to='design_assemblies')
+          i.el-icon-edit-outline
+          p Design
+    
+      el-col(:span='8')
+        router-link(to='manage_parts')
+          i.el-icon-menu
+          p Manage parts
+      
+      el-col(:span='8')
+        router-link(to='about')
+          i.el-icon-location-outline
+          p About
 </template>
 
 <script>
-import scenariospanel from '../ScenariosPanel'
+import AnimatedConstruct from '../widgets/AnimatedConstruct'
 export default {
   data: function () {
     return {
@@ -21,7 +31,7 @@ export default {
     }
   },
   components: {
-    scenariospanel
+    'animated-construct': AnimatedConstruct
   }
 }
 </script>
@@ -32,10 +42,34 @@ p {
   font-size: 18px;
 }
 
+.title {
+  max-width: 400px;
+  margin-top: 5em;
+  // margin-bottom: 2em;
+  width: 90%;
+}
+
 .description p {
   max-width: 800px;
   width: 90%;
   margin: 0 auto;
+}
+
+.app-icons {
+  width: 90%;
+  max-width: 400px;
+  margin-top: 2em;
+  font-family: Comfortaa;
+  i {
+    font-size: 4em;
+  }
+  a {
+    color: #42b7d6;
+    text-decoration: none;
+    &:hover {
+      color: #2e839b;
+    }
+  }
 }
 
 </style>
