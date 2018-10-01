@@ -12,11 +12,13 @@ import store from './store'
 import router from './router'
 import 'vue-awesome/icons'
 import { IceClient } from './IceClient'
+import download from 'downloadjs'
 // import auth from './auth'
 // import BootstrapVue from 'bootstrap-vue'
 
 // Globally register bootstrap-vue components
 
+Vue.prototype.$download = download
 Vue.prototype.$iceClient = new IceClient('/db/')
 Vue.use(VueResource)
 Vue.use(ElementUI, { locale })

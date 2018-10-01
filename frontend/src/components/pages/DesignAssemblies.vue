@@ -2,12 +2,13 @@
 .page
 
   h1.app-title Design assemblies
-
+  //- el-dialog(:visible='true', width="95%")
+  //-   part-selection-menu
   .constructs-designer
 
     el-container
       el-aside(width="300px")
-        .menu-container
+        .side-menu-container
           el-menu
             el-submenu(index='0')
               template(slot="title")
@@ -55,7 +56,7 @@ import construct from '../Constructs/Construct'
 import ConstructsOrderForm from '../forms/ConstructsOrderForm'
 import ConstructsUploadForm from '../forms/ConstructsUploadForm'
 import ConstructsExportForm from '..//forms/ConstructsExportForm'
-
+import PartSelectionMenu from '../Parts/PartSelectionMenu'
 var infos = {
   title: 'Design Assemblies',
   navbarTitle: 'Design Assemblies',
@@ -129,7 +130,8 @@ export default {
     construct,
     'constructs-order-form': ConstructsOrderForm,
     'constructs-upload-form': ConstructsUploadForm,
-    'constructs-export-form': ConstructsExportForm
+    'constructs-export-form': ConstructsExportForm,
+    'part-selection-menu': PartSelectionMenu
   },
   infos: infos,
   methods: {
@@ -282,28 +284,16 @@ h4.formlabel {
   margin-top: 2em;
 }
 
-.menu-container {
-  position: fixed;
-  display: block;
-  width: 300px;
-  overflow-y: auto;
-  height: 60vh;
-  
-  /deep/ .el-submenu__title {
-    background: #f0fcff;
-  }
-  /deep/ .el-submenu > .el-menu {
-    margin: 20px;
-  }
-  /deep/ .el-form-item__label:before {
-    display: none;
-  }
-}
-
 .constructs-container {
   padding: 0;
   margin-left: 10px;
   
+}
+
+.side-menu-container {
+  height: 60vh;
+  position: fixed;
+  display: block;
 }
 
 </style>

@@ -116,17 +116,12 @@ class IceClient {
     var searchResults = await this.search({query: value})
     for (var e of searchResults) {
       var parameters = await self.getCustomFields(e['id'])
-      var addedAlready = false
-      parameters.map(function (p) {
-        if (addedAlready) {
-          return
-        }
-        if ((p.name === parameter) && (p.value === value)) {
-          e.parameters = parameters
-          results.push(e)
-          addedAlready = true
-        }
-      })
+      if (parameters.some(p => ((p.name === parameter) && (p.value === value)))) {
+        e.parameters = parameters
+        results.push(e)
+      } else {
+        return results
+      }
     }
     return results
   }

@@ -45,7 +45,8 @@ export default {
       )
       this.$store.state.user = {
         name: 'visitor',
-        email: 'unknown'
+        email: 'unknown',
+        id: -1
       }
     }
   },

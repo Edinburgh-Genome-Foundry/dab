@@ -7,15 +7,10 @@
 </template>
 
 <script>
-import auth from './auth.js'
 import navbar from './components/Navbar'
 import footersection from './components/Footer'
-import { mapMutations } from 'vuex'
 export default {
   data () {
-    return {
-      user: auth.user
-    }
   },
   components: {
     navbar,
@@ -30,25 +25,8 @@ export default {
       name: 'visitor',
       email: 'unknown'
     }
-
-    //   this.update_auth({
-    //     isLoggedIn: true,
-    //     accessToken: cookieToken.replace(/['"]+/g, ''),
-    //     refreshToken: null,
-    //   })
-    // } else {
-    //   auth.login({
-    //     username: this.$store.state.settings.ANONYMOUS_USERNAME,
-    //     password: this.$store.state.settings.ANONYMOUS_PASSWORD
-    //   })
-    // }
   },
-  methods: {
-    ...mapMutations([
-      'update_auth',
-      'update_user',
-    ])
-  }
+  methods: {}
 }
 </script>
 
@@ -57,6 +35,7 @@ export default {
 @import url(https://fonts.googleapis.com/css?family=Open+Sans);
 @import url(https://fonts.googleapis.com/css?family=Inconsolata);
 @import url(https://fonts.googleapis.com/css?family=Raleway);
+@import url(https://fonts.googleapis.com/css?family=Comfortaa);
 
 #website {
   font-family: 'Raleway', 'Source Sans Pro',  Helvetica, Arial, sans-serif;
@@ -171,5 +150,21 @@ a {
 
 .el-tooltip__popper {
   font-family: Comfortaa !important;
+}
+
+.side-menu-container {
+  
+  width: 300px;
+  overflow-y: auto;
+  
+  /deep/ .el-submenu__title {
+    background: #f0fcff;
+  }
+  /deep/ .el-submenu > .el-menu {
+    margin: 20px;
+  }
+  /deep/ .el-form-item__label:before {
+    display: none;
+  }
 }
 </style>

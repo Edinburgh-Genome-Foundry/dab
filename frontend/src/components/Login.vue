@@ -59,6 +59,7 @@ export default {
       this.$store.state.user = {
         email: response['email'],
         name: response.firstName + ' ' + response.lastName,
+        id: response['id'],
         institution: response.institution
       }
       this.loggingIn = false

@@ -33,23 +33,18 @@ module.exports = {
       return v.toString(16)
     })
   },
-  numerizeValue: function (value, rounding) {
-    if (window.Array.isArray(value)) {
-      var result = []
-      value.forEach(function (val) {
-        result.push(numerizeValue(val, rounding))
-      })
-      return result
-    }
-    var valuefloat = parseFloat(value)
-    if (!isNaN(valuefloat)) {
-      if (!isNaN(parseFloat(rounding))) {
-        valuefloat = round(valuefloat, rounding)
+  numerizeValue,
+  cartesian,
+  uniquify (objectsList, keyFunction) {
+    var flags = {}
+    var newList = objectsList.filter(function (entry) {
+      var key = keyFunction(entry)
+      if (flags[key]) {
+        return false
       }
-      return valuefloat
-    } else {
-      return value
-    }
-  },
-  cartesian: cartesian
+      flags[key] = true
+      return true
+    })
+    return newList
+  }
 }

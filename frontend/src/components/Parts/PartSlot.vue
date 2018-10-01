@@ -3,6 +3,7 @@
 
   .slot-name {{slotName}}
 
+  // User-inactivated part
   transition(name='part-pop1' enter-active-class='animated flipInY')
     .active-display(v-if='active')
       .controls.construct-hover-only
@@ -12,7 +13,7 @@
           icon.animated.infinite.tada(name='pencil' v-if='selectedParts.length === 0')
           icon(name='pencil' v-else)
       .part-label(v-if='selectedParts.length > 0' @click="dialogVisible = true")
-        span {{selectedParts[0].dbName}}
+        span {{selectedParts[0].name}}
         br
         el-tooltip.tooltip(v-if='andOthers.length > 0',
                            :content="partsTooltip", effect="light", :transition='null',
@@ -25,7 +26,7 @@
           .icon(:style="backgroundImageStyle(category)", @click="dialogVisible = true")
       el-icon.center.delete(icon='delete', v-if='!optionsLocked',
                        size='small', @click="$emit('userDisable', slotName)")
-
+  // Active part
   transition(name='part-pop2' enter-active-class='animated rubberBand')
     .inactive-display(v-if='!active' @click="toggleUserEnabled(true)")
       .controls.construct-hover-only
@@ -37,23 +38,26 @@
                      :enterable='false', transition='el-fade-in')
           .icon.inactive(:style="backgroundImageStyle(category)").construct-hover-only
 
-  el-dialog.part-selector(title="Select parts", :visible.sync="dialogVisible", size='large')
-    .show-selected
-      el-button.center(icon='arrow-right' @click='function () {showSelected = !showSelected}' v-if='!showSelected' size='small') Show selected ({{selectedParts.length}})
-      el-button.center(icon='arrow-down' @click='function () {showSelected = !showSelected}' v-if='showSelected' size='small') Hide selected ({{selectedParts.length}})
+  // Part entry selection
+  el-dialog.part-selector(:visible.sync="dialogVisible", width='95%')
+    part-selection-menu(v-model='selectedParts', :position='fullSlotName')
+    //- .show-selected
+    //-   el-button.center(icon='arrow-right' @click='function () {showSelected = !showSelected}' v-if='!showSelected' size='small') Show selected ({{selectedParts.length}})
+    //-   el-button.center(icon='arrow-down' @click='function () {showSelected = !showSelected}' v-if='showSelected' size='small') Hide selected ({{selectedParts.length}})
 
-      .parts(v-if='showSelected')
-        partcard(v-for='part in selectedParts', :key='part.dbName', :selected='true', :part='part',
-                 @deselectPart='deselectPart')
-    el-input.search-box(v-model='search', placeholder='Enter a search term' v-if='categoryFilteredParts.length > 4')
-    .parts
-      partcard(v-for='part in searchFilteredParts', :key='part.dbName', :selected='partIsSelected(part)', :part='part',
-              @selectPart='selectPart', @deselectPart='deselectPart')
+    //-   .parts(v-if='showSelected')
+    //-     partcard(v-for='part in selectedParts', :key='part.dbName', :selected='true', :part='part',
+    //-              @deselectPart='deselectPart')
+    //- el-input.search-box(v-model='search', placeholder='Enter a search term' v-if='categoryFilteredParts.length > 4')
+    //- .parts
+    //-   partcard(v-for='part in searchFilteredParts', :key='part.dbName', :selected='partIsSelected(part)', :part='part',
+    //-           @selectPart='selectPart', @deselectPart='deselectPart')
 </template>
 
 <script>
 import partcard from './PartCard'
 import { mapMutations } from 'vuex'
+import PartSelectionMenu from './PartSelectionMenu'
 
 export default {
   props: {
@@ -67,16 +71,21 @@ export default {
     noConnection: {default: false}
   },
   data: function () {
+    console.log('CONSTRUCT', this.construct, this.$store.state)
+    var fullSlotName = this.$store.state.constructTemplates[this.construct.templateName].name + '__' + this.slotName
+    console.log(fullSlotName)
     return {
       allParts: [],
       selectVisible: false,
       dialogVisible: false,
       search: '',
+      fullSlotName,
       showSelected: false
     }
   },
   components: {
-    partcard
+    partcard,
+    'part-selection-menu': PartSelectionMenu
   },
   computed: {
     selectedParts: {
@@ -89,27 +98,11 @@ export default {
           slotName: this.slotName,
           selectedParts: value
         })
+        console.log('DOING SOME')
       }
     },
     active: function () {
       return (this.optionsLocked || this.userEnabled)
-    },
-    categoryFilteredParts: function () {
-      var self = this
-      return this.allParts.filter(function (part) {
-        return self.categoriesEnabled[part.dbType]
-      })
-    },
-    searchFilteredParts: function () {
-      if (this.search === '') {
-        return this.categoryFilteredParts
-      }
-      var self = this
-      return self.categoryFilteredParts.filter(function (part) {
-        return [part.dbName, part.dbDescription].some(function (txt) {
-          return txt.toLowerCase().indexOf(self.search.toLowerCase()) >= 0
-        })
-      })
     },
     andOthers: function () {
       var others = this.selectedParts.length - 1
@@ -120,31 +113,10 @@ export default {
       }
     },
     partsTooltip () {
-      return this.selectedParts.map(part => part.dbName).join(' , ')
+      return this.selectedParts.map(part => part.name).join(' , ')
     }
   },
   mounted: function () {
-    if (this.noConnection) {
-      return
-    }
-    this.$http.post(
-      this.$store.state.settings.ICE_REPO_API_URL + 'entries/filterlist',
-      {
-        filter: JSON.stringify({
-          type: 'N/A',
-          position: this.slotName,
-        }),
-        fields: '{"matchScore","dbDescription","dbName","dbId","type","position"}',
-        sessionIdForm: this.$cookie.get('sessionId'),
-        userIdForm: this.$cookie.get('userId'),
-      },
-      {emulateJSON: true},
-      {credentials: false},
-    ).then((response) => {
-      if (response.status === 200) {
-        this.allParts = response.body.data
-      }
-    })
   },
   methods: {
     ...mapMutations([
@@ -161,7 +133,7 @@ export default {
     },
     backgroundImageStyle: function (category) {
       return {
-        'background-image': 'url(/static/sbol-icons/' + category.split(' ').join('-') + '.svg)'
+        'background-image': `url(/static/sbol-icons/${category.split(' ').join('-')}.svg)`
       }
     },
     selectPart: function (part) {

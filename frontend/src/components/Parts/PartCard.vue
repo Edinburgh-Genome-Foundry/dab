@@ -2,14 +2,14 @@
 el-card.part-card(:class="{selected: selected}")
   .part_header(slot='header')
     span(v-if='selected')
-      i.select-part.el-icon-delete(@click="$emit('deselectPart',part)")
-      p.part-name {{part.dbName}} (selected)
+      i.select-part.el-icon-delete(@click="$emit('deselectPart', part)")
+      p.part-name {{part.name}} (selected)
     span(v-else)
-      i.select-part.el-icon-plus(@click="$emit('selectPart',part)")
-      p.part-name {{part.dbName}}
+      i.select-part.el-icon-plus(@click="$emit('selectPart', part)")
+      p.part-name {{part.name}}
 
-    a.database-link(:href="'https://emmadb.genomefoundry.org/ICE-REST/rest/entries/genbank/' + part.dbId" ) <i class="el-icon-document"></i> genbank
-    a.database-link(:href="'https://emmadb.genomefoundry.org/entry/' + part.dbId"  rel="noopener" target="_blank") <i class="el-icon-share"></i> ICE page
+    a.database-link(@click='downloadGenbank(part.id, part.name)') <i class="el-icon-document"></i> genbank
+    //- a.database-link(:href="'https://emmadb.genomefoundry.org/entry/' + part.dbId"  rel="noopener" target="_blank") <i class="el-icon-share"></i> ICE page
   p(v-if='part.dbDescription') <b>Description:</b> {{part.dbDescription}}
 </template>
 
@@ -25,7 +25,10 @@ export default {
     }
   },
   methods: {
-
+    async downloadGenbank (partId, partName) {
+      var sequence = await this.$iceClient.getSequence(partId, 'genbank')
+      this.$download(sequence, partName + '.gb', 'application/biosequence.genbank')
+    }
   },
   watch: {
 
@@ -57,6 +60,7 @@ export default {
       // width: 200px;
     }
     a.database-link {
+      cursor: pointer;
       font-size: 0.85em;
       color: white;
       text-decoration: none;
