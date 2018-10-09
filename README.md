@@ -13,7 +13,7 @@ custom computations in the backend. It features job
 queues (with progress feedback for the user), form widgets like file uploaders,
 help buttons, and many more.
 
-![docker-organization](https://github.com/Edinburgh-Genome-Foundry/dab/blob/master/docsdocker-organization.png)
+![docker-organization](https://github.com/Edinburgh-Genome-Foundry/dab/blob/master/docker-organization.png)
 
 This comes with the following advantages:
 
