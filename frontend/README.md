@@ -1,8 +1,8 @@
-# dnaweaverdemo
-
-> Demo for DnaWeaver
+# DAB Frontend
 
 ## Build Setup
+
+This is not meant to be started with NPM (use docker-compose as explained at the root) but it could:
 
 ``` bash
 # install dependencies
