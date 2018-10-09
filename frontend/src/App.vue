@@ -19,7 +19,7 @@ export default {
   async created () {
     await this.$iceClient.setApiToken(
       'visitor.dab.genomefoundry.org',
-      'Yp530IQZeyIZ4+hdrTTwM31IhacEB44Uv0RPWBq+O2k='
+      'tQoGO93Wgw1Vxqk8loSj8dCljui6Q8q30al+NguowHI='
     )
     this.$store.state.user = {
       name: 'visitor',
@@ -119,8 +119,7 @@ a {
     color: "black";
 }
 
-.app-title {
-  color: #0c7694;
+.app-title {  color: #0f9ac0;
   font-size: 3em;
   font-weight: 1000;
   width:100%;

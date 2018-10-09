@@ -8,7 +8,7 @@ services:
 
   rqworker:
     build: backend
-    image: cuba/django
+    image: dab/django
     restart: always
     command: ./rqworker_reload.sh
     links:
@@ -21,7 +21,7 @@ services:
       - ./backend:/code
 
   django:
-    image: cuba/django
+    image: dab/django
     restart: always
     command: gunicorn website.wsgi:application -b :8082 --reload
     links:
@@ -56,6 +56,8 @@ services:
     volumes:
       - index:/var/lib/ice/lucene
       - localdata:/usr/local/tomcat/data
+    expose:
+      - 8080
 
   postgres:
     image: library/postgres:9.6

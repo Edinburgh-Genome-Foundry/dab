@@ -3,35 +3,53 @@
 from rest_framework import serializers
 from ..base import AsyncWorker, StartJobView
 from ..common_data import connector_records, backbone
+from ..tools import data_to_html_data
 from flametree import file_tree
-from dnacauldron import full_assembly_plan_report
+from dnacauldron import full_assembly_report, autoselect_enzyme
+from icebreaker import IceClient
 
 
-def construct_data_to_assemblies_sequences(constructs, database_token, logger):
+def construct_data_to_assemblies_sequences(constructs_data, ice_auth, logger):
 
     results_zip_root = file_tree('@memory')
     errors = {
         'no_assembly': []
     }
-    for construct in logger.iter_bar(construct=constructs):
-        parts = [
-            (part.dbId, part.dbName)
-            for slot, selected_parts in construct.selectedParts.items()
-            if construct.enabledSlots[slot]
+    ice_auth['root'] = 'http://ice:8080'
+    templates_data = constructs_data['constructTemplates']
+    ice_client = IceClient(ice_auth, cache='memory')
+    iterator = constructs_data['constructs']
+    for construct in logger.iter_bar(construct=constructs_data['constructs']):
+        logger(message="Reading parts records")
+        selected_parts = [
+            part
+            for slot, selected in construct["selectedParts"].items()
+            if construct['enabledSlots'][slot]
+            for part in selected
+        ]
+        selected_parts_records = [
+            ice_client.get_record(part["id"])
             for part in selected_parts
         ]
-        parts_records = [
-            record_from_ice_database(part_id, database_token,
-                                     linear=True, name=part_name)
-            for part_id, part_name in parts
-        ] + [backbone]
+        template = templates_data[construct['templateName']]
+        template_name = template['name']
+        connectors_folder_name = template_name + '__connectors__shared'
+        connectors_folder_id = ice_client.get_folder_id(
+            connectors_folder_name, 'SHARED')
+        connector_entries = ice_client.get_folder_entries(connectors_folder_id)
+        connectors_records = [ice_client.get_record(e['id'])
+                              for e in connector_entries]
+        enzyme = autoselect_enzyme(connectors_records + selected_parts_records)
+        for rec in connectors_records + selected_parts_records:
+            rec.linear = False
+        logger(message="Computing final sequence(s)")
         try:
-            nassemblies, zipdata = full_assembly_plan_report(
-                parts_records, "@memory", enzyme='BsmBI',
+            n_assemblies, zipdata = full_assembly_report(
+                selected_parts_records, "@memory", enzyme=enzyme,
                 assemblies_prefix=construct.name,
-                connector_records=connector_records,
-                include_fragments=False, include_parts=False,
-                include_assembly_plots=False)
+                connector_records=connectors_records,
+                include_fragments_plots=False, include_parts_plots=False,
+                include_assembly_plots=True)
             folder = results_zip_root._dir(construct.name)
             ziproot = file_tree(zipdata)
             for d in ziproot._dirs:
@@ -39,10 +57,8 @@ def construct_data_to_assemblies_sequences(constructs, database_token, logger):
             ziproot.parts_graph_pdf.copy(folder._file('parts_graph.pdf'))
 
         except ValueError as err:
+            raise (err)
             name_and_error = "%s (%s)" % (construct.name, str(err))
-            errors['no_assembly'].append(name_and_error)
-        if nassemblies == 0:
-            name_and_error = "%s (%s)" % (construct.name, '0 assemblies found')
             errors['no_assembly'].append(name_and_error)
 
 
@@ -52,8 +68,9 @@ def construct_data_to_assemblies_sequences(constructs, database_token, logger):
 
 
 class serializer_class(serializers.Serializer):
-    database_token = serializers.CharField()
+    iceAuthentication = serializers.JSONField()
     constructsData = serializers.JSONField()
+    projectName = serializers.CharField(allow_blank=True)
 
 
 class worker_class(AsyncWorker):
@@ -62,8 +79,8 @@ class worker_class(AsyncWorker):
         self.logger(message="Reading Data...")
         data = self.data.constructsData
         zip_data, errors = construct_data_to_assemblies_sequences(
-            constructs=data.constructs,
-            database_token=self.data.database_token,
+            constructs_data=self.data.constructsData,
+            ice_auth=self.data.iceAuthentication,
             logger=self.logger
         )
         name = data.projectName if len(data.projectName) else 'sequences'

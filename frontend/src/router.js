@@ -20,7 +20,7 @@ const routes = [{
   }
 }, {
   path: '/about',
-  component: require('./components/pages/Help').default,
+  component: require('./components/pages/About').default,
   meta: {
     title: 'EGF DAB - Help',
     description: 'How to use EGF DAB'

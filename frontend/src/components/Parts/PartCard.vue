@@ -10,7 +10,7 @@ el-card.part-card(:class="{selected: selected}")
 
     a.database-link(@click='downloadGenbank(part.id, part.name)') <i class="el-icon-document"></i> genbank
     //- a.database-link(:href="'https://emmadb.genomefoundry.org/entry/' + part.dbId"  rel="noopener" target="_blank") <i class="el-icon-share"></i> ICE page
-  p(v-if='part.dbDescription') <b>Description:</b> {{part.dbDescription}}
+  p(v-if='part.shortDescription') <b>Description:</b> {{part.dbDescription}}
 </template>
 
 <script>

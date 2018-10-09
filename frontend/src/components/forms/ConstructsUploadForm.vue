@@ -30,6 +30,7 @@ export default {
           this.$emit('input', json.projectName)
         }
         this.loadConstructs({constructs: json.constructs || [json]})
+        this.file = []
       }
     }
   }

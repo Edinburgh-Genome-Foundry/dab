@@ -1,4 +1,4 @@
-var slotNames = '1 2 3 4 5 6 7 8 8a 8b 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25'.split(' ')
+var slotNames = 'backbone 1 2 3 4 5 6 7 8 8a 8b 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25'.split(' ')
 var defaultSlots = {}
 slotNames.map(function (slotName) {
   defaultSlots[slotName] = {
@@ -46,6 +46,16 @@ export const template = {
     'selection-marker': '#fff5ff'
   },
   slotInfos: {
+    'backbone': {
+      zone: ['none'],
+      overhangs: {
+        left: 'ACGA',
+        right: 'ATGG'
+      },
+      categories: [
+        'backbone'
+      ]
+    },
     '1': {
       zone: ['none'],
       overhangs: {
@@ -330,13 +340,18 @@ export const template = {
     }
   },
   slotOptions: {
+    'backbone': {
+      enabled: o => true,
+      locked: o => true,
+      categoriesEnabled: o => ({'backbone': true})
+    },
     '1': {
       enabled: o => true,
       locked: o => o.homologyArms,
       categoriesEnabled: o => ({
-        '5-3 homology arm': o.homologyArms,
-        '5-3 ITR': !o.homologyArms,
-        '5-3 LTR': !o.homologyArms,
+        'homology arm': o.homologyArms,
+        'ITR': !o.homologyArms,
+        'LTR': !o.homologyArms,
         'recombinase recognition sequence': (!o.homologyArms && o.recombinationSites)
       })
     },
@@ -425,8 +440,8 @@ export const template = {
       enabled: o => o.tuA.checked,
       locked: false,
       categoriesEnabled: o => ({
-        '5-3 UTR': true,
-        '5-3 LTR': true
+        'UTR': true,
+        'LTR': true
       })
     },
     '11': {
@@ -527,7 +542,7 @@ export const template = {
       enabled: o => (o.homologyArms || o.recombinationSites),
       locked: true,
       categoriesEnabled: o => ({
-        '5-3 homology arm': o.homologyArms,
+        'homology arm': o.homologyArms,
         'recombinase recognition sequence': o.recombinationSites
       })
     },

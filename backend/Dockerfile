@@ -32,7 +32,7 @@ RUN wget -O "CabinSketch.zip" "https://fonts.google.com/download?family=Cabin+Sk
 RUN fc-cache -f
 
 ARG CACHEBUST=30
-RUN pip install --upgrade git+git://github.com/Edinburgh-Genome-Foundry/DnaCauldron.git
+RUN pip install --upgrade git+git://github.com/Edinburgh-Genome-Foundry/icebreaker.git
 
 RUN rm -rf /root/.ssh/
 

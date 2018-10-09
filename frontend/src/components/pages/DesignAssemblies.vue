@@ -1,11 +1,10 @@
 <template lang="pug">
 .page
 
-  h1.app-title Design assemblies
+  h1.app-title Design Assemblies
   //- el-dialog(:visible='true', width="95%")
   //-   part-selection-menu
   .constructs-designer
-
     el-container
       el-aside(width="300px")
         .side-menu-container
@@ -100,7 +99,6 @@ export default {
       'getConstructOptionsLocked',
       'getConstructCategoriesEnabled',
       'getConstructEnabled',
-      'allConstructsEmptySlots'
     ]),
     constructs () {
       return this.$store.state.constructs

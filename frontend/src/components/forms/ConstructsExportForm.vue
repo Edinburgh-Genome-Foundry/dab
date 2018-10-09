@@ -4,7 +4,7 @@
     el-button(@click='downloadJSON' icon='el-icon-download') JSON (for later use)
 
   backend-querier.querier(
-    :form='{constructsData, projectName}',
+    :form='{constructsData, projectName, iceAuthentication: $iceClient.getSimplifiedAuth()}',
     :validateForm='validateGenbankForm',
     backendUrl='start/get_constructs_as_genbanks',
     v-model='genbankQueriesStatus'
@@ -12,8 +12,8 @@
   )
     span(slot='button') Genbank (final sequences)
   progress-bars(:bars='genbankQueriesStatus.polling.data.bars',
-                :order="['construct']"
-                v-if='!polling.genbank && genbankQueriesStatus.polling.data')
+                :order="['construct']",
+                v-if='polling.genbank && genbankQueriesStatus.polling.data')
   .results(v-if='!polling.genbank')
     download-button(v-if='genbankQueriesStatus.result.zip_file',
                     button_text='Download sequences',
@@ -38,6 +38,7 @@
 
 <script>
 import download from 'downloadjs'
+import { mapGetters } from 'vuex'
 
 export default {
   props: {
@@ -79,6 +80,9 @@ export default {
     },
   },
   computed: {
+    ...mapGetters([
+      'allConstructsEmptySlots'
+    ]),
     polling () {
       return {
         pdf: this.pdfQueriesStatus.polling.inProgress,

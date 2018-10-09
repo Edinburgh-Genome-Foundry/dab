@@ -44,8 +44,8 @@ def constructs_to_pdf_data(construct_designs, construct_templates,
                 part = selected[0]
                 others = len(selected) - 1
                 sublabel = '' if (others == 0) else "+%d others" % others
-                category = category_sanitizer(part.dbType)
-                parts.append(Part(category=category, label=part.dbName,
+                category = category_sanitizer(part.category)
+                parts.append(Part(category=category, label=part.name,
                                   sublabel=sublabel, subscript=slot))
         constructs.append(Construct(parts, name=construct.name))
     constructs = ConstructList(constructs, title=project_name,

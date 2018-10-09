@@ -16,6 +16,7 @@ el-container.parts-selection-menu
               .div(v-for='i, possiblePosition in selectedPartPositions', :key='possiblePosition')
                 el-checkbox(v-model='selectedPartPositions[possiblePosition]')
                 span(style='margin-right: 1em; margin-left: 1em;') {{ possiblePosition.split('__')[0] }}
+                i.el-icon-location-outline
                 span(style="color: #a0a0f0; font-weight: bold") {{ possiblePosition.split('__')[1] }}
                 br
 
@@ -42,7 +43,10 @@ el-container.parts-selection-menu
             i.el-icon-tickets
             span Parts categories
           el-form
-            el-form-item
+            el-form-item(v-for='category in allCategories').category-selection
+              el-checkbox(v-model='selectedCategories[category]')
+              minipart-slot.minipart(:categories="[category]", slotName=' ')
+              span {{ category }}
               //- el-checkbox(v-model='partSources.user')
               //- icon.checkbox-icon(name='user')
               //- span Your parts
@@ -64,12 +68,14 @@ el-container.parts-selection-menu
             template(slot-scope="props")
               p Description: {{ props.row.shortDescription }}
               p
-                el-button(@click='downloadGenbank(scope.row.id, scope.row.name)',
+                el-button(@click='downloadGenbank(props.row.id, props.row.name)',
                           icon="el-icon-tickets" circle)
                 span Record
           el-table-column(label="Type" width=100)
             template(slot-scope="scope")
-              minipart-slot(:categories="[scope.row.category]" v-if='scope.row.category')
+              minipart-slot(:categories="[scope.row.category]",
+                            :slotName='scope.row.position',
+                            v-if='scope.row.category')
           el-table-column(prop="name" label="Name")
           
           el-table-column(label="Creator")
@@ -88,7 +94,7 @@ el-container.parts-selection-menu
                         icon="el-icon-plus" circle)
       
       el-tab-pane(name='selected')
-        span(slot='label') #[i.el-icon-check] Selected parts
+        span(slot='label') #[i.el-icon-check] Selected parts ({{ value.length }})
         el-table(:data="selectedParts" style="width: 100%")
           el-table-column(type="expand")
             template(slot-scope="props")
@@ -99,7 +105,7 @@ el-container.parts-selection-menu
                 span Record
           el-table-column(label="Type" width=100)
             template(slot-scope="scope")
-              minipart-slot(:categories="[scope.row.category]" v-if='scope.row.category')
+              minipart-slot(:categories="[scope.row.category]" v-if='scope.row.category') {{}}
           el-table-column(prop="name" label="Name")
           
           el-table-column(label="Creator")
@@ -123,8 +129,8 @@ import MiniPartSlot from './MiniPartSlot'
 export default {
   props: {
     value: {default: () => ([])},
-    templateName: {default: 'Cyanogate-L1-knockin'},
-    position: {default: 'Cyanogate-L1-knockin__DOWN'}
+    position: {default: 'Cyanogate-L1-knockin__DOWN'},
+    defaultCategoriesEnabled: {default: () => ([])}
   },
   data: function () {
     var possiblePartPositions = [this.position]
@@ -147,18 +153,23 @@ export default {
       },
       selectedPartPositions,
       loadedParts,
-      selectedCategories: {}
+      selectedCategories: Object.assign({}, this.defaultCategoriesEnabled),
+      allCategories: []
     }
   },
   methods: {
 
     async getAllParts () {
       this.dataLoading = true
+      this.allCategories = []
       for (var partPosition of Object.keys(this.selectedPartPositions)) {
         if (!this.loadedParts[partPosition]) {
           var positionParts = await this.getPartsAtPosition(partPosition)
           for (var part of positionParts) {
             part.category = this.getPartCategory(part)
+            if (this.allCategories.indexOf(part.category) < 0) {
+              this.allCategories.push(part.category)
+            }
           }
           this.$set(this.loadedParts, partPosition, positionParts)
         }
@@ -166,15 +177,35 @@ export default {
       this.dataLoading = false
     },
     async getPartsAtPosition (partPosition) {
-      return this.$iceClient.findPartsWithParameterValue('position', 'POSITION_' + partPosition)
+      var personalParts = []
+      var self = this
+      try {
+        var personalFolderId = await this.$iceClient.getFolderId(partPosition, 'PERSONAL')
+        personalParts = await this.$iceClient.getFolderEntries(personalFolderId)
+      } catch (error) {}
+      var sharedParts = []
+      var sharedFolderId = await this.$iceClient.getFolderId(partPosition + '__shared', 'SHARED')
+      sharedParts = await this.$iceClient.getFolderEntries(sharedFolderId)
+      sharedParts.map(async function (data) {
+        [data.template, data.position] = partPosition.split('__')
+        var newData = await self.$iceClient.getPartInfos(data['id'])
+        console.log('newData', newData)
+        Object.assign(data, newData)
+      })
+      console.log(personalParts, sharedParts)
+      return [...personalParts, ...sharedParts]
     },
     getPartCategory (part) {
-      for (var p of part.parameters) {
-        if ((p.name === 'category') && p.value.startsWith('CATEGORY_')) {
-          return p.value.substring(9, p.value.length)
-        }
-      }
-      return null
+      var category = part['shortDescription'].split('[')[1].split(']')[0]
+      console.log(category)
+      return category
+      // console.log(match)
+      // for (var p of part.parameters) {
+      //   if ((p.name === 'category') && p.value.startsWith('CATEGORY_')) {
+      //     return p.value.substring(9, p.value.length)
+      //   }
+      // }
+      // return null
     },
     async downloadGenbank (partId, partName) {
       var sequence = await this.$iceClient.getSequence(partId, 'genbank')
@@ -198,9 +229,9 @@ export default {
         }
       }
       allLoadedParts = tools.uniquify(allLoadedParts, e => e.id)
-      console.log(allLoadedParts)
+      console.log('alp', allLoadedParts)
       return allLoadedParts.filter(function (e) {
-        if (e.category && (self.selectedCategories[e.category])) {
+        if (e.category && (!self.selectedCategories[e.category])) {
           return false
         }
         if (e['owner'] === 'Standard Parts') {
@@ -216,8 +247,7 @@ export default {
         }
         return true
       })
-    },
-
+    }
   },
   watch: {
     selectedPartPositions: {
@@ -262,9 +292,6 @@ export default {
       background-color: #8052e0;
     }
   }
-  .checkbox-icon {
-
-  }
 }
 
 .icon-panel
@@ -277,6 +304,17 @@ export default {
 {
   width: 32px;
   height: 32px;
+}
+
+.category-selection {
+  .minipart {
+     margin-left: 1em;
+  margin-right: 1em;
+  height: 0em;
+  margin-top: -0.5em;
+  }
+  margin-bottom: 0
+ 
 }
 
 </style>

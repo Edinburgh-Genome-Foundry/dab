@@ -1,9 +1,10 @@
 <template lang='pug'>
 .construct(:class="{'no-hover': construct.noHover}")
-  el-menu.construct-hover-only(:collapse='true',
-                               style='float: left; position: absolute;'
-                               v-if="!(construct.hideHeader) && showMenu",
-                               :collapse-transition='false')
+  el-menu.construct-sidebar.construct-hover-only(
+    :collapse='true',
+    style='float: left; position: absolute;'
+    v-if="!(construct.hideHeader) && showMenu",
+    :collapse-transition='false')
     
     el-menu-item(index='2', @click="moveConstructUp({construct: construct})")
       i.el-icon-arrow-up
@@ -174,6 +175,9 @@ export default {
     font-size: 0.8em;
     margin-top: -0.5em;
     margin-left: 0.3em;
+  }
+  .construct-sidebar {
+    // font-size: 0.8em;
   }
 }
 

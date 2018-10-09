@@ -40,7 +40,8 @@
 
   // Part entry selection
   el-dialog.part-selector(:visible.sync="dialogVisible", width='95%')
-    part-selection-menu(v-model='selectedParts', :position='fullSlotName')
+    part-selection-menu(v-model='selectedParts', :position='fullSlotName', v-if='dialogVisible',
+                        :defaultCategoriesEnabled='categoriesEnabled')
     //- .show-selected
     //-   el-button.center(icon='arrow-right' @click='function () {showSelected = !showSelected}' v-if='!showSelected' size='small') Show selected ({{selectedParts.length}})
     //-   el-button.center(icon='arrow-down' @click='function () {showSelected = !showSelected}' v-if='showSelected' size='small') Hide selected ({{selectedParts.length}})

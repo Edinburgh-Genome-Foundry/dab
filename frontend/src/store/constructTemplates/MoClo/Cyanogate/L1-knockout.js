@@ -33,7 +33,7 @@ export const template = {
         right: 'AATG'
       },
       categories: [
-        '5-3 homology arm',
+        'homology arm',
       ]
     },
     'sacB': {
@@ -63,7 +63,7 @@ export const template = {
         right: 'CGCT'
       },
       categories: [
-        '3-5 homology arm'
+        'homology arm'
       ]
     }
   },
@@ -79,7 +79,7 @@ export const template = {
       enabled: o => true,
       locked: true,
       categoriesEnabled: o => ({
-        '5-3 homology arm': true,
+        'homology arm': true,
       })
     },
     'ABR': {
@@ -100,7 +100,7 @@ export const template = {
       enabled: o => true,
       locked: true,
       categoriesEnabled: o => ({
-        '3-5 homology arm': true
+        'homology arm': true
       })
     }
   }

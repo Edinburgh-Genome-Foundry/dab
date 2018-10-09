@@ -2,6 +2,7 @@ import axios from 'axios'
 
 class IceClient {
   constructor (root) {
+    this.root = root
     this.sessionInfos = {}
     this.axiosInstance = axios.create({
       baseURL: root + '/rest/',
@@ -35,6 +36,16 @@ class IceClient {
     this.sessionInfos.name = client
   }
 
+  getSimplifiedAuth () {
+    var headers = this.axiosInstance.defaults.headers
+    return {
+      token: headers['X-ICE-API-Token'],
+      client: headers['X-ICE-API-Token-Client'],
+      session_id: headers['X-ICE-Authentication-SessionId'],
+      root: this.root
+    }
+  }
+
   async getNewSessionId (credentials) {
     try {
       var response = await this.request('POST', 'accesstokens', credentials)
@@ -66,6 +77,33 @@ class IceClient {
 
   async getFolderInfos (id) {
     return this.request('GET', `folders/${id}`)
+  }
+
+  async getFolderId (folderName, collection) {
+    var allFolders = await this.getCollectionFolders(collection)
+    var results = allFolders.filter(f => folderName === f.folderName).map(f => f.id)
+    if (results.length === 1) {
+      return results[0]
+    } else if (results.length === 0) {
+      throw Error(`No folder "${folderName}" in collection ${collection}`)
+    } else {
+      throw Error(`Several folders named "${folderName}" in collection ${collection}`)
+    }
+  }
+
+  async getFolderEntries (folderId, batchSize = 40) {
+    var self = this
+    async function request (offset) {
+      return self.request('GET', `folders/${folderId}/entries?limit=${batchSize}&offset=${offset}`)
+    }
+    var requestResult = await request(0)
+    var count = requestResult['count']
+    var result = []
+    for (var offset = 0; offset < count; offset = offset + batchSize) {
+      var res = await request(offset)
+      result.push(...res.entries)
+    }
+    return result
   }
 
   async search (params) {
