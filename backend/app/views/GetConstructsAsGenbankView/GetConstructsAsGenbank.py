@@ -77,13 +77,12 @@ class worker_class(AsyncWorker):
 
     def work(self):
         self.logger(message="Reading Data...")
-        data = self.data.constructsData
         zip_data, errors = construct_data_to_assemblies_sequences(
             constructs_data=self.data.constructsData,
             ice_auth=self.data.iceAuthentication,
             logger=self.logger
         )
-        name = data.projectName if len(data.projectName) else 'sequences'
+        name = self.data.projectName if len(self.data.projectName) else 'sequences'
         response = {
             'zip_file': dict(
                name=name + '.zip',
