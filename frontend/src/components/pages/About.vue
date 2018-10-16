@@ -10,12 +10,19 @@
       [Edinburgh Genome Foundry](https://genomefoundry.org/) to
       simplify the discovery and use of different assembly standards (such as
       EMMA, MoClo, Cyanogate), and to provide a simple portal to order constructs from the
-      Foundry. It is open source and the code is
-      [on Github](https://github.com/Edinburgh-Genome-Foundry/dab).
+      Foundry.
+
+      EGF DAB is open source and the code is
+      [on Github](https://github.com/Edinburgh-Genome-Foundry/dab). It is part
+      of the [EGF Codons](https://edinburgh-genome-foundry.github.io/)
+      collection of open-source software for DNA assembly and Synthetic
+      Biology.
       
       The website is still under construction and some features will not work as
       expected yet. If you are interested in the project or need some help using
       the website, [leave us a message](mailto:egf-software@ed.ac.uk).
+
+      
 
 
   // h2 Overview
