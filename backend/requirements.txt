@@ -11,7 +11,7 @@ git+https://github.com/pygraphviz/pygraphviz.git
 
 redis==2.10.5
 rq==0.6.0
-requests==2.11.1
+requests>=2.20.0
 django==1.10.5
 djangorestframework==3.5.3
 drfdocs==0.0.11
